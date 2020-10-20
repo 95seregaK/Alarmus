@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:clickable="false"
+    android:background="@color/colorTransparent"
+    android:keepScreenOn="true">
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_height"
+        android:layout_alignParentTop="true"
+        android:gravity="center_horizontal"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:background="@color/colorTransparent"
+        android:textSize="48sp" />
+
+
+    <com.siarhei.alarmus.views.SunSlider
+        android:id="@+id/slideButton"
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorTransparent"
+        ></com.siarhei.alarmus.views.SunSlider>
+
+</RelativeLayout>

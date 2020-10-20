@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.siarhei.alarmus.views.FloatingView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/info_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/info_window_toolbar_height"
+        android:background="@color/white"
+        android:paddingHorizontal="@dimen/info_window_margin"
+        android:text="INFO"
+        android:textSize="@dimen/toolbar_text_size" />
+
+    <TableLayout
+        android:id="@+id/table"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:paddingHorizontal="@dimen/info_window_margin"
+                android:textColor="@color/info_color_active"
+                android:textSize="@dimen/info_window_text_size" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:paddingHorizontal="@dimen/info_window_margin"
+                android:text="@string/today"
+                android:textColor="@color/info_color_text"
+                android:textSize="@dimen/info_window_text_size" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:paddingHorizontal="@dimen/info_window_margin"
+                android:text="@string/next_day"
+                android:textColor="@color/info_color_text"
+                android:textSize="@dimen/info_window_text_size" />
+        </TableRow>
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:paddingHorizontal="@dimen/info_window_margin"
+                android:text="@string/sunrise"
+                android:textColor="@color/info_color_text"
+                android:textSize="@dimen/info_window_text_size" />
+
+            <TextView
+                android:id="@+id/text_sunrise"
+                android:paddingHorizontal="@dimen/info_window_margin"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/info_color_active"
+                android:textSize="@dimen/info_window_text_size" />
+
+            <TextView
+                android:id="@+id/text_sunrise_next"
+                android:paddingHorizontal="@dimen/info_window_margin"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/info_color_active"
+                android:textSize="@dimen/info_window_text_size" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:paddingHorizontal="@dimen/info_window_margin"
+                android:text="@string/noon"
+                android:textColor="@color/info_color_text"
+                android:textSize="@dimen/info_window_text_size" />
+
+            <TextView
+                android:id="@+id/text_noon"
+                android:paddingHorizontal="@dimen/info_window_margin"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/info_color_active"
+                android:textSize="@dimen/info_window_text_size" />
+
+            <TextView
+                android:id="@+id/text_noon_next"
+                android:paddingHorizontal="@dimen/info_window_margin"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/info_color_active"
+                android:textSize="@dimen/info_window_text_size" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="3dp">
+
+            <TextView
+                android:paddingHorizontal="@dimen/info_window_margin"
+                android:text="@string/sunset"
+                android:textColor="@color/info_color_text"
+                android:textSize="@dimen/info_window_text_size" />
+
+            <TextView
+                android:id="@+id/text_sunset"
+                android:paddingHorizontal="@dimen/info_window_margin"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/info_color_active"
+                android:textSize="@dimen/info_window_text_size" />
+
+            <TextView
+                android:id="@+id/text_sunset_next"
+                android:paddingHorizontal="@dimen/info_window_margin"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/info_color_active"
+                android:textSize="@dimen/info_window_text_size" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:paddingHorizontal="@dimen/info_window_margin"
+                android:text="@string/day_duration"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/info_color_text"
+                android:textSize="@dimen/info_window_text_size" />
+
+            <TextView
+                android:id="@+id/text_day_duration"
+                android:paddingHorizontal="@dimen/info_window_margin"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/info_color_text"
+                android:textSize="@dimen/info_window_text_size" />
+
+            <TextView
+                android:id="@+id/text_day_duration_next"
+                android:paddingHorizontal="@dimen/info_window_margin"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/info_color_text"
+                android:textSize="@dimen/info_window_text_size" />
+        </TableRow>
+    </TableLayout>
+
+    <Button
+        android:id="@+id/date_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/info_window_button_margin"
+        android:layout_marginHorizontal="@dimen/info_window_margin"
+        android:background="@color/white"
+        android:text="DATE"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/add_alarm_text_size" />
+
+</com.siarhei.alarmus.views.FloatingView>

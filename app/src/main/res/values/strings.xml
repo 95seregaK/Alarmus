@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Alarmus</string>
+    <string name="dialog_message">Вставай!!!</string>
+    <string name="dialog_title">Будидльник</string>
+    <string name="ok">OK</string>
+    <string name="once">once</string>
+    <string name="every_day">every day</string>
+    <string name="cancel">CANCEL</string>
+    <string name="alarm_deleted">Будильник удален!</string>
+    <string name="save_alarm">Save</string>
+    <string name="sunrise">Sunrise</string>
+    <string name="sunset">Sunset</string>
+    <string name="edit_alarm">Edit Alarm</string>
+    <string name="today">Today</string>
+    <string name="next_day">Next day</string>
+    <string name="noon">Solar noon</string>
+    <string name="day_duration">Day duration</string>
+    <string name="location">Location</string>
+
+</resources>
