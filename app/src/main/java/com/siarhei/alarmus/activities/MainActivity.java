@@ -1,12 +1,11 @@
 package com.siarhei.alarmus.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -69,9 +68,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         builder.setView(dialogView);
 
         // Get the custom alert dialog view widgets reference
-        ImageButton simpleAlarmBtn = (ImageButton) dialogView.findViewById(R.id.simple_alarm_btn);
-        ImageButton sunAlarmBtn = (ImageButton) dialogView.findViewById(R.id.sun_alarm_btn);
-
+        Button simpleAlarmBtn = dialogView.findViewById(R.id.simple_alarm_btn);
+        Button sunAlarmBtn =  dialogView.findViewById(R.id.sun_alarm_btn);
+        simpleAlarmBtn.setOnClickListener(this);
         // Create the alert dialog
         AlertDialog dialog = builder.create();
         return dialog;
@@ -122,6 +121,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v.getId() == addBtn.getId()) {
             //editAlarm(new SimpleAlarm(getNextId()));
             createDialog().show();
+        } else if (v.getId() == R.id.simple_alarm_btn) {
+            editAlarm(new SimpleAlarm(getNextId()));
         }
     }
 
