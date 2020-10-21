@@ -3,8 +3,10 @@ package com.siarhei.alarmus.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -54,8 +56,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         addBtn = (FloatingActionButton) findViewById(R.id.add_button);
         addBtn.setOnClickListener(this);
         alarmAdapter.setOnCheckedListener(this);
+
     }
 
+    public AlertDialog createDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.CustomDialog);
+
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.choose_type_dialog, null);
+
+        // Set the custom layout as alert dialog view
+        builder.setView(dialogView);
+
+        // Get the custom alert dialog view widgets reference
+        ImageButton simpleAlarmBtn = (ImageButton) dialogView.findViewById(R.id.simple_alarm_btn);
+        ImageButton sunAlarmBtn = (ImageButton) dialogView.findViewById(R.id.sun_alarm_btn);
+
+        // Create the alert dialog
+        AlertDialog dialog = builder.create();
+        return dialog;
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -93,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void editAlarm(AlarmData alarm) {
         Intent intent = new Intent("android.intent.action.ADD_ALARM");
-        intent.putExtra(ALARM_EDITING, (SimpleAlarm)alarm);
+        intent.putExtra(ALARM_EDITING, (SimpleAlarm) alarm);
         startActivityForResult(intent, CODE_ADD_NEW);
     }
 
@@ -101,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         if (v.getId() == addBtn.getId()) {
             //editAlarm(new SimpleAlarm(getNextId()));
-
+            createDialog().show();
         }
     }
 
