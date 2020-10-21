@@ -1,7 +1,5 @@
 package com.siarhei.alarmus.data;
 
-import java.util.Calendar;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -10,26 +8,40 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.widget.Toast;
 
-import com.siarhei.alarmus.activities.AlarmActivity;
 import com.siarhei.alarmus.receivers.AlarmReceiver;
-import com.siarhei.alarmus.sun.SunInfo;
 
-import org.osmdroid.util.GeoPoint;
+import java.util.Calendar;
 
-public abstract class AlarmData {
+public abstract class AlarmData implements Parcelable {
     public static final String ID = "id";
-    public static final int MODE_SUNRISE = 1;
-    public static final int MODE_SUNSET = 2;
+
     protected int id;
     protected String name;
     protected Calendar time;
-    protected double latitude;
-    protected double longitude;
+
     protected boolean enabled = false;
-    protected int sunMode = 0;
     protected boolean once = true;
 
     //public boolean[] days = new boolean[7];
+
+    protected AlarmData(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        time = Calendar.getInstance();
+        time.setTimeInMillis(in.readLong());
+        enabled = in.readByte() == 1;
+        once = in.readByte() == 1;
+        //days = in.createBooleanArray();
+    }
+
+    public AlarmData(int id) {
+        this.id = id;
+        this.time = Calendar.getInstance();
+        setTime(time.getTimeInMillis());
+        enabled = false;
+        once = true;
+        // days = new boolean[]{true, true, true, true, true, true, true};
+    }
 
     public Calendar getTime() {
         return time;
@@ -44,27 +56,8 @@ public abstract class AlarmData {
         }
     }
 
-    public void setTime(int mode) {
-        if (sunMode == MODE_SUNRISE) {
-            SunInfo info = new SunInfo(time.get(Calendar.DAY_OF_MONTH),
-                    time.get(Calendar.MONTH), time.get(Calendar.YEAR), latitude, longitude);
-            int hour = (int) info.getSunriseLocalTime();
-            int minute = (int) (60 * (info.getSunriseLocalTime() % 1));
-            time.set(Calendar.HOUR_OF_DAY, hour);
-            time.set(Calendar.MINUTE, minute);
-        }
-    }
-
     public void setNextDay() {
         time.add(Calendar.DAY_OF_MONTH, 1);
-        if (sunMode == MODE_SUNRISE) {
-            SunInfo info = new SunInfo(time.get(Calendar.DAY_OF_MONTH),
-                    time.get(Calendar.MONTH), time.get(Calendar.YEAR), latitude, longitude);
-            int hour = (int) info.getSunriseLocalTime();
-            int minute = (int) (60 * (info.getSunriseLocalTime() % 1));
-            time.set(Calendar.HOUR_OF_DAY, hour);
-            time.set(Calendar.MINUTE, minute);
-        }
     }
 
     public int getMinute() {
@@ -100,7 +93,7 @@ public abstract class AlarmData {
         return (hour < 10 ? "0" : "") + hour + ":"
                 + (minute < 10 ? "0" : "") + minute + ", "
                 + (day < 10 ? "0" : "") + day + "."
-                + (month < 10 ? "0" : "")+ month + "."
+                + (month < 10 ? "0" : "") + month + "."
                 + year
                 ;
     }
@@ -157,27 +150,7 @@ public abstract class AlarmData {
         return id;
     }
 
-    public int getSunMode() {
-        return sunMode;
-    }
 
-    public void setSunMode(int b) {
-        sunMode = b;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setPosition(double lat, double lon) {
-        latitude = lat;
-        longitude = lon;
-
-    }
 
     public void setDelay(Context context, int delay) {
         Intent intent = new Intent(context, AlarmReceiver.class);
@@ -191,5 +164,21 @@ public abstract class AlarmData {
                 System.currentTimeMillis() + delay * 60000, alarmIntent);
         Toast.makeText(context, "Будильник сработает через " + delay + " минут",
                 Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(name);
+        dest.writeLong(time.getTimeInMillis());
+        dest.writeByte((byte) (enabled ? 1 : 0));
+        dest.writeByte((byte) (once ? 1 : 0));
+        //dest.writeBooleanArray(days);
+
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 }

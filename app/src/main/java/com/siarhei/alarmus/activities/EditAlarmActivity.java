@@ -2,12 +2,8 @@ package com.siarhei.alarmus.activities;
 
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Point;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -22,16 +18,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.siarhei.alarmus.R;
 import com.siarhei.alarmus.data.AlarmData;
 import com.siarhei.alarmus.data.AlarmPreferences;
-import com.siarhei.alarmus.R;
+import com.siarhei.alarmus.data.SunAlarm;
 import com.siarhei.alarmus.sun.SunInfo;
-
-import org.osmdroid.util.GeoPoint;
+import com.siarhei.alarmus.views.DelayPicker;
 
 import java.util.Calendar;
 
-public class AddAlarmActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+public class EditAlarmActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
     public static final String APP_PREFERENCES = "my_settings";
     public static final int RESULT_LOCATION_CHOSEN = 2;
     public static final int RESULT_NEW_ALARM = 1;
@@ -40,7 +36,6 @@ public class AddAlarmActivity extends AppCompatActivity implements CompoundButto
     public static final String LATITUDE = "latitude";
     public static final String ALARM_NAME = "alarm";
     public static final String ID = "id";
-    private Switch sunModeSwitch;
     private TextView timeView;
     private TextView locationView;
     private Switch alarmSwitch;
@@ -54,8 +49,10 @@ public class AddAlarmActivity extends AppCompatActivity implements CompoundButto
     private RadioGroup radioSunMode;
     private RadioButton radioSunrise;
     private RadioButton radioSunset;
+    private DelayPicker delayPicker;
     private double lat;
     private double lon;
+    private int alarm_type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,21 +62,20 @@ public class AddAlarmActivity extends AppCompatActivity implements CompoundButto
         setSupportActionBar(toolbar);
 
         alarmSwitch = (Switch) findViewById(R.id.alarmSwitch);
-        sunModeSwitch = (Switch) findViewById(R.id.sunModeSwitch);
         timeView = (TextView) findViewById(R.id.timeView);
-        locationView = (TextView) findViewById(R.id.text_location);
+        locationView = (TextView) findViewById(R.id.btn_location);
         timePicker = (TimePicker) findViewById(R.id.timePicker);
-        plusBtn = (ImageButton) findViewById(R.id.timePlus);
-        minusBtn = (ImageButton) findViewById(R.id.timeMinus);
         onceChk = (CheckBox) findViewById(R.id.onceCheck);
         saveBtn = (ImageButton) findViewById(R.id.save_button);
         radioSunMode = (RadioGroup) findViewById(R.id.radioSunMode);
         radioSunrise = (RadioButton) findViewById(R.id.radioSunrise);
         radioSunset = (RadioButton) findViewById(R.id.radioSunset);
+        delayPicker = (DelayPicker) findViewById(R.id.delay_picker);
+
 
         timePicker.setIs24HourView(true);
-        plusBtn.setOnClickListener(this);
-        minusBtn.setOnClickListener(this);
+        //plusBtn.setOnClickListener(this);
+        //minusBtn.setOnClickListener(this);
         saveBtn.setOnClickListener(this);
         locationView.setOnClickListener(this);
 
@@ -87,28 +83,16 @@ public class AddAlarmActivity extends AppCompatActivity implements CompoundButto
         currentAlarm = (AlarmData) getIntent().getParcelableExtra(MainActivity.ALARM_EDITING);
         Toast.makeText(getApplicationContext(), currentAlarm.getId() + "",
                 Toast.LENGTH_SHORT).show();
-      /*  if (currentAlarm == null) {
-            currentAlarm = new AlarmData();
-        }*/
-        updateView();
+        alarm_type = (currentAlarm instanceof SunAlarm) ?
+                AlarmPreferences.SUN_TYPE : AlarmPreferences.SIMPLE_TYPE;
+        updateView(alarm_type);
 
-        sunModeSwitch.setOnCheckedChangeListener(this);
         //alarmSwitch.setOnCheckedChangeListener(this);
     }
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        if (compoundButton.getId() == sunModeSwitch.getId()) {
-            currentAlarm.setSunMode(b ? AlarmData.MODE_SUNRISE : 0);
-            if (b) {
 
-            }
-            //radioSunMode.setVisibility(currentAlarm.getSunMode() != 0 ? View.VISIBLE : View.GONE);
-            radioSunrise.setEnabled(currentAlarm.getSunMode() != 0);
-            radioSunset.setEnabled(currentAlarm.getSunMode() != 0);
-            locationView.setEnabled(currentAlarm.getSunMode() != 0);
-            timePicker.setVisibility((currentAlarm.getSunMode() == 0 ? View.VISIBLE : View.GONE));
-        }
     }
 
     @Override
@@ -123,7 +107,7 @@ public class AddAlarmActivity extends AppCompatActivity implements CompoundButto
                     currentAlarm.getTime().get(Calendar.HOUR_OF_DAY),
                     currentAlarm.getTime().get(Calendar.MINUTE), true);
             timePickerDialog.show();
-        } else if (view.getId() == R.id.timeMinus) {
+        } /*else if (view.getId() == R.id.timeMinus) {
             timePicker.setCurrentMinute(timePicker.getCurrentMinute() - 1);
             if (timePicker.getCurrentMinute() == 59) {
                 timePicker.setCurrentHour(timePicker.getCurrentHour() - 1);
@@ -133,13 +117,12 @@ public class AddAlarmActivity extends AppCompatActivity implements CompoundButto
             if (timePicker.getCurrentMinute() == 0) {
                 timePicker.setCurrentHour(timePicker.getCurrentHour() + 1);
             }
-        } else if (view.getId() == saveBtn.getId()) {
+        }*/ else if (view.getId() == saveBtn.getId()) {
             save();
             setResult(RESULT_NEW_ALARM);
             finish();
-        } else if (view.getId() == R.id.text_location) {
-            Intent mapIntent = new Intent("android.intent.action.SET_LOCATION");
-            this.startActivityForResult(mapIntent, 1);
+        } else if (view.getId() == R.id.btn_location) {
+            chooseLocation();
         }
     }
 
@@ -147,24 +130,15 @@ public class AddAlarmActivity extends AppCompatActivity implements CompoundButto
         currentAlarm.setEnable(alarmSwitch.isChecked());
         currentAlarm.setTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute());
         currentAlarm.setOnce(onceChk.isChecked());
-        if (sunModeSwitch.isChecked()) {
-            currentAlarm.setSunMode(
-                    radioSunrise.isChecked() ? AlarmData.MODE_SUNRISE : AlarmData.MODE_SUNSET);
-            currentAlarm.setPosition(lat, lon);
-        } else currentAlarm.setSunMode(0);
-
         currentAlarm.cancelAlarm(this);
         if (currentAlarm.isEnabled()) currentAlarm.setAlarm(this);
         preferences.writeAlarm(currentAlarm);
         //Toast.makeText(this, "Будильник!!!", Toast.LENGTH_SHORT).show();
     }
 
-    private GeoPoint chooseLocation() {
-        Intent mapIntent = new Intent("android.intent.category.LOCATION_CHOOSE");
+    private void chooseLocation() {
+        Intent mapIntent = new Intent("android.intent.action.SET_LOCATION");
         this.startActivityForResult(mapIntent, 1);
-        double longitude = mapIntent.getIntExtra("longitude", 0);
-        double latitude = mapIntent.getIntExtra("latitude", 0);
-        return new GeoPoint(latitude, longitude);
     }
 
     @Override
@@ -198,16 +172,21 @@ public class AddAlarmActivity extends AppCompatActivity implements CompoundButto
         //updateView();
     }
 
-    private void updateView() {
-        radioSunrise.setEnabled(currentAlarm.getSunMode() != 0);
-        radioSunset.setEnabled(currentAlarm.getSunMode() != 0);
-        locationView.setEnabled(currentAlarm.getSunMode() != 0);
-        radioSunrise.setChecked(currentAlarm.getSunMode() == AlarmData.MODE_SUNRISE);
-        radioSunset.setChecked(currentAlarm.getSunMode() == AlarmData.MODE_SUNSET);
-        sunModeSwitch.setChecked(currentAlarm.getSunMode() != 0);
+    private void updateView(int type) {
+        if (type == AlarmPreferences.SIMPLE_TYPE) {
+        } else if (type == AlarmPreferences.SUN_TYPE) {
+            SunAlarm sunAlarm = (SunAlarm) currentAlarm;
+            radioSunMode.setVisibility(View.VISIBLE);
+            locationView.setVisibility(View.VISIBLE);
+            radioSunrise.setChecked(sunAlarm.getSunMode() == SunAlarm.MODE_SUNRISE);
+            radioSunset.setChecked(sunAlarm.getSunMode() == SunAlarm.MODE_SUNSET);
+            timePicker.setVisibility(View.GONE);
+            delayPicker.setVisibility(View.VISIBLE);
+
+        }
+
         alarmSwitch.setChecked(currentAlarm.isEnabled());
         onceChk.setChecked(currentAlarm.isOnce());
-        timePicker.setVisibility((currentAlarm.getSunMode() == 0 ? View.VISIBLE : View.GONE));
         timePicker.setCurrentHour(currentAlarm.getHour());
         timePicker.setCurrentMinute(currentAlarm.getMinute());
         timeView.setText(currentAlarm.toString());

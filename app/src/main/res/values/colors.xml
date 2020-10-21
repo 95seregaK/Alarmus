@@ -14,5 +14,6 @@
     <color name="info_color_text">#FFFFFF</color>
     <color name="info_color_active">#FFE600</color>
     <color name="info_color_passive">#AAAAAA</color>
+    <color name="colorHalfTransparent">#85191919</color>
 
 </resources>

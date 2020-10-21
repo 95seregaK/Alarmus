@@ -8,19 +8,18 @@
         <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
-    <style name="AddAlarmTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="EditAlarmTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
-    <style name="AlarmTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AlarmTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorPrimary</item>
-        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/colorHalfTransparent</item>
+
     </style>
 
     <style name="InfoWindowStyle">
@@ -31,6 +30,7 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
+
     <style name="AlarmTheme.Button.Rounded" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>

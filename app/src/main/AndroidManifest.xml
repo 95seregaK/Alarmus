@@ -26,8 +26,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.AddAlarmActivity"
-            android:theme="@style/AddAlarmTheme">
+            android:name=".activities.EditAlarmActivity"
+            android:theme="@style/EditAlarmTheme">
             <intent-filter>
                 <action android:name="android.intent.action.ADD_ALARM" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -41,7 +41,7 @@
         </activity>
         <activity
             android:name=".activities.AlarmActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:theme="@style/AlarmTheme"
             >
             <intent-filter>
                 <action android:name="android.intent.action.ALARM" />

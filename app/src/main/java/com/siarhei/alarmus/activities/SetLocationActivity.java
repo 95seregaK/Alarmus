@@ -19,10 +19,10 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.siarhei.alarmus.R;
-import com.siarhei.alarmus.views.FloatingView;
 import com.siarhei.alarmus.map.MyMarkerInfoWindow;
 import com.siarhei.alarmus.map.SunInfoMarker;
 import com.siarhei.alarmus.sun.SunInfo;
+import com.siarhei.alarmus.views.FloatingView;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
@@ -162,9 +162,9 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
     public void onClick(View view) {
         if (view.getId() == R.id.set_position) {
             Intent intent = new Intent();
-            intent.putExtra(AddAlarmActivity.LATITUDE, defaultMarker.getPosition().getLatitude());
-            intent.putExtra(AddAlarmActivity.LONGITUDE, defaultMarker.getPosition().getLongitude());
-            setResult(AddAlarmActivity.RESULT_LOCATION_CHOSEN, intent);
+            intent.putExtra(EditAlarmActivity.LATITUDE, defaultMarker.getPosition().getLatitude());
+            intent.putExtra(EditAlarmActivity.LONGITUDE, defaultMarker.getPosition().getLongitude());
+            setResult(EditAlarmActivity.RESULT_LOCATION_CHOSEN, intent);
             finish();
         }
         if (view.getId() == R.id.info_view) {

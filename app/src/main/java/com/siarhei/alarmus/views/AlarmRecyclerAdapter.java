@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.siarhei.alarmus.R;
 import com.siarhei.alarmus.data.AlarmData;
+import com.siarhei.alarmus.data.SimpleAlarm;
 
 import java.util.List;
 
@@ -70,7 +71,7 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
             holder.days.setTextColor(context.getResources().getColor(R.color.colorAlarmDisable));
             holder.sunMode.setImageAlpha(context.getResources().getInteger(R.integer.disable_alpha));
         }
-        if (alarm.getSunMode() == 0) holder.sunMode.setImageAlpha(0);
+        if (alarm instanceof SimpleAlarm) holder.sunMode.setImageAlpha(0);
     }
 
     public void setOnCheckedListener(OnCheckedChangeListener onCheckedChangeListener) {

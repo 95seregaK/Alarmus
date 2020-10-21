@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_margin="5dp"
     android:orientation="vertical"
-    tools:context=".activities.AddAlarmActivity">
+    tools:context=".activities.EditAlarmActivity">
 
 
     <com.siarhei.alarmus.views.MyRecyclerView
@@ -14,8 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="true"
-        android:fillViewport="true"
-        />
+        android:fillViewport="true" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_button"

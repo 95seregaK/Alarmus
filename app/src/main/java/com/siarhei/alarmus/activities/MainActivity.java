@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -18,6 +18,7 @@ import com.siarhei.alarmus.R;
 import com.siarhei.alarmus.data.AlarmData;
 import com.siarhei.alarmus.data.AlarmPreferences;
 import com.siarhei.alarmus.data.SimpleAlarm;
+import com.siarhei.alarmus.data.SunAlarm;
 import com.siarhei.alarmus.views.AlarmRecyclerAdapter;
 import com.siarhei.alarmus.views.MyRecyclerView;
 
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<AlarmData> alarms;
     private FloatingActionButton addBtn;
     private AlarmRecyclerAdapter alarmAdapter;
+    private AlertDialog chooseTypeDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         addBtn = (FloatingActionButton) findViewById(R.id.add_button);
         addBtn.setOnClickListener(this);
         alarmAdapter.setOnCheckedListener(this);
+        chooseTypeDialog = createDialog();
 
     }
 
@@ -68,9 +71,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         builder.setView(dialogView);
 
         // Get the custom alert dialog view widgets reference
-        Button simpleAlarmBtn = dialogView.findViewById(R.id.simple_alarm_btn);
-        Button sunAlarmBtn =  dialogView.findViewById(R.id.sun_alarm_btn);
+        ImageButton simpleAlarmBtn = dialogView.findViewById(R.id.simple_alarm_btn);
+        ImageButton sunAlarmBtn = dialogView.findViewById(R.id.sun_alarm_btn);
         simpleAlarmBtn.setOnClickListener(this);
+        sunAlarmBtn.setOnClickListener(this);
         // Create the alert dialog
         AlertDialog dialog = builder.create();
         return dialog;
@@ -80,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 /*
-        if (requestCode == CODE_ADD_NEW && resultCode == AddAlarmActivity.RESULT_NEW_ALARM) {
+        if (requestCode == CODE_ADD_NEW && resultCode == EditAlarmActivity.RESULT_NEW_ALARM) {
             AlarmData alarmData = (AlarmData) data.getParcelableExtra(ALARM_EDITING_NAME);
             alarms.add(alarmData);
             alarmAdapter.notifyItemInserted(alarms.size() - 1);
@@ -88,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             preferences.writeAlarm(alarmData);
 
         } else if (requestCode >> SHIFT == CODE_EDIT_CURRENT
-                && resultCode == AddAlarmActivity.RESULT_NEW_ALARM) {
+                && resultCode == EditAlarmActivity.RESULT_NEW_ALARM) {
             AlarmData alarmData = (AlarmData) data.getParcelableExtra(ALARM_EDITING_NAME);
             int i = requestCode - (CODE_EDIT_CURRENT << SHIFT);
             if (!alarms.get(i).isEnabled() && alarmData.isEnabled()) alarmData.setAlarm(this);
@@ -112,17 +116,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void editAlarm(AlarmData alarm) {
         Intent intent = new Intent("android.intent.action.ADD_ALARM");
-        intent.putExtra(ALARM_EDITING, (SimpleAlarm) alarm);
+        if (alarm instanceof SimpleAlarm) intent.putExtra(ALARM_EDITING, (SimpleAlarm) alarm);
+        else intent.putExtra(ALARM_EDITING, (SunAlarm) alarm);
         startActivityForResult(intent, CODE_ADD_NEW);
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == addBtn.getId()) {
-            //editAlarm(new SimpleAlarm(getNextId()));
-            createDialog().show();
+            chooseTypeDialog.show();
         } else if (v.getId() == R.id.simple_alarm_btn) {
             editAlarm(new SimpleAlarm(getNextId()));
+            chooseTypeDialog.cancel();
+        } else if (v.getId() == R.id.sun_alarm_btn) {
+            editAlarm(new SunAlarm(getNextId()));
+            chooseTypeDialog.cancel();
         }
     }
 

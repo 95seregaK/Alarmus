@@ -15,11 +15,14 @@ import java.util.Set;
 public class AlarmPreferences {
 
 
+    public static final int SUN_TYPE = 1;
+    public static final int SIMPLE_TYPE = 2;
     private SharedPreferences pref;
     private Context context;
     private Set<String> idSet;
     public static final String APP_PREFERENCES = "alarmsList";
     public static final String KEY_ID_SET = "idSet";
+    public static final String KEY_TYPE = "type";
     public static final String KEY_NAME = "name";
     public static final String KEY_ENABLE = "enable";
     public static final String KEY_SUN_MODE = "sun";
@@ -45,18 +48,28 @@ public class AlarmPreferences {
         ed.putStringSet(KEY_ID_SET, idSet);
         ed.putString(id + KEY_NAME, alarm.getName());
         ed.putBoolean(id + KEY_ENABLE, alarm.isEnabled());
-        ed.putInt(id + KEY_SUN_MODE, alarm.getSunMode());
+
         ed.putBoolean(id + KEY_ONCE, alarm.isOnce());
         ed.putLong(id + KEY_TIME, alarm.getTimeInMillis());
-        ed.putLong(id + KEY_LATITUDE, Double.doubleToLongBits(alarm.getLatitude()));
-        ed.putLong(id + KEY_LONGITUDE, Double.doubleToLongBits(alarm.getLongitude()));
+
+        if (alarm instanceof SunAlarm) {
+            ed.putInt(id + KEY_TYPE, SUN_TYPE);
+            SunAlarm sunAlarm = (SunAlarm) alarm;
+            ed.putInt(id + KEY_SUN_MODE, sunAlarm.getSunMode());
+            ed.putLong(id + KEY_LATITUDE, Double.doubleToLongBits(sunAlarm.getLatitude()));
+            ed.putLong(id + KEY_LONGITUDE, Double.doubleToLongBits(sunAlarm.getLongitude()));
+
+        } else {
+            ed.putInt(id + KEY_TYPE, SIMPLE_TYPE);
+        }
         //  ed.apply();
         ed.commit();
         Toast.makeText(context, "Будильник записан!!!", Toast.LENGTH_SHORT).show();
     }
 
     public AlarmData readAlarm(int id) {
-        AlarmData alarm = new SimpleAlarm(id);
+        AlarmData alarm;
+        int type = pref.getInt(id + KEY_TYPE, 0);
         String name = pref.getString(id + KEY_NAME, null);
         boolean enable = pref.getBoolean(id + KEY_ENABLE, false);
         boolean once = pref.getBoolean(id + KEY_ONCE, true);
@@ -64,13 +77,21 @@ public class AlarmPreferences {
         long time = pref.getLong(id + KEY_TIME, System.currentTimeMillis());
         double lat = Double.longBitsToDouble(pref.getLong(id + KEY_LATITUDE, 0));
         double lon = Double.longBitsToDouble(pref.getLong(id + KEY_LONGITUDE, 0));
+
+        if (type == SUN_TYPE) {
+            alarm = new SunAlarm(id);
+            ((SunAlarm) alarm).setSunMode(sunMode);
+            ((SunAlarm) alarm).setPosition(lat, lon);
+        } else {
+            alarm = new SimpleAlarm(id);
+        }
+
         alarm.setId(id);
         alarm.setName(name);
         alarm.setEnable(enable);
         alarm.setTime(time);
-        alarm.setSunMode(sunMode);
         alarm.setOnce(once);
-        alarm.setPosition(lat, lon);
+
         return alarm;
     }
 

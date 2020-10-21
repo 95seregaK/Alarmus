@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -17,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fillViewport="true"
-        tools:context=".activities.AddAlarmActivity">
+        tools:context=".activities.EditAlarmActivity">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -31,13 +30,6 @@
                 android:layout_marginRight="@dimen/default_margin"
                 android:orientation="vertical">
 
-                <Switch
-                    android:id="@+id/sunModeSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/default_height"
-                    android:text="Sun mode"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/add_alarm_text_size" />
 
                 <View
                     android:layout_width="match_parent"
@@ -45,20 +37,20 @@
                     android:background="?android:attr/listDivider" />
 
                 <TextView
-                    android:id="@+id/text_location"
+                    android:id="@+id/btn_location"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/medium_height"
-                    android:layout_marginLeft="@dimen/default_margin"
                     android:gravity="center_vertical"
                     android:text="@string/location"
                     android:textColor="#000000"
-                    android:textSize="@dimen/add_alarm_text_size" />
+                    android:textSize="@dimen/add_alarm_text_size"
+                    android:visibility="gone" />
 
                 <RadioGroup
                     android:id="@+id/radioSunMode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/default_margin">
+                    android:visibility="gone">
 
                     <RadioButton
                         android:id="@+id/radioSunrise"
@@ -101,15 +93,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <ImageButton
-                        android:id="@+id/timeMinus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@drawable/zoom_out"
-                        android:textAlignment="gravity" />
+                    android:orientation="vertical">
 
                     <TimePicker
                         android:id="@+id/timePicker"
@@ -117,12 +101,13 @@
                         android:layout_height="160dp"
                         android:timePickerMode="spinner" />
 
-                    <ImageButton
-                        android:id="@+id/timePlus"
+                    <com.siarhei.alarmus.views.DelayPicker
+                        android:id="@+id/delay_picker"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@drawable/zoom_in" />
+                        android:marqueeRepeatLimit="-1"
+                        android:textSize="@dimen/delay_picker_size"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
