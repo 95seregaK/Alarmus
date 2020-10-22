@@ -8,12 +8,16 @@
     <color name="white">#FFFFFF</color>
     <color name="progressClr">#00FFFFFF</color>
     <color name="alarmBckg">#A11CD535</color>
-    <color name="colorAlarmEnable">#000000</color>
+    <color name="colorAlarmEnable">@color/colorPrimaryDark</color>
     <color name="colorAlarmDisable">#757575</color>
     <color name="colorTransparent">#00FFFFFF</color>
     <color name="info_color_text">#FFFFFF</color>
     <color name="info_color_active">#FFE600</color>
     <color name="info_color_passive">#AAAAAA</color>
     <color name="colorHalfTransparent">#85191919</color>
+    <color name="color_circle_check_checked">@color/colorPrimaryDark</color>
+    <color name="color_circle_check_unchecked">#00000000</color>
+    <color name="color_text_circle_check_checked">#FFFFFF</color>
+    <color name="color_text_circle_check_unchecked">#888888</color>
 
 </resources>

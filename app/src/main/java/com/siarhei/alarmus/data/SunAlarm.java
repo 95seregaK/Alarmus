@@ -6,7 +6,7 @@ import com.siarhei.alarmus.sun.SunInfo;
 
 import java.util.Calendar;
 
-public class SunAlarm extends AlarmData {
+public class SunAlarm extends Alarm {
     public static final int MODE_SUNRISE = 1;
     public static final int MODE_SUNSET = 2;
     public static final Creator<SunAlarm> CREATOR = new Creator<SunAlarm>() {
@@ -24,7 +24,7 @@ public class SunAlarm extends AlarmData {
     protected double latitude;
     protected double longitude;
 
-    protected SunAlarm(Parcel in) {
+    public SunAlarm(Parcel in) {
         super(in);
         sunMode = in.readInt();
         latitude = in.readDouble();

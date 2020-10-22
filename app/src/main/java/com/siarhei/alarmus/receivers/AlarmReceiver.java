@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.siarhei.alarmus.activities.EditAlarmActivity;
-import com.siarhei.alarmus.data.AlarmData;
+import com.siarhei.alarmus.data.Alarm;
 
 public class AlarmReceiver extends BroadcastReceiver {
     private NotificationManager nm;
@@ -33,7 +33,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         alarmIntent.setAction(intent.getAction());*/
 
         Intent alarmIntent = new Intent("android.intent.action.ALARM");
-        alarmIntent.putExtra(AlarmData.ID, intent.getIntExtra(EditAlarmActivity.ID, 0));
+        alarmIntent.putExtra(Alarm.ID, intent.getIntExtra(EditAlarmActivity.ID, 0));
         context.startActivity(alarmIntent);
 
     }

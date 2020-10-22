@@ -13,13 +13,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.siarhei.alarmus.R;
-import com.siarhei.alarmus.data.AlarmData;
-import com.siarhei.alarmus.data.SimpleAlarm;
+import com.siarhei.alarmus.data.Alarm;
+import com.siarhei.alarmus.data.SunAlarm;
 
 import java.util.List;
 
 public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdapter.ViewHolder> {
-    private List<AlarmData> alarms;
+    private List<Alarm> alarms;
     private OnCheckedChangeListener onCheckedChangeListener;
     private Context context;
 
@@ -33,10 +33,10 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final AlarmData alarm = alarms.get(position);
+        final Alarm alarm = alarms.get(position);
         holder.time.setText(alarm.toString());
         holder.label.setText(alarm.getId() + "");
-        holder.days.setText(alarm.isOnce() ? R.string.once : R.string.every_day);
+        holder.days.setText(alarm.isRepeat() ?R.string.repeat: R.string.once );
         holder.enabled.setChecked(alarm.isEnabled());
         holder.enabled.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,8 +58,7 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
                 onCheckedChangeListener.onCheckedChange(buttonView, position, buttonView.isChecked());
             }
         });*/
-        holder.sunMode.setImageResource(R.drawable.ic_sunset);
-
+        if (alarm instanceof SunAlarm)holder.sunMode.setImageResource(R.drawable.ic_sunset);
         if (alarm.isEnabled()) {
             holder.time.setTextColor(context.getResources().getColor(R.color.colorAlarmEnable));
             holder.label.setTextColor(context.getResources().getColor(R.color.colorAlarmEnable));
@@ -71,7 +70,6 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
             holder.days.setTextColor(context.getResources().getColor(R.color.colorAlarmDisable));
             holder.sunMode.setImageAlpha(context.getResources().getInteger(R.integer.disable_alpha));
         }
-        if (alarm instanceof SimpleAlarm) holder.sunMode.setImageAlpha(0);
     }
 
     public void setOnCheckedListener(OnCheckedChangeListener onCheckedChangeListener) {
@@ -83,7 +81,7 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
         return alarms == null ? 0 : alarms.size();
     }
 
-    public void setAlarms(List<AlarmData> alarms) {
+    public void setAlarms(List<Alarm> alarms) {
         this.alarms = alarms;
         notifyDataSetChanged();
     }

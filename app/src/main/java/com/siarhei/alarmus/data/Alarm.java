@@ -12,7 +12,7 @@ import com.siarhei.alarmus.receivers.AlarmReceiver;
 
 import java.util.Calendar;
 
-public abstract class AlarmData implements Parcelable {
+public class Alarm implements Parcelable {
     public static final String ID = "id";
 
     protected int id;
@@ -20,28 +20,50 @@ public abstract class AlarmData implements Parcelable {
     protected Calendar time;
 
     protected boolean enabled = false;
-    protected boolean once = true;
+    protected boolean repeat = true;
+    protected boolean[] days = new boolean[7];
 
-    //public boolean[] days = new boolean[7];
-
-    protected AlarmData(Parcel in) {
+    public Alarm(Parcel in) {
         id = in.readInt();
         name = in.readString();
         time = Calendar.getInstance();
         time.setTimeInMillis(in.readLong());
         enabled = in.readByte() == 1;
-        once = in.readByte() == 1;
-        //days = in.createBooleanArray();
+        repeat = in.readByte() == 1;
+        days = AlarmPreferences.toBooleanArray(in.readInt());
     }
 
-    public AlarmData(int id) {
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(name);
+        dest.writeLong(time.getTimeInMillis());
+        dest.writeByte((byte) (enabled ? 1 : 0));
+        dest.writeByte((byte) (repeat ? 1 : 0));
+        dest.writeInt(AlarmPreferences.toInteger(days));
+
+    }
+
+    public Alarm(int id) {
         this.id = id;
         this.time = Calendar.getInstance();
         setTime(time.getTimeInMillis());
         enabled = false;
-        once = true;
-        // days = new boolean[]{true, true, true, true, true, true, true};
+        repeat = true;
+        days = new boolean[]{true, true, true, true, true, false, false};
     }
+
+    public static final Creator<Alarm> CREATOR = new Creator<Alarm>() {
+        @Override
+        public Alarm createFromParcel(Parcel in) {
+            return new Alarm(in);
+        }
+
+        @Override
+        public Alarm[] newArray(int size) {
+            return new Alarm[size];
+        }
+    };
 
     public Calendar getTime() {
         return time;
@@ -57,7 +79,9 @@ public abstract class AlarmData implements Parcelable {
     }
 
     public void setNextDay() {
-        time.add(Calendar.DAY_OF_MONTH, 1);
+        do {
+            time.add(Calendar.DAY_OF_MONTH, 1);
+        } while (!days[(time.get(Calendar.DAY_OF_WEEK) + 5) % 7]);
     }
 
     public int getMinute() {
@@ -126,8 +150,8 @@ public abstract class AlarmData implements Parcelable {
         return enabled;
     }
 
-    public void setOnce(boolean checked) {
-        once = checked;
+    public void setRepeat(boolean checked) {
+        repeat = checked;
     }
 
     public void setName(String name) {
@@ -138,8 +162,8 @@ public abstract class AlarmData implements Parcelable {
         return name;
     }
 
-    public boolean isOnce() {
-        return once;
+    public boolean isRepeat() {
+        return repeat;
     }
 
     public void setId(int id) {
@@ -149,7 +173,6 @@ public abstract class AlarmData implements Parcelable {
     public int getId() {
         return id;
     }
-
 
 
     public void setDelay(Context context, int delay) {
@@ -167,18 +190,15 @@ public abstract class AlarmData implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(name);
-        dest.writeLong(time.getTimeInMillis());
-        dest.writeByte((byte) (enabled ? 1 : 0));
-        dest.writeByte((byte) (once ? 1 : 0));
-        //dest.writeBooleanArray(days);
-
-    }
-
-    @Override
     public int describeContents() {
         return 0;
+    }
+
+    public void setDays(boolean[] days) {
+        this.days = days;
+    }
+
+    public boolean[] getDays() {
+        return days;
     }
 }

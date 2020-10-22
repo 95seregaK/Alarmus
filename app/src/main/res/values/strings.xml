@@ -4,7 +4,7 @@
     <string name="dialog_title">Будидльник</string>
     <string name="ok">OK</string>
     <string name="once">once</string>
-    <string name="every_day">every day</string>
+    <string name="repeat">repeat</string>
     <string name="cancel">CANCEL</string>
     <string name="alarm_deleted">Будильник удален!</string>
     <string name="save_alarm">Save</string>

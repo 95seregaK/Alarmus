@@ -15,9 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.siarhei.alarmus.R;
-import com.siarhei.alarmus.data.AlarmData;
+import com.siarhei.alarmus.data.Alarm;
 import com.siarhei.alarmus.data.AlarmPreferences;
-import com.siarhei.alarmus.data.SimpleAlarm;
 import com.siarhei.alarmus.data.SunAlarm;
 import com.siarhei.alarmus.views.AlarmRecyclerAdapter;
 import com.siarhei.alarmus.views.MyRecyclerView;
@@ -34,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final short SHIFT = 8;
     private MyRecyclerView recycler;
     private AlarmPreferences preferences;
-    private List<AlarmData> alarms;
+    private List<Alarm> alarms;
     private FloatingActionButton addBtn;
     private AlarmRecyclerAdapter alarmAdapter;
     private AlertDialog chooseTypeDialog;
@@ -114,9 +113,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Toast.makeText(getApplicationContext(), "onResume()", Toast.LENGTH_SHORT).show();
     }
 
-    public void editAlarm(AlarmData alarm) {
+    public void editAlarm(Alarm alarm) {
         Intent intent = new Intent("android.intent.action.ADD_ALARM");
-        if (alarm instanceof SimpleAlarm) intent.putExtra(ALARM_EDITING, (SimpleAlarm) alarm);
+        if (alarm instanceof Alarm) intent.putExtra(ALARM_EDITING, (Alarm) alarm);
         else intent.putExtra(ALARM_EDITING, (SunAlarm) alarm);
         startActivityForResult(intent, CODE_ADD_NEW);
     }
@@ -126,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v.getId() == addBtn.getId()) {
             chooseTypeDialog.show();
         } else if (v.getId() == R.id.simple_alarm_btn) {
-            editAlarm(new SimpleAlarm(getNextId()));
+            editAlarm(new Alarm(getNextId()));
             chooseTypeDialog.cancel();
         } else if (v.getId() == R.id.sun_alarm_btn) {
             editAlarm(new SunAlarm(getNextId()));
@@ -159,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onCheckedChange(CompoundButton buttonView, int position, boolean isChecked) {
-        AlarmData currentAlarm = alarms.get(position);
+        Alarm currentAlarm = alarms.get(position);
 
         if (isChecked && !currentAlarm.isEnabled()) {
             currentAlarm.setEnable(true);
@@ -174,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public int getNextId() {
         int max = 0;
-        for (AlarmData alarm : alarms) {
+        for (Alarm alarm : alarms) {
             max = Math.max(max, alarm.getId());
         }
         return max + 1;

@@ -5,15 +5,13 @@ import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.siarhei.alarmus.data.AlarmData;
+import com.siarhei.alarmus.data.Alarm;
 import com.siarhei.alarmus.data.AlarmPreferences;
 import com.siarhei.alarmus.R;
 import com.siarhei.alarmus.views.SlideButton;
@@ -28,7 +26,7 @@ public class AlarmActivity extends AppCompatActivity implements SlideButton.Slid
     private TextView time;
     private SunSlider sunSlider;
     private MediaPlayer mMediaPlayer;
-    private AlarmData currentAlarm;
+    private Alarm currentAlarm;
     private AlarmPreferences preferences;
 
 
@@ -40,13 +38,13 @@ public class AlarmActivity extends AppCompatActivity implements SlideButton.Slid
         time = findViewById(R.id.time);
         mMediaPlayer = new MediaPlayer();
         preferences = AlarmPreferences.getInstance(this);
-        currentAlarm = preferences.readAlarm(getIntent().getIntExtra(AlarmData.ID, 0));
+        currentAlarm = preferences.readAlarm(getIntent().getIntExtra(Alarm.ID, 0));
         time.setText(currentAlarm.toString());
         sunSlider.setRadius(getResources().getDisplayMetrics().widthPixels / 2 - 100);
         sunSlider.setOnSliderMoveListener((action, direction) -> {
             if (action == SunSlider.ACTION_SUCCESS) {
                 if (direction < 180) {
-                    if (currentAlarm.isOnce()) currentAlarm.setEnable(false);
+                    if (!currentAlarm.isRepeat()) currentAlarm.setEnable(false);
                     else {
                         currentAlarm.setNextDay();
                         currentAlarm.setAlarm(this);

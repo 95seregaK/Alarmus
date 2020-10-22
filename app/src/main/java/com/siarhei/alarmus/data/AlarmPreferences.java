@@ -26,7 +26,8 @@ public class AlarmPreferences {
     public static final String KEY_NAME = "name";
     public static final String KEY_ENABLE = "enable";
     public static final String KEY_SUN_MODE = "sun";
-    public static final String KEY_ONCE = "once";
+    public static final String KEY_REPEAT = "repeat";
+    public static final String KEY_DAYS = "days";
     public static final String KEY_TIME = "time";
     public static final String KEY_LATITUDE = "latitude";
     public static final String KEY_LONGITUDE = "longitude";
@@ -41,15 +42,15 @@ public class AlarmPreferences {
         return new AlarmPreferences(context);
     }
 
-    public void writeAlarm(AlarmData alarm) {
+    public void writeAlarm(Alarm alarm) {
         SharedPreferences.Editor ed = pref.edit();
         int id = alarm.getId();
         idSet.add(String.valueOf(id));
         ed.putStringSet(KEY_ID_SET, idSet);
         ed.putString(id + KEY_NAME, alarm.getName());
         ed.putBoolean(id + KEY_ENABLE, alarm.isEnabled());
-
-        ed.putBoolean(id + KEY_ONCE, alarm.isOnce());
+        ed.putInt(id + KEY_DAYS, toInteger(alarm.getDays()));
+        ed.putBoolean(id + KEY_REPEAT, alarm.isRepeat());
         ed.putLong(id + KEY_TIME, alarm.getTimeInMillis());
 
         if (alarm instanceof SunAlarm) {
@@ -67,35 +68,52 @@ public class AlarmPreferences {
         Toast.makeText(context, "Будильник записан!!!", Toast.LENGTH_SHORT).show();
     }
 
-    public AlarmData readAlarm(int id) {
-        AlarmData alarm;
+    public Alarm readAlarm(int id) {
+        Alarm alarm;
         int type = pref.getInt(id + KEY_TYPE, 0);
         String name = pref.getString(id + KEY_NAME, null);
         boolean enable = pref.getBoolean(id + KEY_ENABLE, false);
-        boolean once = pref.getBoolean(id + KEY_ONCE, true);
-        int sunMode = pref.getInt(id + KEY_SUN_MODE, 0);
+        boolean once = pref.getBoolean(id + KEY_REPEAT, true);
         long time = pref.getLong(id + KEY_TIME, System.currentTimeMillis());
-        double lat = Double.longBitsToDouble(pref.getLong(id + KEY_LATITUDE, 0));
-        double lon = Double.longBitsToDouble(pref.getLong(id + KEY_LONGITUDE, 0));
-
+        boolean days[] = toBooleanArray(pref.getInt(id + KEY_DAYS, 0));
         if (type == SUN_TYPE) {
+            int sunMode = pref.getInt(id + KEY_SUN_MODE, 0);
+            double lat = Double.longBitsToDouble(pref.getLong(id + KEY_LATITUDE, 0));
+            double lon = Double.longBitsToDouble(pref.getLong(id + KEY_LONGITUDE, 0));
             alarm = new SunAlarm(id);
             ((SunAlarm) alarm).setSunMode(sunMode);
             ((SunAlarm) alarm).setPosition(lat, lon);
         } else {
-            alarm = new SimpleAlarm(id);
+            alarm = new Alarm(id);
         }
 
         alarm.setId(id);
         alarm.setName(name);
         alarm.setEnable(enable);
         alarm.setTime(time);
-        alarm.setOnce(once);
+        alarm.setRepeat(once);
+        alarm.setDays(days);
 
         return alarm;
     }
 
-    public List<AlarmData> readAllAlarms() {
+    public static boolean[] toBooleanArray(int in) {
+        boolean res[] = new boolean[7];
+        for (int i = 0; i < 7; i++) {
+            res[i] = (in & (1 << i)) == (1 << i);
+        }
+        return res;
+    }
+
+    public static int toInteger(boolean[] in) {
+        int res = 0;
+        for (int i = 0; i < 7; i++) {
+            res = res | (in[i] ? 1 << i : 0);
+        }
+        return res;
+    }
+
+    public List<Alarm> readAllAlarms() {
         List alarms = new ArrayList();
         Iterator<String> i = idSet.iterator();
         while (i.hasNext()) {
@@ -118,7 +136,7 @@ public class AlarmPreferences {
         ed.putStringSet(KEY_ID_SET, idSet);
         ed.remove(id + KEY_NAME);
         ed.remove(id + KEY_ENABLE);
-        ed.remove(id + KEY_ONCE);
+        ed.remove(id + KEY_REPEAT);
         ed.remove(id + KEY_SUN_MODE);
         ed.remove(id + KEY_TIME);
         ed.remove(id + KEY_LATITUDE);

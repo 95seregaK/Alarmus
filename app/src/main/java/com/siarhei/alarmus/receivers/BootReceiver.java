@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.siarhei.alarmus.data.AlarmData;
+import com.siarhei.alarmus.data.Alarm;
 import com.siarhei.alarmus.data.AlarmPreferences;
 
 import java.util.List;
@@ -15,8 +15,8 @@ public class BootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Toast.makeText(context, "BOOT! " + toString(), Toast.LENGTH_LONG).show();
         AlarmPreferences preferences = AlarmPreferences.getInstance(context);
-        List<AlarmData> alarms = preferences.readAllAlarms();
-        for (AlarmData alarm : alarms) {
+        List<Alarm> alarms = preferences.readAllAlarms();
+        for (Alarm alarm : alarms) {
             if(alarm.isEnabled())alarm.setAlarm(context);
         }
     }
