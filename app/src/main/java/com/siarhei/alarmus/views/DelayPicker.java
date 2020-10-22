@@ -32,4 +32,12 @@ public class DelayPicker extends HorizontalPicker {
         setSideItems(1);
         setSelectedItem(maxDelay);
     }
+
+    public int getValue() {
+        return getSelectedItem() - maxDelay;
+    }
+
+    public void setValue(int value) {
+        setSelectedItem(value + maxDelay);
+    }
 }

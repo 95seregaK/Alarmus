@@ -26,6 +26,7 @@ public class SunAlarm extends Alarm {
     protected int sunMode = MODE_SUNRISE;
     protected double latitude;
     protected double longitude;
+    private int delay;
 
     public SunAlarm(Parcel in) {
         super(in);
@@ -39,7 +40,8 @@ public class SunAlarm extends Alarm {
         super(id);
         latitude = SetLocationActivity.DEFAULT_LATITUDE;
         longitude = SetLocationActivity.DEFAULT_LONGITUDE;
-
+        delay = 0;
+        defineTime();
     }
 
     @Override
@@ -81,6 +83,7 @@ public class SunAlarm extends Alarm {
         }
         time.set(Calendar.HOUR_OF_DAY, SunInfo.getHour(t));
         time.set(Calendar.MINUTE, SunInfo.getMinute(t));
+        time.add(Calendar.MINUTE, delay);
     }
 
     public int getSunMode() {
@@ -102,5 +105,13 @@ public class SunAlarm extends Alarm {
     public void setPosition(double lat, double lon) {
         latitude = lat;
         longitude = lon;
+    }
+
+    public void setDelay(int value) {
+        delay = value;
+    }
+
+    public int getDelay() {
+        return delay;
     }
 }

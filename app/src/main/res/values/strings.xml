@@ -16,5 +16,6 @@
     <string name="noon">Solar noon</string>
     <string name="day_duration">Day duration</string>
     <string name="location">Location</string>
+    <string name="delay">Delay:</string>
 
 </resources>

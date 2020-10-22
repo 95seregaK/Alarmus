@@ -2,19 +2,19 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".activities.EditAlarmActivity"
-    >
+    android:textColor="@color/color_text_default"
+    tools:context=".activities.EditAlarmActivity">
 
     <include layout="@layout/add_alarm_toolbar" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fillViewport="true"
-        >
+        android:fillViewport="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -22,10 +22,12 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/edit_alarm_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/default_margin"
                 android:layout_marginRight="@dimen/default_margin"
+                android:gravity="center_horizontal"
                 android:orientation="vertical">
 
 
@@ -35,12 +37,28 @@
                     android:background="?android:attr/listDivider" />
 
                 <TextView
+                    android:id="@+id/timeView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:typeface="serif"
+                    android:text="Time"
+                    android:textSize="@dimen/add_alarm_time_text_size" />
+
+                <TextView
+                    android:id="@+id/dateView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Date"
+                    android:textSize="@dimen/add_alarm_date_text_size" />
+
+                <TextView
                     android:id="@+id/btn_location"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/medium_height"
                     android:gravity="center_vertical"
                     android:text="@string/location"
-                    android:textColor="#000000"
                     android:textSize="@dimen/add_alarm_text_size"
                     android:visibility="gone" />
 
@@ -59,6 +77,7 @@
                         android:layoutDirection="rtl"
                         android:text="@string/sunrise"
                         android:textSize="@dimen/add_alarm_text_size" />
+
                     <RadioButton
                         android:id="@+id/radioNoon"
                         android:layout_width="match_parent"
@@ -82,36 +101,38 @@
                         android:background="?android:attr/listDivider" />
                 </RadioGroup>
 
-                <TextView
-                    android:id="@+id/timeView"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/default_height"
-                    android:gravity="center_vertical"
-                    android:text="Time"
-                    android:textColor="#000000"
-                    android:textSize="@dimen/add_alarm_text_size" />
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="?android:attr/listDivider" />
 
+                <TimePicker
+                    android:id="@+id/timePicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="160dp"
+                    android:timePickerMode="spinner" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
-                    <TimePicker
-                        android:id="@+id/timePicker"
-                        android:layout_width="wrap_content"
-                        android:layout_height="160dp"
-                        android:timePickerMode="spinner" />
+                    <TextView
+                        android:id="@+id/delay_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/default_height"
+                        android:layout_weight="2"
+                        android:gravity="center_vertical"
+                        android:text="@string/delay"
+                        android:textSize="@dimen/add_alarm_text_size"
+                        android:visibility="gone" />
 
                     <com.siarhei.alarmus.views.DelayPicker
                         android:id="@+id/delay_picker"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:marqueeRepeatLimit="-1"
                         android:textSize="@dimen/delay_picker_size"
                         android:visibility="gone" />
@@ -130,6 +151,7 @@
                     android:layoutDirection="rtl"
                     android:text="Repeat"
                     android:textSize="@dimen/add_alarm_text_size" />
+
                 <LinearLayout
                     android:id="@+id/view_week"
                     android:layout_width="match_parent"
@@ -184,8 +206,9 @@
                         android:layout_width="@dimen/text_check_size"
                         android:layout_height="@dimen/text_check_size"
                         android:layout_margin="@dimen/text_check_margin"
-                        android:text="S"/>
+                        android:text="S" />
                 </LinearLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -197,7 +220,6 @@
                     android:layout_height="@dimen/default_height"
                     android:text="On/Off"
                     android:textSize="@dimen/add_alarm_text_size" />
-
 
 
             </LinearLayout>

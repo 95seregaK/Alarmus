@@ -28,6 +28,7 @@ public class AlarmPreferences {
     public static final String KEY_SUN_MODE = "sun";
     public static final String KEY_REPEAT = "repeat";
     public static final String KEY_DAYS = "days";
+    public static final String KEY_DELAY = "delay";
     public static final String KEY_TIME = "time";
     public static final String KEY_LATITUDE = "latitude";
     public static final String KEY_LONGITUDE = "longitude";
@@ -59,7 +60,7 @@ public class AlarmPreferences {
             ed.putInt(id + KEY_SUN_MODE, sunAlarm.getSunMode());
             ed.putLong(id + KEY_LATITUDE, Double.doubleToLongBits(sunAlarm.getLatitude()));
             ed.putLong(id + KEY_LONGITUDE, Double.doubleToLongBits(sunAlarm.getLongitude()));
-
+            ed.putInt(id + KEY_DELAY, sunAlarm.getDelay());
         } else {
             ed.putInt(id + KEY_TYPE, SIMPLE_TYPE);
         }
@@ -77,12 +78,16 @@ public class AlarmPreferences {
         long time = pref.getLong(id + KEY_TIME, System.currentTimeMillis());
         boolean days[] = toBooleanArray(pref.getInt(id + KEY_DAYS, 0));
         if (type == SUN_TYPE) {
+
             int sunMode = pref.getInt(id + KEY_SUN_MODE, 0);
             double lat = Double.longBitsToDouble(pref.getLong(id + KEY_LATITUDE, 0));
             double lon = Double.longBitsToDouble(pref.getLong(id + KEY_LONGITUDE, 0));
+            int delay = pref.getInt(id + KEY_DELAY, 0);
             alarm = new SunAlarm(id);
-            ((SunAlarm) alarm).setSunMode(sunMode);
-            ((SunAlarm) alarm).setPosition(lat, lon);
+            SunAlarm sunAlarm = (SunAlarm) alarm;
+            sunAlarm.setSunMode(sunMode);
+            sunAlarm.setPosition(lat, lon);
+            sunAlarm.setDelay(delay);
         } else {
             alarm = new Alarm(id);
         }
@@ -134,13 +139,16 @@ public class AlarmPreferences {
         SharedPreferences.Editor ed = pref.edit();
         idSet.remove(String.valueOf(id));
         ed.putStringSet(KEY_ID_SET, idSet);
+        ed.remove(id + KEY_TYPE);
+        ed.remove(id + KEY_TIME);
         ed.remove(id + KEY_NAME);
         ed.remove(id + KEY_ENABLE);
         ed.remove(id + KEY_REPEAT);
         ed.remove(id + KEY_SUN_MODE);
-        ed.remove(id + KEY_TIME);
         ed.remove(id + KEY_LATITUDE);
         ed.remove(id + KEY_LONGITUDE);
+        ed.remove(id + KEY_DELAY);
+        ed.remove(id + KEY_DAYS);
         ed.commit();
         Toast.makeText(context, R.string.alarm_deleted, Toast.LENGTH_SHORT).show();
     }

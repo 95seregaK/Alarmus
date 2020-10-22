@@ -15,6 +15,8 @@ import java.util.Calendar;
 
 public class Alarm implements Parcelable {
     public static final String ID = "id";
+    private static final int HOUR_DEFAULT = 6;
+    private static final int MINUTE_DEFAULT = 0;
 
     protected int id;
     protected String name;
@@ -22,7 +24,7 @@ public class Alarm implements Parcelable {
 
     protected boolean enabled = false;
     protected boolean repeat = false;
-    protected boolean[] days = {true, true, true, true, true, false, false};
+    protected boolean[] days = {true, true, true, true, true, true, true};
 
     public static final Creator<Alarm> CREATOR = new Creator<Alarm>() {
         @Override
@@ -60,7 +62,8 @@ public class Alarm implements Parcelable {
     public Alarm(int id) {
         this.id = id;
         this.time = Calendar.getInstance();
-        setTime(time.getTimeInMillis());
+        setTime(HOUR_DEFAULT, MINUTE_DEFAULT);
+        setTimeNext();
     }
 
 
@@ -69,17 +72,26 @@ public class Alarm implements Parcelable {
     }
 
     public void setTime(int hourOfDay, int minute) {
-        time.setTimeInMillis(System.currentTimeMillis());
         time.set(Calendar.HOUR_OF_DAY, hourOfDay);
         time.set(Calendar.MINUTE, minute);
+        time.set(Calendar.SECOND, 0);
     }
 
     public void setTimeNext() {
         long now = System.currentTimeMillis();
+        setToday();
         while (now > time.getTimeInMillis() || (repeat && !days[(time.get(Calendar.DAY_OF_WEEK) + 5) % 7])) {
             time.add(Calendar.DAY_OF_MONTH, 1);
         }
         Log.d("alarmType", "Alarm");
+    }
+
+    public void setToday() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, getHour());
+        calendar.set(Calendar.MINUTE, getMinute());
+        calendar.set(Calendar.SECOND, 0);
+        time = calendar;
     }
 
     public int getMinute() {

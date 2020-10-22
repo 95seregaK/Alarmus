@@ -19,5 +19,6 @@
     <color name="color_circle_check_unchecked">#00000000</color>
     <color name="color_text_circle_check_checked">#FFFFFF</color>
     <color name="color_text_circle_check_unchecked">#888888</color>
+    <color name="color_text_default">#001B6C</color>
 
 </resources>

@@ -9,21 +9,37 @@
     <TextView
         android:id="@+id/time"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_height"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:gravity="center_horizontal"
-        android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="48sp" />
+        android:textSize="@dimen/alarm_time_text_size" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/time"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="@dimen/alarm_date_text_size" />
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/date"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="@dimen/alarm_date_text_size" />
 
 
     <com.siarhei.alarmus.views.SunSlider
         android:id="@+id/slideButton"
         android:layout_width="match_parent"
         android:layout_height="600dp"
-        android:gravity="center"
         android:layout_alignParentBottom="true"
         android:background="@color/colorTransparent"
-        ></com.siarhei.alarmus.views.SunSlider>
+        android:gravity="center"></com.siarhei.alarmus.views.SunSlider>
 
 </RelativeLayout>

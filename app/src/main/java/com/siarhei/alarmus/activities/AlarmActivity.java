@@ -23,7 +23,7 @@ import java.io.IOException;
 
 public class AlarmActivity extends AppCompatActivity implements SlideButton.SlideButtonListener {
 
-    private TextView time;
+    private TextView time, date, label;
     private SunSlider sunSlider;
     private MediaPlayer mMediaPlayer;
     private Alarm currentAlarm;
@@ -36,10 +36,14 @@ public class AlarmActivity extends AppCompatActivity implements SlideButton.Slid
         setContentView(R.layout.activity_alarm);
         sunSlider = (SunSlider) findViewById(R.id.slideButton);
         time = findViewById(R.id.time);
+        date = findViewById(R.id.date);
+        label = findViewById(R.id.label);
         mMediaPlayer = new MediaPlayer();
         preferences = AlarmPreferences.getInstance(this);
         currentAlarm = preferences.readAlarm(getIntent().getIntExtra(Alarm.ID, 0));
-        time.setText(currentAlarm.toString());
+        time.setText(currentAlarm.toTime());
+        date.setText(currentAlarm.toDate());
+        date.setText(currentAlarm.getName());
         sunSlider.setRadius(getResources().getDisplayMetrics().widthPixels / 2 - 100);
         sunSlider.setOnSliderMoveListener((action, direction) -> {
             if (action == SunSlider.ACTION_SUCCESS) {
