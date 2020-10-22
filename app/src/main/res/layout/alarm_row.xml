@@ -24,6 +24,15 @@
             android:textSize="@dimen/row_text_size_max"
             tools:text="7:00" />
 
+        <TextView
+            android:id="@+id/row_date"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:gravity="bottom"
+            android:textSize="@dimen/row_text_size_min"
+            tools:text="Tomorrow" />
+
 
         <TextView
             android:id="@+id/row_label"

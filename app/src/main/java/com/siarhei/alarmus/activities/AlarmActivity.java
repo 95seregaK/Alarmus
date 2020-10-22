@@ -46,13 +46,13 @@ public class AlarmActivity extends AppCompatActivity implements SlideButton.Slid
                 if (direction < 180) {
                     if (!currentAlarm.isRepeat()) currentAlarm.setEnable(false);
                     else {
-                        currentAlarm.setNextDay();
+                        currentAlarm.setTimeNext();
                         currentAlarm.setAlarm(this);
                         Toast.makeText(getApplicationContext(), "Будильник установлен!!!", Toast.LENGTH_SHORT).show();
                     }
                     preferences.writeAlarm(currentAlarm);
                 } else {
-                    currentAlarm.setDelay(this, 1);
+                    currentAlarm.setDelayedAlarm(this, 1);
                 }
                 finish();
 

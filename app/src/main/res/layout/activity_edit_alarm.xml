@@ -5,18 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-
+    tools:context=".activities.EditAlarmActivity"
     >
 
     <include layout="@layout/add_alarm_toolbar" />
 
     <ScrollView
-
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fillViewport="true"
-        tools:context=".activities.EditAlarmActivity">
+        >
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -50,6 +48,7 @@
                     android:id="@+id/radioSunMode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/radio_padding"
                     android:visibility="gone">
 
                     <RadioButton
@@ -59,6 +58,14 @@
 
                         android:layoutDirection="rtl"
                         android:text="@string/sunrise"
+                        android:textSize="@dimen/add_alarm_text_size" />
+                    <RadioButton
+                        android:id="@+id/radioNoon"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/medium_height"
+
+                        android:layoutDirection="rtl"
+                        android:text="@string/noon"
                         android:textSize="@dimen/add_alarm_text_size" />
 
                     <RadioButton

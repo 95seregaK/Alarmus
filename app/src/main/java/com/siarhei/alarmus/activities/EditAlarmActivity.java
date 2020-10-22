@@ -24,6 +24,7 @@ import com.siarhei.alarmus.data.Alarm;
 import com.siarhei.alarmus.data.AlarmPreferences;
 import com.siarhei.alarmus.data.SunAlarm;
 import com.siarhei.alarmus.sun.SunInfo;
+import com.siarhei.alarmus.sun.SunMath;
 import com.siarhei.alarmus.views.CircleCheckBox;
 import com.siarhei.alarmus.views.DelayPicker;
 
@@ -43,19 +44,16 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private Switch alarmSwitch;
     private Alarm currentAlarm;
     private TimePicker timePicker;
-    public AlarmPreferences preferences;
+    private AlarmPreferences preferences;
     private ImageButton plusBtn;
     private ImageButton minusBtn;
     private ImageButton saveBtn;
     private CheckBox repeatChk;
     private RadioGroup radioSunMode;
-    private RadioButton radioSunrise;
-    private RadioButton radioSunset;
+    private RadioButton radioSunrise, radioSunset, radioNoon;
     private DelayPicker delayPicker;
-    private double lat;
-    private double lon;
-    private int alarm_type;
-    private CircleCheckBox checkDay1, checkDay2, checkDay3, checkDay4, checkDay5, checkDay6, checkDay7;
+    private int alarmType;
+    private CircleCheckBox[] checkDays;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,16 +70,13 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         saveBtn = (ImageButton) findViewById(R.id.save_button);
         radioSunMode = (RadioGroup) findViewById(R.id.radioSunMode);
         radioSunrise = (RadioButton) findViewById(R.id.radioSunrise);
+        radioNoon = (RadioButton) findViewById(R.id.radioNoon);
         radioSunset = (RadioButton) findViewById(R.id.radioSunset);
         delayPicker = (DelayPicker) findViewById(R.id.delay_picker);
-        checkDay1 = (CircleCheckBox) findViewById(R.id.check_day1);
-        checkDay2 = (CircleCheckBox) findViewById(R.id.check_day2);
-        checkDay3 = (CircleCheckBox) findViewById(R.id.check_day3);
-        checkDay4 = (CircleCheckBox) findViewById(R.id.check_day4);
-        checkDay5 = (CircleCheckBox) findViewById(R.id.check_day5);
-        checkDay6 = (CircleCheckBox) findViewById(R.id.check_day6);
-        checkDay7 = (CircleCheckBox) findViewById(R.id.check_day7);
-
+        checkDays = new CircleCheckBox[]{findViewById(R.id.check_day1),
+                findViewById(R.id.check_day2), findViewById(R.id.check_day3),
+                findViewById(R.id.check_day4), findViewById(R.id.check_day5),
+                findViewById(R.id.check_day6), findViewById(R.id.check_day7)};
         timePicker.setIs24HourView(true);
         //plusBtn.setOnClickListener(this);
         //minusBtn.setOnClickListener(this);
@@ -90,14 +85,30 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         locationView.setOnClickListener(this);
 
         preferences = AlarmPreferences.getInstance(this);
-        currentAlarm = (Alarm) getIntent().getParcelableExtra(MainActivity.ALARM_EDITING);
-        Toast.makeText(getApplicationContext(), currentAlarm.getId() + "",
-                Toast.LENGTH_SHORT).show();
-        alarm_type = (currentAlarm instanceof SunAlarm) ?
+        currentAlarm = getIntent().getParcelableExtra(MainActivity.ALARM_EDITING);
+        alarmType = (currentAlarm instanceof SunAlarm) ?
                 AlarmPreferences.SUN_TYPE : AlarmPreferences.SIMPLE_TYPE;
-        updateView(alarm_type);
-        Log.d("WEEK", AlarmPreferences.toInteger(
-                new boolean[]{false, false, false, true, false, false, false}) + " day of week");
+        alarmSwitch.setChecked(currentAlarm.isEnabled());
+        repeatChk.setChecked(currentAlarm.isRepeat());
+        setDays();
+        findViewById(R.id.view_week).setVisibility(currentAlarm.isRepeat() ? View.VISIBLE : View.GONE);
+        if (alarmType == AlarmPreferences.SUN_TYPE) {
+            SunAlarm sunAlarm = (SunAlarm) currentAlarm;
+            radioSunMode.setVisibility(View.VISIBLE);
+            locationView.setVisibility(View.VISIBLE);
+            radioSunrise.setChecked(sunAlarm.getSunMode() == SunAlarm.MODE_SUNRISE);
+            radioNoon.setChecked(sunAlarm.getSunMode() == SunAlarm.MODE_NOON);
+            radioSunset.setChecked(sunAlarm.getSunMode() == SunAlarm.MODE_SUNSET);
+            timePicker.setVisibility(View.GONE);
+            delayPicker.setVisibility(View.VISIBLE);
+            updateSunView();
+        } else {
+            timePicker.setCurrentHour(currentAlarm.getHour());
+            timePicker.setCurrentMinute(currentAlarm.getMinute());
+            timeView.setText(currentAlarm.toString());
+        }
+
+        Log.d("WEEK", (10 ^ 3) + " ");
         //alarmSwitch.setOnCheckedChangeListener(this);
     }
 
@@ -141,13 +152,22 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
 
     private void save() {
         currentAlarm.setEnable(alarmSwitch.isChecked());
-        currentAlarm.setTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute());
+        if (alarmType == AlarmPreferences.SUN_TYPE) {
+            SunAlarm sunAlarm = (SunAlarm) currentAlarm;
+            if (radioSunrise.isChecked()) sunAlarm.setSunMode(SunAlarm.MODE_SUNRISE);
+            else if (radioNoon.isChecked()) sunAlarm.setSunMode(SunAlarm.MODE_NOON);
+            else if (radioSunset.isChecked()) sunAlarm.setSunMode(SunAlarm.MODE_SUNSET);
+        } else {
+            currentAlarm.setTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute());
+        }
+        currentAlarm.setTimeNext();
         currentAlarm.setRepeat(repeatChk.isChecked());
-        boolean days[] = {checkDay1.isChecked(), checkDay2.isChecked(), checkDay3.isChecked(),
-                checkDay4.isChecked(), checkDay5.isChecked(), checkDay6.isChecked(), checkDay7.isChecked()};
+        boolean days[] = new boolean[7];
+        for (int i = 0; i < 7; i++) {
+            days[i] = checkDays[i].isChecked();
+        }
         currentAlarm.setDays(days);
         currentAlarm.cancelAlarm(this);
-
         if (currentAlarm.isEnabled()) currentAlarm.setAlarm(this);
         preferences.writeAlarm(currentAlarm);
         //Toast.makeText(this, "Будильник!!!", Toast.LENGTH_SHORT).show();
@@ -155,6 +175,8 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
 
     private void chooseLocation() {
         Intent mapIntent = new Intent("android.intent.action.SET_LOCATION");
+        mapIntent.putExtra(LATITUDE, ((SunAlarm) currentAlarm).getLatitude());
+        mapIntent.putExtra(LONGITUDE, ((SunAlarm) currentAlarm).getLongitude());
         this.startActivityForResult(mapIntent, 1);
     }
 
@@ -162,24 +184,13 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_LOCATION_CHOSEN) {
-            //alarmSwitch.setChecked(false);
-            lat = data.getDoubleExtra(LATITUDE, 0);
-            lon = data.getDoubleExtra(LONGITUDE, 0);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(System.currentTimeMillis());
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-            int month = calendar.get(Calendar.MONTH) + 1;
-            int year = calendar.get(Calendar.YEAR);
-            SunInfo sunInfo = new SunInfo(day, month, year, lat, lon);
-            // timeView.setText(alarm.toString());
-            timePicker.setCurrentHour((int) sunInfo.getSunriseLocalTime());
-            timePicker.setCurrentMinute((int) (60 * (sunInfo.getSunriseLocalTime() % 1)));
-            Toast.makeText(getApplicationContext(), lat + " " + lon, Toast.LENGTH_LONG).show();
-
+            double lat = data.getDoubleExtra(LATITUDE, 0);
+            double lon = data.getDoubleExtra(LONGITUDE, 0);
+            ((SunAlarm) currentAlarm).setPosition(lat, lon);
+            updateSunView();
+            //Toast.makeText(getApplicationContext(), lat + " " + lon, Toast.LENGTH_LONG).show();
         } else {
-            //timeView.setText(resultCode+"");
         }
-
     }
 
     @Override
@@ -189,36 +200,25 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         //updateView();
     }
 
-    private void updateView(int type) {
-        if (type == AlarmPreferences.SIMPLE_TYPE) {
-        } else if (type == AlarmPreferences.SUN_TYPE) {
-            SunAlarm sunAlarm = (SunAlarm) currentAlarm;
-            radioSunMode.setVisibility(View.VISIBLE);
-            locationView.setVisibility(View.VISIBLE);
-            radioSunrise.setChecked(sunAlarm.getSunMode() == SunAlarm.MODE_SUNRISE);
-            radioSunset.setChecked(sunAlarm.getSunMode() == SunAlarm.MODE_SUNSET);
-            timePicker.setVisibility(View.GONE);
-            delayPicker.setVisibility(View.VISIBLE);
+    private void updateSunView() {
+        SunAlarm sunAlarm = (SunAlarm) currentAlarm;
+        double lat = sunAlarm.getLatitude();
+        double lon = sunAlarm.getLongitude();
+        locationView.setText("Location: " + SunMath.round(lat, 4) + " " + SunMath.round(lon, 4));
+        SunInfo sunInfo = new SunInfo(currentAlarm.getTime(), lat, lon);
+        radioSunrise.setText(getResources().getString(R.string.sunrise) + ": "
+                + SunInfo.timeToString(sunInfo.getSunriseLocalTime(), SunInfo.HH_MM));
+        radioNoon.setText(getResources().getString(R.string.noon) + ": "
+                + SunInfo.timeToString(sunInfo.getNoonLocalTime(), SunInfo.HH_MM));
+        radioSunset.setText(getResources().getString(R.string.sunset) + ": "
+                + SunInfo.timeToString(sunInfo.getSunsetLocalTime(), SunInfo.HH_MM));
 
-        }
-
-        alarmSwitch.setChecked(currentAlarm.isEnabled());
-        repeatChk.setChecked(currentAlarm.isRepeat());
-        setDays();
-        findViewById(R.id.view_week).setVisibility(currentAlarm.isRepeat() ? View.VISIBLE : View.GONE);
-        timePicker.setCurrentHour(currentAlarm.getHour());
-        timePicker.setCurrentMinute(currentAlarm.getMinute());
-        timeView.setText(currentAlarm.toString());
     }
 
     private void setDays() {
-        checkDay1.setChecked(currentAlarm.getDays()[0]);
-        checkDay2.setChecked(currentAlarm.getDays()[1]);
-        checkDay3.setChecked(currentAlarm.getDays()[2]);
-        checkDay4.setChecked(currentAlarm.getDays()[3]);
-        checkDay5.setChecked(currentAlarm.getDays()[4]);
-        checkDay6.setChecked(currentAlarm.getDays()[5]);
-        checkDay7.setChecked(currentAlarm.getDays()[6]);
+        for (int i = 0; i < 7; i++) {
+            checkDays[i].setChecked(currentAlarm.getDays()[i]);
+        }
     }
 
 }

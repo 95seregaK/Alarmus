@@ -91,8 +91,10 @@ public class SunMath {
                 + y / 4 - y / 100 + y / 400 - 32045;
         return jdn;
     }
-   /* public static long getSunsetTime(){
 
-    };
-    */
+   public static double round(double number, int d) {
+       int m = (int) Math.pow(10, d);
+       double res = (double) Math.round(number * m);
+       return res / m;
+   }
 }

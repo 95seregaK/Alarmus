@@ -1,14 +1,17 @@
 package com.siarhei.alarmus.data;
 
 import android.os.Parcel;
+import android.util.Log;
 
+import com.siarhei.alarmus.activities.SetLocationActivity;
 import com.siarhei.alarmus.sun.SunInfo;
 
 import java.util.Calendar;
 
 public class SunAlarm extends Alarm {
     public static final int MODE_SUNRISE = 1;
-    public static final int MODE_SUNSET = 2;
+    public static final int MODE_NOON = 2;
+    public static final int MODE_SUNSET = 3;
     public static final Creator<SunAlarm> CREATOR = new Creator<SunAlarm>() {
         @Override
         public SunAlarm createFromParcel(Parcel in) {
@@ -20,7 +23,7 @@ public class SunAlarm extends Alarm {
             return new SunAlarm[size];
         }
     };
-    protected int sunMode = 0;
+    protected int sunMode = MODE_SUNRISE;
     protected double latitude;
     protected double longitude;
 
@@ -34,6 +37,9 @@ public class SunAlarm extends Alarm {
 
     public SunAlarm(int id) {
         super(id);
+        latitude = SetLocationActivity.DEFAULT_LATITUDE;
+        longitude = SetLocationActivity.DEFAULT_LONGITUDE;
+
     }
 
     @Override
@@ -46,26 +52,35 @@ public class SunAlarm extends Alarm {
     }
 
     @Override
-    public void setNextDay() {
-        super.setNextDay();
-        SunInfo info = new SunInfo(time.get(Calendar.DAY_OF_MONTH),
-                time.get(Calendar.MONTH) + 1,
-                time.get(Calendar.YEAR), latitude, longitude);
-        double t = sunMode == MODE_SUNRISE ?
-                info.getSunriseLocalTime() : info.getSunsetLocalTime();
-        int hour = (int) t;
-        int minute = (int) (60 * (t % 1));
-        time.set(Calendar.HOUR_OF_DAY, hour);
-        time.set(Calendar.MINUTE, minute);
+    public void setTimeNext() {
+        long now = System.currentTimeMillis();
+        time.setTimeInMillis(now);
+        defineTime();
+        while (now > time.getTimeInMillis() || (repeat && !days[(time.get(Calendar.DAY_OF_WEEK) + 5) % 7])) {
+            time.add(Calendar.DAY_OF_MONTH, 1);
+            defineTime();
+        }
+        Log.d("AlarmType", "Sun alarm");
     }
 
-    public void setTime(int mode) {
-        SunInfo info = new SunInfo(time.get(Calendar.DAY_OF_MONTH),
-                time.get(Calendar.MONTH), time.get(Calendar.YEAR), latitude, longitude);
-        int hour = (int) info.getSunriseLocalTime();
-        int minute = (int) (60 * (info.getSunriseLocalTime() % 1));
-        time.set(Calendar.HOUR_OF_DAY, hour);
-        time.set(Calendar.MINUTE, minute);
+    public void defineTime() {
+        SunInfo info = new SunInfo(time, latitude, longitude);
+        double t = 0;
+        switch (sunMode) {
+            case MODE_SUNRISE:
+                t = info.getSunriseLocalTime();
+                break;
+            case MODE_NOON:
+                t = info.getNoonLocalTime();
+                break;
+            case MODE_SUNSET:
+                t = info.getSunsetLocalTime();
+                break;
+            default:
+                break;
+        }
+        time.set(Calendar.HOUR_OF_DAY, SunInfo.getHour(t));
+        time.set(Calendar.MINUTE, SunInfo.getMinute(t));
     }
 
     public int getSunMode() {
@@ -87,6 +102,5 @@ public class SunAlarm extends Alarm {
     public void setPosition(double lat, double lon) {
         latitude = lat;
         longitude = lon;
-
     }
 }

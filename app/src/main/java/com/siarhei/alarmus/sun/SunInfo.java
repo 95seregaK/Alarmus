@@ -38,6 +38,15 @@ public class SunInfo {
         init();
     }
 
+    public SunInfo(Calendar calendar, double lat, double lon) {
+        this.day = calendar.get(Calendar.DAY_OF_MONTH);
+        this.month = calendar.get(Calendar.MONTH) + 1;
+        this.year = calendar.get(Calendar.YEAR);
+        this.latitude = lat;
+        this.longitude = lon;
+        init();
+    }
+
     public static SunInfo nextDaySunInfo(SunInfo info) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(info.year, info.month - 1, info.day);
@@ -79,20 +88,20 @@ public class SunInfo {
         switch (format) {
             case HH_MM:
                 int min = (int) Math.round(minute);
-                timeStr += min > 9 ? min : "0" + min;
+                timeStr += (min > 9 ? "" : "0") + min;
                 break;
             case HH_MM_SS:
                 int min1 = (int) minute;
-                timeStr += min1 > 9 ? min1 : "0" + min1;
+                timeStr += (min1 > 9 ? "" : "0") + min1;
                 timeStr += ":";
                 int sec = (int) Math.round(second);
-                timeStr += sec > 9 ? sec : "0" + sec;
+                timeStr += (sec > 9 ? "" : "0") + sec;
                 break;
             case HH_MM_SS_MM:
                 int min2 = (int) minute;
-                timeStr += min2 > 9 ? min2 : "0" + min2;
+                timeStr += (min2 > 9 ? "" : "0") + min2;
                 int sec1 = (int) second;
-                timeStr += sec1 > 9 ? sec1 : "0" + sec1;
+                timeStr += (sec1 > 9 ? "" : "0") + sec1;
                 timeStr += "." + millis;
                 break;
             default:
@@ -190,4 +199,15 @@ public class SunInfo {
                 + month + "."
                 + year);
     }
+
+    public static int getMinute(double time){
+        int hour = (int) time;
+        int minute = (int) (60 * (time % 1));
+        return minute;
+    }
+    public static int getHour(double time){
+        int hour = (int) time;
+        return hour;
+    }
+
 }

@@ -38,6 +38,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AlarmRecyclerAdapter alarmAdapter;
     private AlertDialog chooseTypeDialog;
 
+    private static int compare(Alarm o1, Alarm o2) {
+        return (o1.getHour() - o2.getHour())* 60 +o1.getMinute() - o2.getMinute();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onResume() {
         super.onResume();
         alarms = preferences.readAllAlarms();
-        Collections.sort(alarms, (o1, o2) -> (int) (o1.getTimeInMillis() - o2.getTimeInMillis()));
+        Collections.sort(alarms, (o1, o2) -> compare(o1, o2));
         alarmAdapter.setAlarms(alarms);
         //Toast.makeText(getApplicationContext(), "onResume()", Toast.LENGTH_SHORT).show();
     }

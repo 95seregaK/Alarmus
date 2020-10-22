@@ -52,6 +52,8 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
     private TextView textSunrise, textSunriseNext, textSunset, textSunsetNext,
             textNoon, textNoonNext, textDayDuration, textDayDurationNext;
     private TextView subDescription;
+    public static final double DEFAULT_LATITUDE = 54.0;
+    public static final double DEFAULT_LONGITUDE = 28.0;
 
 
     @Override
@@ -88,7 +90,9 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
 
         IMapController mapController = map.getController();
         mapController.setZoom(9.5);
-        GeoPoint startPoint = new GeoPoint(54.8583, 28.2944);
+        double lat = getIntent().getDoubleExtra(EditAlarmActivity.LATITUDE, DEFAULT_LATITUDE);
+        double lon = getIntent().getDoubleExtra(EditAlarmActivity.LONGITUDE, DEFAULT_LONGITUDE);
+        GeoPoint startPoint = new GeoPoint(lat, lon);
         mapController.setCenter(startPoint);
         markerClusterer = new RadiusMarkerClusterer(this);
         markerClusterer.setRadius(20);
@@ -216,11 +220,14 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
         textSunsetNext.setText(SunInfo.timeToString(infoNext.getSunsetLocalTime(), SunInfo.HH_MM));
         textNoonNext.setText(SunInfo.timeToString(infoNext.getNoonLocalTime(), SunInfo.HH_MM));
         textDayDurationNext.setText(SunInfo.timeToString(infoNext.getDayDuration(), SunInfo.HH_MM));
-        if (!SunInfo.afterNow(info.getSunriseLocalTime())){
-            textSunrise.setTextColor(getResources().getColor(R.color.info_color_passive));}
-        if (!SunInfo.afterNow(info.getNoonLocalTime())){
-            textNoon.setTextColor(getResources().getColor(R.color.info_color_passive));}
-        if (!SunInfo.afterNow(info.getSunsetLocalTime())){
-            textSunset.setTextColor(getResources().getColor(R.color.info_color_passive));}
+        if (!SunInfo.afterNow(info.getSunriseLocalTime())) {
+            textSunrise.setTextColor(getResources().getColor(R.color.info_color_passive));
+        }
+        if (!SunInfo.afterNow(info.getNoonLocalTime())) {
+            textNoon.setTextColor(getResources().getColor(R.color.info_color_passive));
+        }
+        if (!SunInfo.afterNow(info.getSunsetLocalTime())) {
+            textSunset.setTextColor(getResources().getColor(R.color.info_color_passive));
+        }
     }
 }

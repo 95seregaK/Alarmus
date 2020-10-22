@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.siarhei.alarmus.receivers.AlarmReceiver;
@@ -20,8 +21,20 @@ public class Alarm implements Parcelable {
     protected Calendar time;
 
     protected boolean enabled = false;
-    protected boolean repeat = true;
-    protected boolean[] days = new boolean[7];
+    protected boolean repeat = false;
+    protected boolean[] days = {true, true, true, true, true, false, false};
+
+    public static final Creator<Alarm> CREATOR = new Creator<Alarm>() {
+        @Override
+        public Alarm createFromParcel(Parcel in) {
+            return new Alarm(in);
+        }
+
+        @Override
+        public Alarm[] newArray(int size) {
+            return new Alarm[size];
+        }
+    };
 
     public Alarm(Parcel in) {
         id = in.readInt();
@@ -48,22 +61,8 @@ public class Alarm implements Parcelable {
         this.id = id;
         this.time = Calendar.getInstance();
         setTime(time.getTimeInMillis());
-        enabled = false;
-        repeat = true;
-        days = new boolean[]{true, true, true, true, true, false, false};
     }
 
-    public static final Creator<Alarm> CREATOR = new Creator<Alarm>() {
-        @Override
-        public Alarm createFromParcel(Parcel in) {
-            return new Alarm(in);
-        }
-
-        @Override
-        public Alarm[] newArray(int size) {
-            return new Alarm[size];
-        }
-    };
 
     public Calendar getTime() {
         return time;
@@ -73,15 +72,14 @@ public class Alarm implements Parcelable {
         time.setTimeInMillis(System.currentTimeMillis());
         time.set(Calendar.HOUR_OF_DAY, hourOfDay);
         time.set(Calendar.MINUTE, minute);
-        while (System.currentTimeMillis() > time.getTimeInMillis()) {
-            time.add(Calendar.DAY_OF_MONTH, 1);
-        }
     }
 
-    public void setNextDay() {
-        do {
+    public void setTimeNext() {
+        long now = System.currentTimeMillis();
+        while (now > time.getTimeInMillis() || (repeat && !days[(time.get(Calendar.DAY_OF_WEEK) + 5) % 7])) {
             time.add(Calendar.DAY_OF_MONTH, 1);
-        } while (!days[(time.get(Calendar.DAY_OF_WEEK) + 5) % 7]);
+        }
+        Log.d("alarmType", "Alarm");
     }
 
     public int getMinute() {
@@ -108,40 +106,55 @@ public class Alarm implements Parcelable {
     }
 
     public String toString() {
+        return toTime() + ", " + toDate();
+    }
+
+    public String toTime() {
         int hour = time.get(Calendar.HOUR_OF_DAY);
         int minute = time.get(Calendar.MINUTE);
+
+        return (hour < 10 ? "0" : "") + hour + ":"
+                + (minute < 10 ? "0" : "") + minute;
+    }
+
+    public String toDate() {
+
         int day = time.get(Calendar.DAY_OF_MONTH);
         int month = time.get(Calendar.MONTH) + 1;
         int year = time.get(Calendar.YEAR);
 
-        return (hour < 10 ? "0" : "") + hour + ":"
-                + (minute < 10 ? "0" : "") + minute + ", "
-                + (day < 10 ? "0" : "") + day + "."
+        return (day < 10 ? "0" : "") + day + "."
                 + (month < 10 ? "0" : "") + month + "."
-                + year
-                ;
+                + year;
     }
 
-    public void setAlarm(Context context) {
+    private PendingIntent prepareIntent(Context context) {
         Intent intent = new Intent(context, AlarmReceiver.class);
-        //Intent intent = new Intent("android.intent.action.ALARM_CALL");
         intent.setAction(String.valueOf(id));
         intent.putExtra(ID, id);
         PendingIntent alarmIntent = PendingIntent.getBroadcast(context, id,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return alarmIntent;
+    }
+
+    public void setAlarm(Context context) {
+        setTimeNext();
         AlarmManager manager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
-        manager.set(AlarmManager.RTC_WAKEUP, getTimeInMillis(), alarmIntent);
+        manager.set(AlarmManager.RTC_WAKEUP, getTimeInMillis(), prepareIntent(context));
         Toast.makeText(context, "Будильник установлен на " + toString(), Toast.LENGTH_SHORT).show();
     }
 
-    public void cancelAlarm(Context context) {
-        Intent intent = new Intent(context, AlarmReceiver.class);
-        //Intent intent = new Intent("android.intent.action.ALARM_CALL");
-        intent.setAction(String.valueOf(id));
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, id,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    public void setDelayedAlarm(Context context, int delay) {
         AlarmManager manager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
-        manager.cancel(alarmIntent);
+        long t = System.currentTimeMillis() + delay * 60000;
+        manager.set(AlarmManager.RTC_WAKEUP, t, prepareIntent(context));
+        Toast.makeText(context, "Будильник сработает через " + delay + " минут",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    public void cancelAlarm(Context context) {
+        AlarmManager manager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
+        manager.cancel(prepareIntent(context));
         Toast.makeText(context, "Будильник выключен! " + toString(), Toast.LENGTH_SHORT).show();
     }
 
@@ -174,20 +187,6 @@ public class Alarm implements Parcelable {
         return id;
     }
 
-
-    public void setDelay(Context context, int delay) {
-        Intent intent = new Intent(context, AlarmReceiver.class);
-        //Intent intent = new Intent("android.intent.action.ALARM_CALL");
-        intent.setAction(String.valueOf(id));
-        intent.putExtra(ID, id);
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, id,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager manager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
-        manager.set(AlarmManager.RTC_WAKEUP,
-                System.currentTimeMillis() + delay * 60000, alarmIntent);
-        Toast.makeText(context, "Будильник сработает через " + delay + " минут",
-                Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     public int describeContents() {
