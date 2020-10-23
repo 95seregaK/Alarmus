@@ -19,7 +19,7 @@ public class Alarm implements Parcelable {
     private static final int MINUTE_DEFAULT = 0;
 
     protected int id;
-    protected String name;
+    protected String label;
     protected Calendar time;
 
     protected boolean enabled = false;
@@ -40,7 +40,7 @@ public class Alarm implements Parcelable {
 
     public Alarm(Parcel in) {
         id = in.readInt();
-        name = in.readString();
+        label = in.readString();
         time = Calendar.getInstance();
         time.setTimeInMillis(in.readLong());
         enabled = in.readByte() == 1;
@@ -51,7 +51,7 @@ public class Alarm implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
-        dest.writeString(name);
+        dest.writeString(label);
         dest.writeLong(time.getTimeInMillis());
         dest.writeByte((byte) (enabled ? 1 : 0));
         dest.writeByte((byte) (repeat ? 1 : 0));
@@ -179,12 +179,12 @@ public class Alarm implements Parcelable {
         repeat = checked;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
-    public String getName() {
-        return name;
+    public String getLabel() {
+        return label;
     }
 
     public boolean isRepeat() {

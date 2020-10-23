@@ -16,7 +16,7 @@ import androidx.annotation.RequiresApi;
 
 import com.siarhei.alarmus.R;
 
-public class SunSlider extends RelativeLayout {
+public class CircleSlider extends RelativeLayout {
 
     public static final int ACTION_SUCCESS = 1;
     public static final int ACTION_FAILURE = 2;
@@ -26,23 +26,23 @@ public class SunSlider extends RelativeLayout {
     private OnSliderMoveListener moveListener;
     private int radius;
 
-    public SunSlider(Context context) {
+    public CircleSlider(Context context) {
         super(context);
         init(context);
     }
 
-    public SunSlider(Context context, @Nullable AttributeSet attrs) {
+    public CircleSlider(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public SunSlider(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public CircleSlider(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public SunSlider(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public CircleSlider(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
     }
@@ -54,7 +54,7 @@ public class SunSlider extends RelativeLayout {
     public void init(Context context) {
         //setBackgroundColor(getResources().getColor(R.color.white));
         sliderView = new View(getContext());
-        sliderView.setBackgroundResource(R.drawable.ic_alarm);
+        sliderView.setBackgroundResource(R.drawable.circle_view);
         LayoutParams layoutParams = new LayoutParams(200, 200);
         sliderView.setLayoutParams(layoutParams);
         addView(sliderView);
@@ -74,7 +74,7 @@ public class SunSlider extends RelativeLayout {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Paint paint = new Paint();
-        //paint.setColor(Color.YELLOW);
+        paint.setColor(Color.WHITE);
         paint.setStrokeWidth(3);
         paint.setStyle(Paint.Style.STROKE);
         int padding = getWidth() / 2 - radius;
@@ -128,7 +128,7 @@ public class SunSlider extends RelativeLayout {
                                     .y((float) (cy + 2 * radius * Math.sin(direction)))
                                     .setDuration(ANIMATION_DURATION).start();
                             if (moveListener != null) {
-                                moveListener.onMoved(ACTION_SUCCESS,
+                                moveListener.onSliderMoved(ACTION_SUCCESS,
                                         (int) (direction * 180 / Math.PI + 450) % 360);
                             }
                         }
@@ -137,7 +137,7 @@ public class SunSlider extends RelativeLayout {
                         //Log.d("ACTION_UP", dX + " " + dY + " " + cx + " " + cy);
                         v.animate().x(cx).y(cy).setDuration(ANIMATION_DURATION).start();
                         if (moveListener != null)
-                            moveListener.onMoved(ACTION_FAILURE, 0);
+                            moveListener.onSliderMoved(ACTION_FAILURE, 0);
                         break;
                     default:
                         return false;
@@ -148,6 +148,6 @@ public class SunSlider extends RelativeLayout {
     }
 
     public interface OnSliderMoveListener {
-        public void onMoved(int action, int direction);
+        public void onSliderMoved(int action, int direction);
     }
 }

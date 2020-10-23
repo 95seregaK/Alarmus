@@ -48,7 +48,7 @@ public class AlarmPreferences {
         int id = alarm.getId();
         idSet.add(String.valueOf(id));
         ed.putStringSet(KEY_ID_SET, idSet);
-        ed.putString(id + KEY_NAME, alarm.getName());
+        ed.putString(id + KEY_NAME, alarm.getLabel());
         ed.putBoolean(id + KEY_ENABLE, alarm.isEnabled());
         ed.putInt(id + KEY_DAYS, toInteger(alarm.getDays()));
         ed.putBoolean(id + KEY_REPEAT, alarm.isRepeat());
@@ -93,7 +93,7 @@ public class AlarmPreferences {
         }
 
         alarm.setId(id);
-        alarm.setName(name);
+        alarm.setLabel(name);
         alarm.setEnable(enable);
         alarm.setTime(time);
         alarm.setRepeat(once);

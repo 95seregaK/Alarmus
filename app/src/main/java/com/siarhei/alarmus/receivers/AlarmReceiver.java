@@ -1,9 +1,11 @@
 package com.siarhei.alarmus.receivers;
 
+import android.app.KeyguardManager;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 import com.siarhei.alarmus.activities.EditAlarmActivity;
 import com.siarhei.alarmus.data.Alarm;

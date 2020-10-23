@@ -20,5 +20,7 @@
     <color name="color_text_circle_check_checked">#FFFFFF</color>
     <color name="color_text_circle_check_unchecked">#888888</color>
     <color name="color_text_default">#001B6C</color>
+    <color name="color_circle_view">#FFFFFF</color>
+    <color name="colorAlarmActivityBckg">#B24A4A4A</color>
 
 </resources>
