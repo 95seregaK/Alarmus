@@ -56,7 +56,8 @@
         <receiver
             android:name=".receivers.AlarmReceiver"
             android:enabled="true"
-            android:exported="false">
+            android:exported="false"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.ALARM_CALL" />
             </intent-filter>

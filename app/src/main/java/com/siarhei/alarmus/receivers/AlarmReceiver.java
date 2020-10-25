@@ -35,6 +35,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         alarmIntent.setAction(intent.getAction());*/
 
         Intent alarmIntent = new Intent("android.intent.action.ALARM");
+        alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         alarmIntent.putExtra(Alarm.ID, intent.getIntExtra(EditAlarmActivity.ID, 0));
         context.startActivity(alarmIntent);
 

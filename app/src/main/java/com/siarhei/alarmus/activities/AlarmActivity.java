@@ -79,7 +79,6 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         time.setText(currentAlarm.toTime());
         date.setText(currentAlarm.toDate());
         label.setText(currentAlarm.getLabel());
-        sunSlider.setRadius(getResources().getDisplayMetrics().widthPixels / 2 - 100);
         sunSlider.setOnSliderMoveListener(this);
         try {
             play();

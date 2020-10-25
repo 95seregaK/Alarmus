@@ -2,9 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    android:clickable="false"
-    android:keepScreenOn="true"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.AlarmActivity"
     android:orientation="vertical">
 
     <TextView
@@ -31,12 +30,9 @@
         android:textColor="@color/white"
         android:textSize="@dimen/alarm_date_text_size" />
 
-
     <com.siarhei.alarmus.views.CircleSlider
         android:id="@+id/slideButton"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorTransparent"
-        android:gravity="center" />
-
+        />
 </LinearLayout>

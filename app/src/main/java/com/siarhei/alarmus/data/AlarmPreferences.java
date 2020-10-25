@@ -92,7 +92,6 @@ public class AlarmPreferences {
             alarm = new Alarm(id);
         }
 
-        alarm.setId(id);
         alarm.setLabel(name);
         alarm.setEnable(enable);
         alarm.setTime(time);

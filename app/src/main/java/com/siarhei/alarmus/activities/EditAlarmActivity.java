@@ -201,7 +201,9 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private void save() {
         updateAlarm();
         currentAlarm.cancelAlarm(this);
-        if (currentAlarm.isEnabled()) currentAlarm.setAlarm(this);
+        // if (currentAlarm.isEnabled())
+        currentAlarm.setEnable(true);
+        currentAlarm.setAlarm(this);
         preferences.writeAlarm(currentAlarm);
         //Toast.makeText(this, "Будильник!!!", Toast.LENGTH_SHORT).show();
     }

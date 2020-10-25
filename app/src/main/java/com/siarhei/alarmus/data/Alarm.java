@@ -18,7 +18,7 @@ public class Alarm implements Parcelable {
     private static final int HOUR_DEFAULT = 6;
     private static final int MINUTE_DEFAULT = 0;
 
-    protected int id;
+    final private int id;
     protected String label;
     protected Calendar time;
 
@@ -146,6 +146,7 @@ public class Alarm implements Parcelable {
         intent.putExtra(ID, id);
         PendingIntent alarmIntent = PendingIntent.getBroadcast(context, id,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         return alarmIntent;
     }
 
@@ -189,10 +190,6 @@ public class Alarm implements Parcelable {
 
     public boolean isRepeat() {
         return repeat;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getId() {
