@@ -33,13 +33,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final short SHIFT = 8;
     private MyRecyclerView recycler;
     private AlarmPreferences preferences;
-    private List<Alarm> alarms;
+    private static List<Alarm> alarms;
     private FloatingActionButton addBtn;
     private AlarmRecyclerAdapter alarmAdapter;
     private AlertDialog chooseTypeDialog;
 
     private static int compare(Alarm o1, Alarm o2) {
-        return (o1.getHour() - o2.getHour())* 60 +o1.getMinute() - o2.getMinute();
+        return (o1.getHour() - o2.getHour()) * 60 + o1.getMinute() - o2.getMinute();
     }
 
     @Override
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Toast.makeText(getApplicationContext(), "onCreate()", Toast.LENGTH_SHORT).show();
         preferences = AlarmPreferences.getInstance(this);
         alarms = preferences.readAllAlarms();
-        recycler = (MyRecyclerView) findViewById(R.id.recycler);
+        recycler = findViewById(R.id.recycler);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         alarmAdapter = new AlarmRecyclerAdapter();
         alarmAdapter.setAlarms(alarms);
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recycler.setAdapter(alarmAdapter);
         recycler.setOnItemSwipeListener(this);
         recycler.setOnItemClickListener(this);
-        addBtn = (FloatingActionButton) findViewById(R.id.add_button);
+        addBtn = findViewById(R.id.add_button);
         addBtn.setOnClickListener(this);
         alarmAdapter.setOnCheckedListener(this);
         chooseTypeDialog = createDialog();
@@ -79,13 +79,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         simpleAlarmBtn.setOnClickListener(this);
         sunAlarmBtn.setOnClickListener(this);
         // Create the alert dialog
-        AlertDialog dialog = builder.create();
-        return dialog;
+        return builder.create();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CODE_ADD_NEW && resultCode == EditAlarmActivity.RESULT_NEW_ALARM) {
+            if (alarms.size() == 0) preferences = AlarmPreferences.getInstance(this);
+            alarms = preferences.readAllAlarms();
+            Collections.sort(alarms, MainActivity::compare);
+            alarmAdapter.setAlarms(alarms);
+        }
 /*
         if (requestCode == CODE_ADD_NEW && resultCode == EditAlarmActivity.RESULT_NEW_ALARM) {
             AlarmData alarmData = (AlarmData) data.getParcelableExtra(ALARM_EDITING_NAME);
@@ -111,16 +116,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
-        alarms = preferences.readAllAlarms();
-        Collections.sort(alarms, (o1, o2) -> compare(o1, o2));
-        alarmAdapter.setAlarms(alarms);
+        //preferences=AlarmPreferences.getInstance(this);
+        //alarms = preferences.readAllAlarms();
+        //Collections.sort(alarms, MainActivity::compare);
+        //alarmAdapter.notifyDataSetChanged();
+        //alarmAdapter.setAlarms(alarms);
         //Toast.makeText(getApplicationContext(), "onResume()", Toast.LENGTH_SHORT).show();
     }
 
     public void editAlarm(Alarm alarm) {
         Intent intent = new Intent("android.intent.action.ADD_ALARM");
-        if (alarm instanceof Alarm) intent.putExtra(ALARM_EDITING, (Alarm) alarm);
-        else intent.putExtra(ALARM_EDITING, (SunAlarm) alarm);
+        if (alarm instanceof Alarm) intent.putExtra(ALARM_EDITING, alarm);
+        else intent.putExtra(ALARM_EDITING, alarm);
         startActivityForResult(intent, CODE_ADD_NEW);
     }
 
@@ -181,6 +188,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             max = Math.max(max, alarm.getId());
         }
         return max + 1;
+    }
+
+    public static void addAlarm(Alarm alarm) {
+        if (alarms != null) {
+            alarms.add(alarm);
+        }
     }
 
 }

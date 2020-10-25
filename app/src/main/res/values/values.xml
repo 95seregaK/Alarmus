@@ -29,4 +29,7 @@
     <dimen name="radio_padding">20dp</dimen>
     <dimen name="alarm_time_text_size">70sp</dimen>
     <dimen name="alarm_date_text_size">20sp</dimen>
+    <dimen name="slider_radius">36dp</dimen>
+    <dimen name="info_window_height">260dp</dimen>
+    <dimen name="slider_padding">30dp</dimen>
 </resources>

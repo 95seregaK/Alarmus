@@ -1,29 +1,21 @@
 package com.siarhei.alarmus.activities;
 
-import android.annotation.SuppressLint;
-import android.app.KeyguardManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.siarhei.alarmus.R;
 import com.siarhei.alarmus.data.Alarm;
 import com.siarhei.alarmus.data.AlarmPreferences;
-import com.siarhei.alarmus.R;
 import com.siarhei.alarmus.views.CircleSlider;
-
 
 import java.io.IOException;
 
@@ -69,7 +61,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         wl.acquire();*/
 
 
-        sunSlider = (CircleSlider) findViewById(R.id.slideButton);
+        sunSlider = findViewById(R.id.slideButton);
         time = findViewById(R.id.time);
         date = findViewById(R.id.date);
         label = findViewById(R.id.label);
@@ -98,7 +90,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
 
     public void play() throws IOException {
 
-        AudioManager mAudioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
+        AudioManager mAudioManager = (AudioManager) this.getSystemService(AUDIO_SERVICE);
         mAudioManager.setMode(AudioManager.MODE_NORMAL);
         mAudioManager.setSpeakerphoneOn(false);
 
@@ -125,7 +117,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     }
 
     @Override
-    public void onSliderMoved(int action, int direction) {
+    public void onSliderMoved(int action, float direction) {
         if (action == CircleSlider.ACTION_SUCCESS) {
             if (direction < 180) {
                 if (!currentAlarm.isRepeat()) currentAlarm.setEnable(false);

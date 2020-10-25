@@ -25,20 +25,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f10215e-c20b-49a3-889d-2870a71a8b90" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/circle_view_bckg.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/sunrise_bckg2.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/siarhei/alarmus/activities/AlarmActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/siarhei/alarmus/activities/AlarmActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/siarhei/alarmus/activities/EditAlarmActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/siarhei/alarmus/activities/EditAlarmActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/siarhei/alarmus/data/Alarm.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/siarhei/alarmus/data/Alarm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/siarhei/alarmus/activities/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/siarhei/alarmus/activities/MainActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/siarhei/alarmus/data/AlarmPreferences.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/siarhei/alarmus/data/AlarmPreferences.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/siarhei/alarmus/receivers/AlarmReceiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/siarhei/alarmus/receivers/AlarmReceiver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/siarhei/alarmus/views/CircleSlider.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/siarhei/alarmus/views/CircleSlider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_alarm.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_alarm.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/sunrise_bckg.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/sunrise_bckg2.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/sunrise_bckg.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/values-v21/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values-v21/styles.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/values.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/values.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -94,8 +93,8 @@
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="Pixel_2_API_24" />
-    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-10-23T04:29:51.845Z" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="CB5A1KEG0N" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-10-25T09:44:41.952Z" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="android-custom-viewC:/Users/Admin/StudioProjects/Alarmus/app/src/main/java/com/siarhei/alarmus/views/CircleSlider.java_SELECTED" value="CircleSlider" />
@@ -299,7 +298,14 @@
       <option name="project" value="LOCAL" />
       <updated>1603399198165</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Merge remote-tracking branch 'origin/master' into master">
+      <created>1603618587791</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1603618587791</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -422,10 +428,10 @@
     </state>
     <state x="407" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.824@0.0.1536.824" timestamp="1601476396139" />
     <state x="509" y="224" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1160@0.0.1920.1160" timestamp="1603274050610" />
-    <state x="78" y="111" width="1125" height="762" key="AVDManager" timestamp="1603533841686">
+    <state x="78" y="111" width="1125" height="762" key="AVDManager" timestamp="1603648116212">
       <screen x="0" y="0" width="1280" height="984" />
     </state>
-    <state x="78" y="111" width="1125" height="762" key="AVDManager/0.0.1280.984@0.0.1280.984" timestamp="1603533841686" />
+    <state x="78" y="111" width="1125" height="762" key="AVDManager/0.0.1280.984@0.0.1280.984" timestamp="1603648116212" />
     <state x="93" y="93" width="1350" height="638" key="AVDManager/0.0.1536.824@0.0.1536.824" timestamp="1603291435739" />
     <state x="116" y="131" width="1688" height="899" key="AVDManager/0.0.1920.1160@0.0.1920.1160" timestamp="1603262438343" />
     <state x="309" y="299" key="AndroidCreateResourceFileDialog" timestamp="1603564911435">
@@ -434,14 +440,16 @@
     <state x="309" y="299" key="AndroidCreateResourceFileDialog/0.0.1280.984@0.0.1280.984" timestamp="1603564911435" />
     <state x="371" y="250" key="AndroidCreateResourceFileDialog/0.0.1536.824@0.0.1536.824" timestamp="1603444227044" />
     <state x="464" y="352" key="AndroidCreateResourceFileDialog/0.0.1920.1160@0.0.1920.1160" timestamp="1603268906211" />
-    <state x="628" y="243" key="AndroidCreateXmlResourceDialog" timestamp="1603444936121">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state x="523" y="290" key="AndroidCreateXmlResourceDialog" timestamp="1603653183843">
+      <screen x="0" y="0" width="1280" height="984" />
     </state>
+    <state x="523" y="290" key="AndroidCreateXmlResourceDialog/0.0.1280.984@0.0.1280.984" timestamp="1603653183843" />
     <state x="628" y="243" key="AndroidCreateXmlResourceDialog/0.0.1536.824@0.0.1536.824" timestamp="1603444936121" />
     <state x="785" y="342" key="AndroidCreateXmlResourceDialog/0.0.1920.1160@0.0.1920.1160" timestamp="1603287429312" />
-    <state x="339" y="0" key="CommitChangelistDialog2" timestamp="1603399197417">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state x="283" y="0" key="CommitChangelistDialog2" timestamp="1603618580712">
+      <screen x="0" y="0" width="1280" height="984" />
     </state>
+    <state x="283" y="0" key="CommitChangelistDialog2/0.0.1280.984@0.0.1280.984" timestamp="1603618580712" />
     <state x="339" y="0" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1603399197417" />
     <state x="371" y="0" key="CommitChangelistDialog2/0.0.1920.1160@0.0.1920.1160" timestamp="1603269186895" />
     <state x="93" y="93" width="1350" height="638" key="DiffContextDialog" timestamp="1603222504057">
@@ -461,28 +469,28 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="518" y="110" key="Github.UntrackedFilesDialog/0.0.1536.824@0.0.1536.824" timestamp="1603225687118" />
-    <state width="1237" height="218" key="GridCell.Tab.0.bottom" timestamp="1603616409103">
+    <state width="618" height="454" key="GridCell.Tab.0.bottom" timestamp="1603656651142">
       <screen x="0" y="0" width="1280" height="984" />
     </state>
-    <state width="1237" height="218" key="GridCell.Tab.0.bottom/0.0.1280.984@0.0.1280.984" timestamp="1603616409103" />
+    <state width="618" height="454" key="GridCell.Tab.0.bottom/0.0.1280.984@0.0.1280.984" timestamp="1603656651142" />
     <state width="1491" height="209" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1603448521506" />
     <state width="1367" height="421" key="GridCell.Tab.0.bottom/0.0.1920.1160@0.0.1920.1160" timestamp="1603287326754" />
-    <state width="1237" height="218" key="GridCell.Tab.0.center" timestamp="1603616409102">
+    <state width="618" height="454" key="GridCell.Tab.0.center" timestamp="1603656651142">
       <screen x="0" y="0" width="1280" height="984" />
     </state>
-    <state width="1237" height="218" key="GridCell.Tab.0.center/0.0.1280.984@0.0.1280.984" timestamp="1603616409102" />
+    <state width="618" height="454" key="GridCell.Tab.0.center/0.0.1280.984@0.0.1280.984" timestamp="1603656651142" />
     <state width="1491" height="209" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1603448521506" />
     <state width="1367" height="421" key="GridCell.Tab.0.center/0.0.1920.1160@0.0.1920.1160" timestamp="1603287326754" />
-    <state width="1237" height="218" key="GridCell.Tab.0.left" timestamp="1603616409101">
+    <state width="618" height="454" key="GridCell.Tab.0.left" timestamp="1603656651142">
       <screen x="0" y="0" width="1280" height="984" />
     </state>
-    <state width="1237" height="218" key="GridCell.Tab.0.left/0.0.1280.984@0.0.1280.984" timestamp="1603616409101" />
+    <state width="618" height="454" key="GridCell.Tab.0.left/0.0.1280.984@0.0.1280.984" timestamp="1603656651142" />
     <state width="1491" height="209" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1603448521506" />
     <state width="1367" height="421" key="GridCell.Tab.0.left/0.0.1920.1160@0.0.1920.1160" timestamp="1603287326754" />
-    <state width="1237" height="218" key="GridCell.Tab.0.right" timestamp="1603616409103">
+    <state width="618" height="454" key="GridCell.Tab.0.right" timestamp="1603656651142">
       <screen x="0" y="0" width="1280" height="984" />
     </state>
-    <state width="1237" height="218" key="GridCell.Tab.0.right/0.0.1280.984@0.0.1280.984" timestamp="1603616409103" />
+    <state width="618" height="454" key="GridCell.Tab.0.right/0.0.1280.984@0.0.1280.984" timestamp="1603656651142" />
     <state width="1491" height="209" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1603448521506" />
     <state width="1367" height="421" key="GridCell.Tab.0.right/0.0.1920.1160@0.0.1920.1160" timestamp="1603287326754" />
     <state x="148" y="65" key="MergeDialog" timestamp="1603378656019">
@@ -502,9 +510,10 @@
     </state>
     <state x="253" y="101" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1603296055997" />
     <state x="346" y="77" key="SettingsEditor/0.0.1920.1160@0.0.1920.1160" timestamp="1603263875504" />
-    <state x="361" y="145" key="Vcs.Push.Dialog.v2" timestamp="1603399205325">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state x="301" y="173" key="Vcs.Push.Dialog.v2" timestamp="1603618597147">
+      <screen x="0" y="0" width="1280" height="984" />
     </state>
+    <state x="301" y="173" key="Vcs.Push.Dialog.v2/0.0.1280.984@0.0.1280.984" timestamp="1603618597147" />
     <state x="361" y="145" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1603399205325" />
     <state x="259" y="238" key="chooseDestDirectoryDialog" timestamp="1603616817310">
       <screen x="0" y="0" width="1280" height="984" />
@@ -532,5 +541,9 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="396" y="155" key="psd.add.library.dependency.panel.dimension/0.0.1536.824@0.0.1536.824" timestamp="1600712848935" />
+    <state x="303" y="211" key="search.everywhere.popup" timestamp="1603656161938">
+      <screen x="0" y="0" width="1280" height="984" />
+    </state>
+    <state x="303" y="211" key="search.everywhere.popup/0.0.1280.984@0.0.1280.984" timestamp="1603656161938" />
   </component>
 </project>

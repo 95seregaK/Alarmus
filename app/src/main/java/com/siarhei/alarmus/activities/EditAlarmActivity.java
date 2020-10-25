@@ -3,7 +3,6 @@ package com.siarhei.alarmus.activities;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -75,28 +74,28 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     }
 
     private void initContentView() {
-        toolbar = (Toolbar) findViewById(R.id.add_alarm_toolbar);
+        toolbar = findViewById(R.id.add_alarm_toolbar);
         setSupportActionBar(toolbar);
-        saveBtn = (ImageButton) findViewById(R.id.save_button);
-        timeView = (TextView) findViewById(R.id.timeView);
-        dateView = (TextView) findViewById(R.id.dateView);
-        locationView = (TextView) findViewById(R.id.btn_location);
-        timePicker = (TimePicker) findViewById(R.id.timePicker);
+        saveBtn = findViewById(R.id.save_button);
+        timeView = findViewById(R.id.timeView);
+        dateView = findViewById(R.id.dateView);
+        locationView = findViewById(R.id.btn_location);
+        timePicker = findViewById(R.id.timePicker);
         timePicker.setIs24HourView(true);
-        labelView = (EditText) findViewById(R.id.label_edit);
-        radioSunMode = (RadioGroup) findViewById(R.id.radioSunMode);
-        radioSunrise = (RadioButton) findViewById(R.id.radioSunrise);
-        radioNoon = (RadioButton) findViewById(R.id.radioNoon);
-        radioSunset = (RadioButton) findViewById(R.id.radioSunset);
-        delayPicker = (DelayPicker) findViewById(R.id.delay_picker);
-        delayView = (TextView) findViewById(R.id.delay_view);
-        repeatCheck = (CheckBox) findViewById(R.id.repeatCheck);
+        labelView = findViewById(R.id.label_edit);
+        radioSunMode = findViewById(R.id.radioSunMode);
+        radioSunrise = findViewById(R.id.radioSunrise);
+        radioNoon = findViewById(R.id.radioNoon);
+        radioSunset = findViewById(R.id.radioSunset);
+        delayPicker = findViewById(R.id.delay_picker);
+        delayView = findViewById(R.id.delay_view);
+        repeatCheck = findViewById(R.id.repeatCheck);
         weekView = findViewById(R.id.view_week);
         checkDays = new CircleCheckBox[]{findViewById(R.id.check_day1),
                 findViewById(R.id.check_day2), findViewById(R.id.check_day3),
                 findViewById(R.id.check_day4), findViewById(R.id.check_day5),
                 findViewById(R.id.check_day6), findViewById(R.id.check_day7)};
-        alarmSwitch = (Switch) findViewById(R.id.alarmSwitch);
+        alarmSwitch = findViewById(R.id.alarmSwitch);
     }
 
     private void setVisibility() {
@@ -156,8 +155,6 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         }
     }
 
-    ;
-
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         if (compoundButton.getId() == R.id.repeatCheck) {
@@ -171,7 +168,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     public void onClick(View view) {
         if (view.getId() == R.id.timeView) {
             TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                    (TimePickerDialog.OnTimeSetListener) (view1, hourOfDay, minute) ->
+                    (view1, hourOfDay, minute) ->
                     {
                         currentAlarm.setTime(hourOfDay, minute);
                         timeView.setText(currentAlarm.toString());
@@ -204,6 +201,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         // if (currentAlarm.isEnabled())
         currentAlarm.setEnable(true);
         currentAlarm.setAlarm(this);
+        //MainActivity.addAlarm(currentAlarm);
         preferences.writeAlarm(currentAlarm);
         //Toast.makeText(this, "Будильник!!!", Toast.LENGTH_SHORT).show();
     }
@@ -255,7 +253,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             currentAlarm.setTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute());
         }
         currentAlarm.setRepeat(repeatCheck.isChecked());
-        boolean days[] = new boolean[7];
+        boolean[] days = new boolean[7];
         for (int i = 0; i < 7; i++) {
             days[i] = checkDays[i].isChecked();
         }

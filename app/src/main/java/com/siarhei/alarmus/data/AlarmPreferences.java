@@ -17,9 +17,9 @@ public class AlarmPreferences {
 
     public static final int SUN_TYPE = 1;
     public static final int SIMPLE_TYPE = 2;
-    private SharedPreferences pref;
-    private Context context;
-    private Set<String> idSet;
+    private final SharedPreferences pref;
+    private final Context context;
+    private final Set<String> idSet;
     public static final String APP_PREFERENCES = "alarmsList";
     public static final String KEY_ID_SET = "idSet";
     public static final String KEY_TYPE = "type";
@@ -76,7 +76,7 @@ public class AlarmPreferences {
         boolean enable = pref.getBoolean(id + KEY_ENABLE, false);
         boolean once = pref.getBoolean(id + KEY_REPEAT, true);
         long time = pref.getLong(id + KEY_TIME, System.currentTimeMillis());
-        boolean days[] = toBooleanArray(pref.getInt(id + KEY_DAYS, 0));
+        boolean[] days = toBooleanArray(pref.getInt(id + KEY_DAYS, 0));
         if (type == SUN_TYPE) {
 
             int sunMode = pref.getInt(id + KEY_SUN_MODE, 0);
@@ -102,7 +102,7 @@ public class AlarmPreferences {
     }
 
     public static boolean[] toBooleanArray(int in) {
-        boolean res[] = new boolean[7];
+        boolean[] res = new boolean[7];
         for (int i = 0; i < 7; i++) {
             res[i] = (in & (1 << i)) == (1 << i);
         }

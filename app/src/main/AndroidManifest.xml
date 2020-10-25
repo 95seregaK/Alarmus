@@ -44,20 +44,17 @@
         </activity>
         <activity
             android:name=".activities.AlarmActivity"
-            android:theme="@style/AlarmTheme"
-            >
+            android:theme="@style/AlarmTheme">
             <intent-filter>
                 <action android:name="android.intent.action.ALARM" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-
         <receiver
             android:name=".receivers.AlarmReceiver"
             android:enabled="true"
-            android:exported="false"
-            >
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.ALARM_CALL" />
             </intent-filter>
