@@ -3,6 +3,8 @@ package com.siarhei.alarmus.activities;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -39,7 +41,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     public static final String ID = "id";
 
     private TextView timeView, dateView, locationView;
-    EditText labelView;
+    private EditText labelEdit;
     private Switch alarmSwitch;
     private TimePicker timePicker;
     private ImageButton saveBtn;
@@ -82,7 +84,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         locationView = findViewById(R.id.btn_location);
         timePicker = findViewById(R.id.timePicker);
         timePicker.setIs24HourView(true);
-        labelView = findViewById(R.id.label_edit);
+        labelEdit = findViewById(R.id.label_edit);
         radioSunMode = findViewById(R.id.radioSunMode);
         radioSunrise = findViewById(R.id.radioSunrise);
         radioNoon = findViewById(R.id.radioNoon);
@@ -127,7 +129,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             timePicker.setCurrentHour(currentAlarm.getHour());
             timePicker.setCurrentMinute(currentAlarm.getMinute());
         }
-        labelView.setText(currentAlarm.getLabel());
+        labelEdit.setText(currentAlarm.getLabel());
     }
 
     private void setListeners() {
@@ -137,6 +139,17 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         timePicker.setOnTimeChangedListener((view, hourOfDay, minute) -> {
             updateAlarm();
             updateTimeView();
+        });
+        labelEdit.setOnClickListener(v -> {
+            labelEdit.setFocusable(true);
+        });
+        labelEdit.setOnEditorActionListener((v, actionId, event) -> {
+            Log.d("onEditorAction", actionId + " ");
+            if (actionId == 6) {
+                labelEdit.setFocusable(false);
+                timeView.requestFocus();
+            }
+            return false;
         });
         radioSunMode.setOnCheckedChangeListener((group, checkedId) -> {
             updateAlarm();
@@ -259,7 +272,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         }
         currentAlarm.setDays(days);
         currentAlarm.setTimeNext();
-        currentAlarm.setLabel(labelView.getText().toString());
+        currentAlarm.setLabel(labelEdit.getText().toString());
         //Log.d("update", "update");
     }
 

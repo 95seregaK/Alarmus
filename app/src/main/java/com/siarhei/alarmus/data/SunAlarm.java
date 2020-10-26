@@ -33,7 +33,7 @@ public class SunAlarm extends Alarm {
         sunMode = in.readInt();
         latitude = in.readDouble();
         longitude = in.readDouble();
-        //days = in.createBooleanArray();
+        delay = in.readInt();
     }
 
     public SunAlarm(int id) {
@@ -50,7 +50,7 @@ public class SunAlarm extends Alarm {
         dest.writeInt(sunMode);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
-        //dest.writeBooleanArray(days);
+        dest.writeInt(delay);
     }
 
     @Override

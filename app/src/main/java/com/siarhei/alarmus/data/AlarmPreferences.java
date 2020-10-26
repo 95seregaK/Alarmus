@@ -23,7 +23,7 @@ public class AlarmPreferences {
     public static final String APP_PREFERENCES = "alarmsList";
     public static final String KEY_ID_SET = "idSet";
     public static final String KEY_TYPE = "type";
-    public static final String KEY_NAME = "name";
+    public static final String KEY_LABEL = "name";
     public static final String KEY_ENABLE = "enable";
     public static final String KEY_SUN_MODE = "sun";
     public static final String KEY_REPEAT = "repeat";
@@ -48,7 +48,7 @@ public class AlarmPreferences {
         int id = alarm.getId();
         idSet.add(String.valueOf(id));
         ed.putStringSet(KEY_ID_SET, idSet);
-        ed.putString(id + KEY_NAME, alarm.getLabel());
+        ed.putString(id + KEY_LABEL, alarm.getLabel());
         ed.putBoolean(id + KEY_ENABLE, alarm.isEnabled());
         ed.putInt(id + KEY_DAYS, toInteger(alarm.getDays()));
         ed.putBoolean(id + KEY_REPEAT, alarm.isRepeat());
@@ -64,15 +64,15 @@ public class AlarmPreferences {
         } else {
             ed.putInt(id + KEY_TYPE, SIMPLE_TYPE);
         }
-        //  ed.apply();
-        ed.commit();
+        ed.apply();
+        //ed.commit();
         Toast.makeText(context, "Будильник записан!!!", Toast.LENGTH_SHORT).show();
     }
 
     public Alarm readAlarm(int id) {
         Alarm alarm;
         int type = pref.getInt(id + KEY_TYPE, 0);
-        String name = pref.getString(id + KEY_NAME, null);
+        String name = pref.getString(id + KEY_LABEL, null);
         boolean enable = pref.getBoolean(id + KEY_ENABLE, false);
         boolean once = pref.getBoolean(id + KEY_REPEAT, true);
         long time = pref.getLong(id + KEY_TIME, System.currentTimeMillis());
@@ -140,7 +140,7 @@ public class AlarmPreferences {
         ed.putStringSet(KEY_ID_SET, idSet);
         ed.remove(id + KEY_TYPE);
         ed.remove(id + KEY_TIME);
-        ed.remove(id + KEY_NAME);
+        ed.remove(id + KEY_LABEL);
         ed.remove(id + KEY_ENABLE);
         ed.remove(id + KEY_REPEAT);
         ed.remove(id + KEY_SUN_MODE);
@@ -148,7 +148,7 @@ public class AlarmPreferences {
         ed.remove(id + KEY_LONGITUDE);
         ed.remove(id + KEY_DELAY);
         ed.remove(id + KEY_DAYS);
-        ed.commit();
+        ed.apply();
         Toast.makeText(context, R.string.alarm_deleted, Toast.LENGTH_SHORT).show();
     }
 }
