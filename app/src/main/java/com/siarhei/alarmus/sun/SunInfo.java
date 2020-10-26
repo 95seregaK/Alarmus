@@ -174,11 +174,12 @@ public class SunInfo {
         return day;
     }
 
-    public void setNewDate(int day, int month, int year) {
+    public SunInfo setNewDate(int day, int month, int year) {
         this.day = day;
         this.month = month;
         this.year = year;
         init();
+        return this;
     }
 
     private void init() {

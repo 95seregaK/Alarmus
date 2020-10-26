@@ -2,6 +2,7 @@ package com.siarhei.alarmus.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,6 +12,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
@@ -19,7 +21,6 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.siarhei.alarmus.R;
-import com.siarhei.alarmus.map.MyMarkerInfoWindow;
 import com.siarhei.alarmus.map.SunInfoMarker;
 import com.siarhei.alarmus.sun.SunInfo;
 import com.siarhei.alarmus.views.FloatingView;
@@ -37,6 +38,8 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 
 import java.io.IOException;
+import java.time.Month;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -50,6 +53,7 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
     private FloatingActionButton setPositionBtn;
     private FloatingView infoWindow;
     private MapView map;
+    Button dateButton;
     private TextView subDescription;
     private SunInfoScrollView sunInfoView;
     public static final double DEFAULT_LATITUDE = 54.0;
@@ -66,6 +70,8 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
         setPositionBtn.setOnClickListener(this);
         infoWindow = findViewById(R.id.info_view);
         sunInfoView = findViewById(R.id.sun_info_view);
+        dateButton = findViewById(R.id.date_button);
+        dateButton.setOnClickListener(this);
         infoWindow.setOnClickListener(this);
         //setting this before the layout is inflated is a good idea
         //it 'should' ensure that the map has a writable location for the map cache, even without permissions
@@ -93,8 +99,6 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
         defaultMarker.setIcon(getResources().getDrawable(R.drawable.ic_current_marker));
         defaultMarker.setOnMarkerClickListener(this);
         defaultMarker.setPosition(startPoint);
-        markerInfoWindow = new MyMarkerInfoWindow(R.layout.info_window, map, this);
-        defaultMarker.setInfoWindow(markerInfoWindow);
 
         MapEventsReceiver mapEventsReceiver = new MyMapEventsReceiver() {
             @Override
@@ -111,7 +115,6 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
                 Marker marker = new SunInfoMarker(map, SetLocationActivity.this);
 
                 marker.setPosition(p);
-                marker.setInfoWindow(markerInfoWindow);
                 marker.setOnMarkerClickListener(SetLocationActivity.this);
                 markerClusterer.add(marker);
 
@@ -164,8 +167,22 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
             finish();
         }
         if (view.getId() == R.id.info_view) {
-            infoWindow.hide();
+            if (infoWindow.isShown()) infoWindow.hide();
+            else infoWindow.emerge();
+        } else if (view.getId() == R.id.date_button) {
+            Calendar calendar = Calendar.getInstance();
+            SunInfo info = getCurrentSunInfo();
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                    (v, year, monthOfYear, dayOfMonth) -> {
+                        sunInfoView.setSunInfo(info.setNewDate(dayOfMonth, monthOfYear + 1, year));
+                    }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+            datePickerDialog.show();
         }
+    }
+
+    public SunInfo getCurrentSunInfo() {
+        return (SunInfo) defaultMarker.getRelatedObject();
     }
 
     @Override

@@ -1,10 +1,14 @@
 package com.siarhei.alarmus.activities;
 
+import android.app.ActionBar;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -16,6 +20,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -60,6 +65,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private double latitude;
     private double longitude;
     private Toolbar toolbar;
+    private AlertDialog labelEditDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +108,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
                 findViewById(R.id.check_day4), findViewById(R.id.check_day5),
                 findViewById(R.id.check_day6), findViewById(R.id.check_day7)};
         alarmSwitch = findViewById(R.id.alarmSwitch);
+        labelEditDialog = createDialog();
     }
 
     private void setVisibility() {
@@ -137,6 +144,33 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         labelEdit.setText(currentAlarm.getLabel());
     }
 
+    public AlertDialog createDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.edit_label_dialog, null);
+        builder.setView(dialogView);
+        EditText labelEditD = (EditText) dialogView.findViewById(R.id.label_edit);
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.toggleSoftInput(0, 0);
+                }
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialogView.findViewById(R.id.button_cancel).setOnClickListener((v) -> {
+            dialog.cancel();
+        });
+        dialogView.findViewById(R.id.button_ok).setOnClickListener((v) -> {
+            labelEdit.setText(labelEditD.getText().toString());
+            currentAlarm.setLabel(labelEditD.getText().toString());
+            dialog.cancel();
+        });
+        return dialog;
+    }
+
     private void setListeners() {
         saveBtn.setOnClickListener(this);
         repeatCheck.setOnCheckedChangeListener(this);
@@ -146,15 +180,9 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             updateTimeView();
         });
         labelEdit.setOnClickListener(v -> {
-            labelEdit.setFocusable(true);
-        });
-        labelEdit.setOnEditorActionListener((v, actionId, event) -> {
-            Log.d("onEditorAction", actionId + " ");
-            if (actionId == 6) {
-                labelEdit.setFocusable(false);
-                timeView.requestFocus();
-            }
-            return false;
+            labelEditDialog.show();
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         });
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             updateAlarm();
@@ -248,10 +276,6 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         SunAlarm sunAlarm = (SunAlarm) currentAlarm;
         locationView.setText("Location: " + SunMath.round(latitude, 4) + " " + SunMath.round(longitude, 4));
         SunInfo sunInfo = new SunInfo(currentAlarm.getTime(), latitude, longitude);
-        infoView.setSunInfo(sunInfo);
-        for(int i=0; i<10;i++){
-            Log.d("X_location", infoView.getContainer().getChildAt(i).getX() + "");
-        }
         delayPicker.setValue(sunAlarm.getDelay());
     }
 

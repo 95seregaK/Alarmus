@@ -1,5 +1,6 @@
 package com.siarhei.alarmus.activities;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.siarhei.alarmus.R;
 import com.siarhei.alarmus.data.Alarm;
 import com.siarhei.alarmus.data.AlarmPreferences;
 import com.siarhei.alarmus.data.SunAlarm;
+import com.siarhei.alarmus.sun.SunInfo;
 import com.siarhei.alarmus.views.AlarmRecyclerAdapter;
 import com.siarhei.alarmus.views.MyRecyclerView;
 

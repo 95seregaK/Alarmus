@@ -33,4 +33,6 @@
     <dimen name="info_window_height">260dp</dimen>
     <dimen name="slider_padding">30dp</dimen>
     <dimen name="padding_time_view">10dp</dimen>
+    <dimen name="margin_edit_dialog">10dp</dimen>
+    <dimen name="radio_sun_mode_size">24dp</dimen>
 </resources>
