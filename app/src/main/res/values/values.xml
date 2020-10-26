@@ -32,4 +32,5 @@
     <dimen name="slider_radius">36dp</dimen>
     <dimen name="info_window_height">260dp</dimen>
     <dimen name="slider_padding">30dp</dimen>
+    <dimen name="padding_time_view">10dp</dimen>
 </resources>

@@ -10,6 +10,9 @@ public class SunInfo {
     public static final int HH_MM = 1;
     public static final int HH_MM_SS = 2;
     public static final int HH_MM_SS_MM = 3;
+    public static final int SUNRISE_MODE = 1;
+    public static final int NOON_MODE = 2;
+    public static final int SUNSET_MODE = 3;
 
     private double meanSolarNoon;
     private double solarTransit;
@@ -47,22 +50,30 @@ public class SunInfo {
         init();
     }
 
-    public static SunInfo nextDaySunInfo(SunInfo info) {
+    public static SunInfo nextDaySunInfo(SunInfo info,int add) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(info.year, info.month - 1, info.day);
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
-        SunInfo infoNext = new SunInfo(calendar.get(Calendar.DAY_OF_MONTH),
-                calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR),
-                info.latitude, info.longitude);
+        calendar.add(Calendar.DAY_OF_MONTH, add);
+        SunInfo infoNext = new SunInfo(calendar, info.latitude, info.longitude);
         return infoNext;
     }
 
-    public static boolean afterNow(double time) {
+    public static boolean afterNow(SunInfo info, int mode) {
         Calendar calendar = Calendar.getInstance();
         long currentTime = System.currentTimeMillis();
-        calendar.setTimeInMillis(currentTime);
+        double time;
+        if (mode == SUNRISE_MODE) {
+            time = info.getSunriseLocalTime();
+        } else if (mode == NOON_MODE) {
+            time = info.getNoonLocalTime();
+        } else {
+            time = info.getSunsetLocalTime();
+        }
         int hour = (int) time;
         int minute = (int) (60 * (time - hour));
+        calendar.set(Calendar.YEAR, info.year);
+        calendar.set(Calendar.MONTH, info.month - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, info.day);
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, minute);
         return calendar.getTimeInMillis() > currentTime;
@@ -87,14 +98,14 @@ public class SunInfo {
         String timeStr = hour + ":";
         switch (format) {
             case HH_MM:
-                int min = (int) Math.round(minute);
+                int min = (int) minute;
                 timeStr += (min > 9 ? "" : "0") + min;
                 break;
             case HH_MM_SS:
                 int min1 = (int) minute;
                 timeStr += (min1 > 9 ? "" : "0") + min1;
                 timeStr += ":";
-                int sec = (int) Math.round(second);
+                int sec = (int) second;
                 timeStr += (sec > 9 ? "" : "0") + sec;
                 break;
             case HH_MM_SS_MM:
@@ -200,12 +211,13 @@ public class SunInfo {
                 + year);
     }
 
-    public static int getMinute(double time){
+    public static int getMinute(double time) {
         int hour = (int) time;
         int minute = (int) (60 * (time % 1));
         return minute;
     }
-    public static int getHour(double time){
+
+    public static int getHour(double time) {
         int hour = (int) time;
         return hour;
     }

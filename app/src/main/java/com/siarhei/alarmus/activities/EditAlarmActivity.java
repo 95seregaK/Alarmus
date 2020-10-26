@@ -4,7 +4,6 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -28,6 +27,7 @@ import com.siarhei.alarmus.sun.SunInfo;
 import com.siarhei.alarmus.sun.SunMath;
 import com.siarhei.alarmus.views.CircleCheckBox;
 import com.siarhei.alarmus.views.DelayPicker;
+import com.siarhei.alarmus.views.SunInfoScrollView;
 
 import java.util.Calendar;
 
@@ -46,12 +46,14 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private TimePicker timePicker;
     private ImageButton saveBtn;
     private CheckBox repeatCheck;
-    private RadioGroup radioSunMode;
+    private RadioGroup radioGroup;
     private RadioButton radioSunrise, radioSunset, radioNoon;
     private DelayPicker delayPicker;
     private CircleCheckBox[] checkDays;
+    private SunInfoScrollView infoView;
     private TextView delayView;
     private View weekView;
+    private View sunInfoLayout;
     private Alarm currentAlarm;
     private AlarmPreferences preferences;
     private int alarmType;
@@ -85,7 +87,8 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         timePicker = findViewById(R.id.timePicker);
         timePicker.setIs24HourView(true);
         labelEdit = findViewById(R.id.label_edit);
-        radioSunMode = findViewById(R.id.radioSunMode);
+        infoView = findViewById(R.id.sun_info_view);
+        radioGroup = findViewById(R.id.radio_group);
         radioSunrise = findViewById(R.id.radioSunrise);
         radioNoon = findViewById(R.id.radioNoon);
         radioSunset = findViewById(R.id.radioSunset);
@@ -93,6 +96,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         delayView = findViewById(R.id.delay_view);
         repeatCheck = findViewById(R.id.repeatCheck);
         weekView = findViewById(R.id.view_week);
+        sunInfoLayout = findViewById(R.id.sun_info_layout);
         checkDays = new CircleCheckBox[]{findViewById(R.id.check_day1),
                 findViewById(R.id.check_day2), findViewById(R.id.check_day3),
                 findViewById(R.id.check_day4), findViewById(R.id.check_day5),
@@ -102,11 +106,12 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
 
     private void setVisibility() {
         if (alarmType == AlarmPreferences.SUN_TYPE) {
-            radioSunMode.setVisibility(View.VISIBLE);
+            radioGroup.setVisibility(View.VISIBLE);
             locationView.setVisibility(View.VISIBLE);
             timePicker.setVisibility(View.GONE);
             delayPicker.setVisibility(View.VISIBLE);
             delayView.setVisibility(View.VISIBLE);
+            sunInfoLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -151,7 +156,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             }
             return false;
         });
-        radioSunMode.setOnCheckedChangeListener((group, checkedId) -> {
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             updateAlarm();
             updateTimeView();
         });
@@ -243,12 +248,10 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         SunAlarm sunAlarm = (SunAlarm) currentAlarm;
         locationView.setText("Location: " + SunMath.round(latitude, 4) + " " + SunMath.round(longitude, 4));
         SunInfo sunInfo = new SunInfo(currentAlarm.getTime(), latitude, longitude);
-        radioSunrise.setText(getResources().getString(R.string.sunrise) + ": "
-                + SunInfo.timeToString(sunInfo.getSunriseLocalTime(), SunInfo.HH_MM));
-        radioNoon.setText(getResources().getString(R.string.noon) + ": "
-                + SunInfo.timeToString(sunInfo.getNoonLocalTime(), SunInfo.HH_MM));
-        radioSunset.setText(getResources().getString(R.string.sunset) + ": "
-                + SunInfo.timeToString(sunInfo.getSunsetLocalTime(), SunInfo.HH_MM));
+        infoView.setSunInfo(sunInfo);
+        for(int i=0; i<10;i++){
+            Log.d("X_location", infoView.getContainer().getChildAt(i).getX() + "");
+        }
         delayPicker.setValue(sunAlarm.getDelay());
     }
 

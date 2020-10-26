@@ -23,6 +23,7 @@ import com.siarhei.alarmus.map.MyMarkerInfoWindow;
 import com.siarhei.alarmus.map.SunInfoMarker;
 import com.siarhei.alarmus.sun.SunInfo;
 import com.siarhei.alarmus.views.FloatingView;
+import com.siarhei.alarmus.views.SunInfoScrollView;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
@@ -49,9 +50,8 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
     private FloatingActionButton setPositionBtn;
     private FloatingView infoWindow;
     private MapView map;
-    private TextView textSunrise, textSunriseNext, textSunset, textSunsetNext,
-            textNoon, textNoonNext, textDayDuration, textDayDurationNext;
     private TextView subDescription;
+    private SunInfoScrollView sunInfoView;
     public static final double DEFAULT_LATITUDE = 54.0;
     public static final double DEFAULT_LONGITUDE = 28.0;
 
@@ -62,18 +62,10 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
         setContentView(R.layout.activity_map);
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
-        setPositionBtn = (FloatingActionButton) findViewById(R.id.set_position);
+        setPositionBtn = findViewById(R.id.set_position);
         setPositionBtn.setOnClickListener(this);
-        infoWindow = (FloatingView) findViewById(R.id.info_view);
-        textSunrise = (TextView) findViewById(R.id.text_sunrise);
-        textSunriseNext = (TextView) findViewById(R.id.text_sunrise_next);
-        textSunset = (TextView) findViewById(R.id.text_sunset);
-        textSunsetNext = (TextView) findViewById(R.id.text_sunset_next);
-        textNoon = (TextView) findViewById(R.id.text_noon);
-        textNoonNext = (TextView) findViewById(R.id.text_noon_next);
-        textDayDuration = (TextView) findViewById(R.id.text_day_duration);
-        textDayDurationNext = (TextView) findViewById(R.id.text_day_duration_next);
-
+        infoWindow = findViewById(R.id.info_view);
+        sunInfoView = findViewById(R.id.sun_info_view);
         infoWindow.setOnClickListener(this);
         //setting this before the layout is inflated is a good idea
         //it 'should' ensure that the map has a writable location for the map cache, even without permissions
@@ -82,7 +74,7 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
         //note, the load method also sets the HTTP User Agent to your application's package name, abusing osm's tile servers will get you banned based on this string
 
         //inflate and create the map
-        map = (MapView) findViewById(R.id.map);
+        map = findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
         //map.setBuiltInZoomControls(true);
         map.setMultiTouchControls(true);
@@ -178,10 +170,9 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
 
     @Override
     public boolean onMarkerClick(Marker marker, MapView mapView) {
-
         //mapView.getController().animateTo(marker.getPosition());
         //marker.showInfoWindow();
-        setInfo((SunInfo) marker.getRelatedObject());
+        sunInfoView.setSunInfo(((SunInfo) marker.getRelatedObject()));
         infoWindow.emerge();
         return true;
     }
@@ -209,25 +200,5 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
         }
     }
 
-    public void setInfo(SunInfo info) {
-        textSunrise.setText(SunInfo.timeToString(info.getSunriseLocalTime(), SunInfo.HH_MM));
-        textSunset.setText(SunInfo.timeToString(info.getSunsetLocalTime(), SunInfo.HH_MM));
-        textNoon.setText(SunInfo.timeToString(info.getNoonLocalTime(), SunInfo.HH_MM));
-        textDayDuration.setText(SunInfo.timeToString(info.getDayDuration(), SunInfo.HH_MM));
 
-        SunInfo infoNext = SunInfo.nextDaySunInfo(info);
-        textSunriseNext.setText(SunInfo.timeToString(infoNext.getSunriseLocalTime(), SunInfo.HH_MM));
-        textSunsetNext.setText(SunInfo.timeToString(infoNext.getSunsetLocalTime(), SunInfo.HH_MM));
-        textNoonNext.setText(SunInfo.timeToString(infoNext.getNoonLocalTime(), SunInfo.HH_MM));
-        textDayDurationNext.setText(SunInfo.timeToString(infoNext.getDayDuration(), SunInfo.HH_MM));
-        if (!SunInfo.afterNow(info.getSunriseLocalTime())) {
-            textSunrise.setTextColor(getResources().getColor(R.color.info_color_passive));
-        }
-        if (!SunInfo.afterNow(info.getNoonLocalTime())) {
-            textNoon.setTextColor(getResources().getColor(R.color.info_color_passive));
-        }
-        if (!SunInfo.afterNow(info.getSunsetLocalTime())) {
-            textSunset.setTextColor(getResources().getColor(R.color.info_color_passive));
-        }
-    }
 }

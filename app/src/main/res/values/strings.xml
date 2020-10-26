@@ -17,5 +17,6 @@
     <string name="day_duration">Day duration</string>
     <string name="location">Location</string>
     <string name="delay">Delay:</string>
+    <string name="date">Date</string>
 
 </resources>

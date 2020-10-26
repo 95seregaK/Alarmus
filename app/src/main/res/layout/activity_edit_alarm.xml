@@ -14,26 +14,28 @@
         android:id="@+id/timeView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/color_circle_view"
         android:fontFamily="sans-serif-thin"
         android:gravity="center_horizontal"
         android:text="Time"
+        android:textColor="@color/info_color_text"
         android:textSize="@dimen/add_alarm_time_text_size" />
 
     <TextView
         android:id="@+id/dateView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/color_circle_view"
         android:fontFamily="sans-serif-light"
         android:gravity="center_horizontal"
         android:text="Date"
-        android:textSize="@dimen/add_alarm_date_text_size" />
+        android:textSize="@dimen/add_alarm_date_text_size"
+        android:textColor="@color/info_color_text"
+        android:paddingBottom="@dimen/padding_time_view"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:layout_marginVertical="@dimen/time_view_margin"
         android:background="?android:attr/listDivider" />
 
     <ScrollView
@@ -41,7 +43,7 @@
         android:layout_height="wrap_content"
         android:fillViewport="true">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -64,44 +66,102 @@
                     android:textSize="@dimen/add_alarm_text_size"
                     android:visibility="gone" />
 
-                <RadioGroup
-                    android:id="@+id/radioSunMode"
+
+                <LinearLayout
+                    android:id="@+id/sun_info_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/radio_padding"
+                    android:orientation="horizontal"
                     android:visibility="gone">
 
-                    <RadioButton
-                        android:id="@+id/radioSunrise"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="@dimen/info_window_margin" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="@dimen/info_window_margin"
+                            android:text="@string/sunrise" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="@dimen/info_window_margin"
+                            android:text="@string/noon" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="@dimen/info_window_margin"
+                            android:text="@string/sunset" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="@dimen/info_window_margin"
+                            android:text="@string/day_duration" />
+
+                    </LinearLayout>
+
+
+                    <com.siarhei.alarmus.views.SunInfoScrollView
+                        android:id="@+id/sun_info_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+
+                        />
+
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/medium_height"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                        android:layoutDirection="rtl"
-                        android:text="@string/sunrise"
-                        android:textSize="@dimen/add_alarm_text_size" />
+                        <View
+                            android:layout_width="16dp"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="@dimen/info_window_margin" />
 
-                    <RadioButton
-                        android:id="@+id/radioNoon"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/medium_height"
+                        <RadioGroup
+                            android:id="@+id/radio_group"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                           >
 
-                        android:layoutDirection="rtl"
-                        android:text="@string/noon"
-                        android:textSize="@dimen/add_alarm_text_size" />
+                            <RadioButton
+                                android:id="@+id/radioSunrise"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/medium_height"
+                                />
 
-                    <RadioButton
-                        android:id="@+id/radioSunset"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/medium_height"
-                        android:layoutDirection="rtl"
-                        android:text="@string/sunset"
-                        android:textSize="@dimen/add_alarm_text_size" />
+                            <RadioButton
+                                android:id="@+id/radioNoon"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/medium_height" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?android:attr/listDivider" />
-                </RadioGroup>
+                            <RadioButton
+                                android:id="@+id/radioSunset"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/medium_height" />
+                        </RadioGroup>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider" />
 
                 <View
                     android:layout_width="match_parent"
@@ -170,6 +230,8 @@
                     android:id="@+id/view_week"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
+                    android:animationCache="true"
                     android:gravity="center"
                     android:orientation="horizontal">
 
@@ -238,7 +300,7 @@
 
             </LinearLayout>
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </ScrollView>
 </LinearLayout>
