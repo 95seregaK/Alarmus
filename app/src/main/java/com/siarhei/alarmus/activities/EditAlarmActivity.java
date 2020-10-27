@@ -1,11 +1,9 @@
 package com.siarhei.alarmus.activities;
 
-import android.app.ActionBar;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -13,7 +11,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -32,6 +29,8 @@ import com.siarhei.alarmus.sun.SunInfo;
 import com.siarhei.alarmus.sun.SunMath;
 import com.siarhei.alarmus.views.CircleCheckBox;
 import com.siarhei.alarmus.views.DelayPicker;
+import com.siarhei.alarmus.views.ImageRadioButton;
+import com.siarhei.alarmus.views.ImageRadioGroup;
 import com.siarhei.alarmus.views.SunInfoScrollView;
 
 import java.util.Calendar;
@@ -51,8 +50,8 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private TimePicker timePicker;
     private ImageButton saveBtn;
     private CheckBox repeatCheck;
-    private RadioGroup radioGroup;
-    private RadioButton radioSunrise, radioSunset, radioNoon;
+    private ImageRadioGroup radioGroup;
+    private ImageRadioButton radioSunrise, radioSunset, radioNoon;
     private DelayPicker delayPicker;
     private CircleCheckBox[] checkDays;
     private SunInfoScrollView infoView;
@@ -65,7 +64,6 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private double latitude;
     private double longitude;
     private Toolbar toolbar;
-    private AlertDialog labelEditDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +96,9 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         radioSunrise = findViewById(R.id.radioSunrise);
         radioNoon = findViewById(R.id.radioNoon);
         radioSunset = findViewById(R.id.radioSunset);
+        radioSunrise.setImage(R.drawable.ic_sunrise);
+        radioNoon.setImage(R.drawable.ic_noon);
+        radioSunset.setImage(R.drawable.ic_sunset);
         delayPicker = findViewById(R.id.delay_picker);
         delayView = findViewById(R.id.delay_view);
         repeatCheck = findViewById(R.id.repeatCheck);
@@ -108,7 +109,6 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
                 findViewById(R.id.check_day4), findViewById(R.id.check_day5),
                 findViewById(R.id.check_day6), findViewById(R.id.check_day7)};
         alarmSwitch = findViewById(R.id.alarmSwitch);
-        labelEditDialog = createDialog();
     }
 
     private void setVisibility() {
@@ -144,12 +144,14 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         labelEdit.setText(currentAlarm.getLabel());
     }
 
-    public AlertDialog createDialog() {
+    public AlertDialog createLabelEditDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.edit_label_dialog, null);
         builder.setView(dialogView);
-        EditText labelEditD = (EditText) dialogView.findViewById(R.id.label_edit);
+        EditText labelEditD = dialogView.findViewById(R.id.label_edit);
+        labelEditD.setText(labelEdit.getText().toString());
+        labelEditD.setSelection(labelEditD.getText().length());
         builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
@@ -165,7 +167,6 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         });
         dialogView.findViewById(R.id.button_ok).setOnClickListener((v) -> {
             labelEdit.setText(labelEditD.getText().toString());
-            currentAlarm.setLabel(labelEditD.getText().toString());
             dialog.cancel();
         });
         return dialog;
@@ -180,11 +181,12 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             updateTimeView();
         });
         labelEdit.setOnClickListener(v -> {
-            labelEditDialog.show();
+            AlertDialog dialog = createLabelEditDialog();
+            dialog.show();
             InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         });
-        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+        radioGroup.setOnCheckedChangedListener((view) -> {
             updateAlarm();
             updateTimeView();
         });
@@ -276,6 +278,13 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         SunAlarm sunAlarm = (SunAlarm) currentAlarm;
         locationView.setText("Location: " + SunMath.round(latitude, 4) + " " + SunMath.round(longitude, 4));
         SunInfo sunInfo = new SunInfo(currentAlarm.getTime(), latitude, longitude);
+        radioSunrise.setText(SunInfo.timeToString(sunInfo.getSunriseLocalTime(),SunInfo.HH_MM));
+        radioNoon.setText(SunInfo.timeToString(sunInfo.getNoonLocalTime(),SunInfo.HH_MM));
+        radioSunset.setText(SunInfo.timeToString(sunInfo.getSunsetLocalTime(),SunInfo.HH_MM));
+
+
+
+
         delayPicker.setValue(sunAlarm.getDelay());
     }
 

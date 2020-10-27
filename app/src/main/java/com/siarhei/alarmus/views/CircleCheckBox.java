@@ -13,6 +13,7 @@ public class CircleCheckBox extends androidx.appcompat.widget.AppCompatTextView
         implements View.OnClickListener {
     private boolean checked;
     private OnCheckedChangeListener onCheckedChangeListener;
+    private int backgroundChecked, backgroundUnchecked, colorChecked, colorUnchecked;
 
     public CircleCheckBox(Context context) {
         super(context);
@@ -21,6 +22,12 @@ public class CircleCheckBox extends androidx.appcompat.widget.AppCompatTextView
 
     public CircleCheckBox(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        // TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircleCheckBox, 0);
+
+        // String str = a.getString(R.styleable.CircleCheckBox_source);
+        //do something with str
+        //   a.recycle();
+
         init();
     }
 
@@ -31,8 +38,12 @@ public class CircleCheckBox extends androidx.appcompat.widget.AppCompatTextView
 
     public void init() {
         setOnClickListener(this);
-        setChecked(true);
         setGravity(Gravity.CENTER);
+        backgroundChecked = R.drawable.circle_check_checked;
+        backgroundUnchecked = R.drawable.circle_check_unchecked;
+        colorChecked = R.color.color_text_circle_check_checked;
+        colorUnchecked = R.color.color_text_circle_check_unchecked;
+        setChecked(false);
     }
 
     public boolean isChecked() {
@@ -41,11 +52,11 @@ public class CircleCheckBox extends androidx.appcompat.widget.AppCompatTextView
 
     public void setChecked(boolean b) {
         if (b) {
-            setBackground(getResources().getDrawable(R.drawable.circle_check_checked));
-            setTextColor(getResources().getColor(R.color.color_text_circle_check_checked));
+            setBackground(getResources().getDrawable(backgroundChecked));
+            setTextColor(getResources().getColor(colorChecked));
         } else {
-            setBackground(getResources().getDrawable(R.drawable.circle_check_unchecked));
-            setTextColor(getResources().getColor(R.color.color_text_circle_check_unchecked));
+            setBackground(getResources().getDrawable(backgroundUnchecked));
+            setTextColor(getResources().getColor(colorUnchecked));
         }
         this.checked = b;
         if (onCheckedChangeListener != null) onCheckedChangeListener.onCheckedChanged(this, b);
@@ -63,6 +74,14 @@ public class CircleCheckBox extends androidx.appcompat.widget.AppCompatTextView
 
     public void setOnCheckedChangeListener(OnCheckedChangeListener onCheckedChangeListener) {
         this.onCheckedChangeListener = onCheckedChangeListener;
+    }
+
+    public void setBackgroundChecked(int id) {
+        backgroundChecked = id;
+    }
+
+    public void setBackgroundUnchecked(int id) {
+        backgroundUnchecked = id;
     }
 
     public interface OnCheckedChangeListener {

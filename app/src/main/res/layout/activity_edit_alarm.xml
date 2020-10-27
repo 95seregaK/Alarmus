@@ -74,37 +74,32 @@
                     android:orientation="horizontal"
                     android:visibility="visible">
 
-                    <RadioGroup
+                    <com.siarhei.alarmus.views.ImageRadioGroup
                         android:id="@+id/radio_group"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:orientation="horizontal">
 
-                        <RadioButton
+                        <com.siarhei.alarmus.views.ImageRadioButton
                             android:id="@+id/radioSunrise"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:button="@drawable/radio_sunrise"
+                            android:layout_height="40dp"
                             android:text="@string/sunrise"
                             android:textColor="@drawable/radio_text" />
 
-                        <RadioButton
+                        <com.siarhei.alarmus.views.ImageRadioButton
                             android:id="@+id/radioNoon"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:button="@drawable/radio_noon"
-                            android:text="@string/noon"
+                            android:layout_height="40dp"
                             android:textColor="@drawable/radio_text" />
 
-                        <RadioButton
+                        <com.siarhei.alarmus.views.ImageRadioButton
                             android:id="@+id/radioSunset"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:button="@drawable/radio_sunrise"
-                            android:text="@string/sunset"
+                            android:layout_height="40dp"
                             android:textColor="@drawable/radio_text" />
-                    </RadioGroup>
 
+                    </com.siarhei.alarmus.views.ImageRadioGroup>
                 </LinearLayout>
 
 

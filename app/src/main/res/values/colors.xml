@@ -15,12 +15,14 @@
     <color name="info_color_active">#FFE600</color>
     <color name="info_color_passive">#AAAAAA</color>
     <color name="colorHalfTransparent">#85191919</color>
-    <color name="color_circle_check_checked">@color/colorPrimaryDark</color>
+    <color name="color_circle_check_checked">@color/color_circle_view</color>
     <color name="color_circle_check_unchecked">#00000000</color>
     <color name="color_text_circle_check_checked">#FFFFFF</color>
     <color name="color_text_circle_check_unchecked">#888888</color>
     <color name="color_text_default">#001B6C</color>
     <color name="color_circle_view">#FD8720</color>
     <color name="colorAlarmActivityBckg">#B24A4A4A</color>
+    <color name="color_text_image_radio_checked">#00025C</color>
+    <color name="color_text_image_radio_unchecked">#808080</color>
 
 </resources>
