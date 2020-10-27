@@ -24,5 +24,6 @@
     <color name="colorAlarmActivityBckg">#B24A4A4A</color>
     <color name="color_text_image_radio_checked">#00025C</color>
     <color name="color_text_image_radio_unchecked">#808080</color>
+    <color name="color_filter_disable">#A0A0A0</color>
 
 </resources>

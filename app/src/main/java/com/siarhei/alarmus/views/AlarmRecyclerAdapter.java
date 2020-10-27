@@ -75,12 +75,14 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
             holder.label.setTextColor(context.getResources().getColor(R.color.colorAlarmEnable));
             holder.days.setTextColor(context.getResources().getColor(R.color.colorAlarmEnable));
             holder.sunMode.setImageAlpha(context.getResources().getInteger(R.integer.enable_alpha));
+            holder.sunMode.setColorFilter(0);
         } else {
             holder.time.setTextColor(context.getResources().getColor(R.color.colorAlarmDisable));
             holder.date.setTextColor(context.getResources().getColor(R.color.colorAlarmDisable));
             holder.label.setTextColor(context.getResources().getColor(R.color.colorAlarmDisable));
             holder.days.setTextColor(context.getResources().getColor(R.color.colorAlarmDisable));
             holder.sunMode.setImageAlpha(context.getResources().getInteger(R.integer.disable_alpha));
+            holder.sunMode.setColorFilter(context.getResources().getColor(R.color.color_filter_disable));
         }
     }
 

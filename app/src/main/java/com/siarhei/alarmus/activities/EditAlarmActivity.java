@@ -4,6 +4,9 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -11,7 +14,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -50,20 +52,20 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private TimePicker timePicker;
     private ImageButton saveBtn;
     private CheckBox repeatCheck;
-    private ImageRadioGroup radioGroup;
+    private ImageRadioGroup radioGroupSunMode;
     private ImageRadioButton radioSunrise, radioSunset, radioNoon;
     private DelayPicker delayPicker;
     private CircleCheckBox[] checkDays;
     private SunInfoScrollView infoView;
     private TextView delayView;
     private View weekView;
-    private View sunInfoLayout;
     private Alarm currentAlarm;
     private AlarmPreferences preferences;
     private int alarmType;
     private double latitude;
     private double longitude;
     private Toolbar toolbar;
+    private AlertDialog editLabeldialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +94,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         timePicker.setIs24HourView(true);
         labelEdit = findViewById(R.id.label_edit);
         infoView = findViewById(R.id.sun_info_view);
-        radioGroup = findViewById(R.id.radio_group);
+        radioGroupSunMode = findViewById(R.id.radio_group_sun_mode);
         radioSunrise = findViewById(R.id.radioSunrise);
         radioNoon = findViewById(R.id.radioNoon);
         radioSunset = findViewById(R.id.radioSunset);
@@ -103,7 +105,6 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         delayView = findViewById(R.id.delay_view);
         repeatCheck = findViewById(R.id.repeatCheck);
         weekView = findViewById(R.id.view_week);
-        sunInfoLayout = findViewById(R.id.sun_info_layout);
         checkDays = new CircleCheckBox[]{findViewById(R.id.check_day1),
                 findViewById(R.id.check_day2), findViewById(R.id.check_day3),
                 findViewById(R.id.check_day4), findViewById(R.id.check_day5),
@@ -113,12 +114,11 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
 
     private void setVisibility() {
         if (alarmType == AlarmPreferences.SUN_TYPE) {
-            radioGroup.setVisibility(View.VISIBLE);
+            radioGroupSunMode.setVisibility(View.VISIBLE);
             locationView.setVisibility(View.VISIBLE);
             timePicker.setVisibility(View.GONE);
             delayPicker.setVisibility(View.VISIBLE);
             delayView.setVisibility(View.VISIBLE);
-            sunInfoLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -147,11 +147,18 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     public AlertDialog createLabelEditDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.edit_label_dialog, null);
+        View dialogView = inflater.inflate(R.layout.dialog_edit_label, null);
         builder.setView(dialogView);
         EditText labelEditD = dialogView.findViewById(R.id.label_edit);
         labelEditD.setText(labelEdit.getText().toString());
         labelEditD.setSelection(labelEditD.getText().length());
+        labelEditD.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == 6) {
+                labelEdit.setText(labelEditD.getText().toString());
+                editLabeldialog.cancel();
+            }
+            return false;
+        });
         builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
@@ -181,24 +188,25 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             updateTimeView();
         });
         labelEdit.setOnClickListener(v -> {
-            AlertDialog dialog = createLabelEditDialog();
-            dialog.show();
+            editLabeldialog = createLabelEditDialog();
+            editLabeldialog.show();
             InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         });
-        radioGroup.setOnCheckedChangedListener((view) -> {
+        radioGroupSunMode.setOnCheckedChangeListener((id) -> {
+            //Log.d("update", "" + id);
             updateAlarm();
             updateTimeView();
         });
         delayPicker.setOnItemSelectedListener(index -> {
             updateAlarm();
             updateTimeView();
-            //Log.d("update","dealy updated");
         });
         for (int i = 0; i < 7; i++) {
             checkDays[i].setOnCheckedChangeListener((view, checked) -> {
                 updateAlarm();
                 updateTimeView();
+                updateLocationViews();
             });
         }
     }
@@ -209,6 +217,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             findViewById(R.id.view_week).setVisibility(b ? View.VISIBLE : View.GONE);
             updateAlarm();
             updateTimeView();
+            updateLocationViews();
         }
     }
 
@@ -278,12 +287,18 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         SunAlarm sunAlarm = (SunAlarm) currentAlarm;
         locationView.setText("Location: " + SunMath.round(latitude, 4) + " " + SunMath.round(longitude, 4));
         SunInfo sunInfo = new SunInfo(currentAlarm.getTime(), latitude, longitude);
-        radioSunrise.setText(SunInfo.timeToString(sunInfo.getSunriseLocalTime(),SunInfo.HH_MM));
-        radioNoon.setText(SunInfo.timeToString(sunInfo.getNoonLocalTime(),SunInfo.HH_MM));
-        radioSunset.setText(SunInfo.timeToString(sunInfo.getSunsetLocalTime(),SunInfo.HH_MM));
-
-
-
+        if (!SunInfo.afterNow(sunInfo, SunInfo.SUNRISE_MODE))
+            sunInfo = SunInfo.nextDaySunInfo(sunInfo, 1);
+        radioSunrise.setText(SunInfo.timeToString(sunInfo.getSunriseLocalTime(), SunInfo.HH_MM));
+        radioSunrise.setSubText(sunInfo.getDateString());
+        if (!SunInfo.afterNow(sunInfo, SunInfo.NOON_MODE))
+            sunInfo = SunInfo.nextDaySunInfo(sunInfo, 1);
+        radioNoon.setSubText(sunInfo.getDateString());
+        radioNoon.setText(SunInfo.timeToString(sunInfo.getNoonLocalTime(), SunInfo.HH_MM));
+        if (!SunInfo.afterNow(sunInfo, SunInfo.SUNSET_MODE))
+            sunInfo = SunInfo.nextDaySunInfo(sunInfo, 1);
+        radioSunset.setSubText(sunInfo.getDateString());
+        radioSunset.setText(SunInfo.timeToString(sunInfo.getSunsetLocalTime(), SunInfo.HH_MM));
 
         delayPicker.setValue(sunAlarm.getDelay());
     }

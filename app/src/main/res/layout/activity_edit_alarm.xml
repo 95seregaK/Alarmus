@@ -5,6 +5,8 @@
 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".activities.EditAlarmActivity">
 
@@ -67,51 +69,42 @@
                     android:visibility="gone" />
 
 
-                <LinearLayout
-                    android:id="@+id/sun_info_layout"
+                <com.siarhei.alarmus.views.ImageRadioGroup
+                    android:id="@+id/radio_group_sun_mode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
                     android:orientation="horizontal"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
-                    <com.siarhei.alarmus.views.ImageRadioGroup
-                        android:id="@+id/radio_group"
+                    <com.siarhei.alarmus.views.ImageRadioButton
+                        android:id="@+id/radioSunrise"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                        android:layout_height="@dimen/height_sun_mode_radio"
+                        android:layout_marginHorizontal="@dimen/margin_radio_sun_mode"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:text="@string/sunrise"
+                        android:textColor="@drawable/radio_text" />
 
-                        <com.siarhei.alarmus.views.ImageRadioButton
-                            android:id="@+id/radioSunrise"
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:text="@string/sunrise"
-                            android:textColor="@drawable/radio_text" />
-
-                        <com.siarhei.alarmus.views.ImageRadioButton
-                            android:id="@+id/radioNoon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:textColor="@drawable/radio_text" />
-
-                        <com.siarhei.alarmus.views.ImageRadioButton
-                            android:id="@+id/radioSunset"
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:textColor="@drawable/radio_text" />
-
-                    </com.siarhei.alarmus.views.ImageRadioGroup>
-                </LinearLayout>
+                    <com.siarhei.alarmus.views.ImageRadioButton
+                        android:id="@+id/radioNoon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/height_sun_mode_radio"
+                        android:layout_marginHorizontal="@dimen/margin_radio_sun_mode"
+                        android:background="?android:attr/selectableItemBackground"
 
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?android:attr/listDivider" />
+                        android:textColor="@drawable/radio_text" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?android:attr/listDivider" />
+                    <com.siarhei.alarmus.views.ImageRadioButton
+                        android:id="@+id/radioSunset"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/height_sun_mode_radio"
+                        android:layout_marginHorizontal="@dimen/margin_radio_sun_mode"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:textColor="@drawable/radio_text" />
+
+                </com.siarhei.alarmus.views.ImageRadioGroup>
 
                 <TimePicker
                     android:id="@+id/timePicker"
@@ -241,7 +234,6 @@
                     android:layout_height="@dimen/default_height"
                     android:text="On/Off"
                     android:textSize="@dimen/add_alarm_text_size" />
-
 
             </LinearLayout>
 

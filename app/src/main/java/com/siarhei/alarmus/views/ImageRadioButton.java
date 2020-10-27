@@ -1,6 +1,9 @@
 package com.siarhei.alarmus.views;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -17,7 +20,7 @@ import androidx.annotation.RequiresApi;
 
 import com.siarhei.alarmus.R;
 
-public class ImageRadioButton extends LinearLayout implements View.OnClickListener {
+public class ImageRadioButton extends LinearLayout {
     private boolean checked;
     private ImageRadioButton.OnCheckedChangeListener onCheckedChangeListener;
     private ImageView imageView;
@@ -60,15 +63,21 @@ public class ImageRadioButton extends LinearLayout implements View.OnClickListen
         addView(textLayout);
         colorChecked = R.color.color_text_image_radio_checked;
         colorUnchecked = R.color.color_text_image_radio_unchecked;
-        setOnClickListener(this);
-        imageView.setScaleType(ImageView.ScaleType.FIT_START);
+        setOnClickListener((v) -> {
+            ((ImageRadioButton) v).setChecked(true);
+        });
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        imageView.setAdjustViewBounds(true);
+        Typeface face = Typeface.create("sans-serif-light", Typeface.NORMAL);
+        mainText.setTypeface(face);
+        //subText.setTypeface(face);
+        mainText.setTextSize(getResources().getDimension(R.dimen.size_text_image_radio));
+        setColors(false);
     }
 
     public void setImage(int id) {
         imageChecked = id;
         imageView.setImageDrawable(getResources().getDrawable(id));
-        imageView.setLayoutParams(new LinearLayout.LayoutParams(120,
-                ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
     public void setTextColor(int id) {
@@ -81,35 +90,43 @@ public class ImageRadioButton extends LinearLayout implements View.OnClickListen
         return checked;
     }
 
-    public void setChecked(boolean b) {
+    private void setColors(boolean b) {
         if (b) {
-            // imageView.setImageDrawable(getResources().getDrawable(imageChecked));
             imageView.setAlpha(1f);
+            imageView.setColorFilter(0);
             mainText.setTextColor(getResources().getColor(colorChecked));
             subText.setTextColor(getResources().getColor(colorChecked));
-            if (getParent() instanceof ImageRadioGroup) {
-                Log.d("RadioGroup", "" + getParent());
-                ImageRadioGroup radiogroup = (ImageRadioGroup) getParent();
-                for (int i = 0; i < radiogroup.getChildCount(); i++) {
-                    View child = radiogroup.getChildAt(i);
-                    if (child instanceof ImageRadioButton && child != this) {
-                        ((ImageRadioButton) child).setChecked(false);
-                    }
-                }
-                if (radiogroup.getOnCheckedChangedListener() != null)
-                    radiogroup.getOnCheckedChangedListener().onCheckedChanged(this);
-            }
-
         } else {
-            // imageView.setImageDrawable(getResources().getDrawable(imageChecked));
             imageView.setAlpha(0.4f);
-            imageView.setColorFilter(0);
+            imageView.setColorFilter(getResources().getColor(R.color.color_filter_disable));
             mainText.setTextColor(getResources().getColor(colorUnchecked));
             subText.setTextColor(getResources().getColor(colorUnchecked));
-        }
-        this.checked = b;
-        if (onCheckedChangeListener != null) onCheckedChangeListener.onCheckedChanged(this, b);
 
+        }
+    }
+
+    public void setChecked(boolean b) {
+        if (b && !checked) {
+            ImageRadioGroup radiogroup = null;
+            if (getParent() instanceof ImageRadioGroup) {
+                radiogroup = (ImageRadioGroup) getParent();
+                for (int i = 0; i < radiogroup.getChildCount(); i++) {
+                    View child = radiogroup.getChildAt(i);
+                    if (child instanceof ImageRadioButton && ((ImageRadioButton) child).checked) {
+                        ((ImageRadioButton) child).checked = false;
+                        ((ImageRadioButton) child).setColors(false);
+                    }
+                }
+            }
+            setColors(true);
+            checked = true;
+            if (radiogroup != null)
+                radiogroup.onCheckedChange(this.getId());
+        } else if (!b && checked) {
+            setColors(false);
+            this.checked = false;
+            //if (onCheckedChangeListener != null) onCheckedChangeListener.onCheckedChange(this, b);
+        }
     }
 
     public void setText(CharSequence text) {
@@ -118,11 +135,6 @@ public class ImageRadioButton extends LinearLayout implements View.OnClickListen
 
     public void setSubText(CharSequence text) {
         subText.setText(text);
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (!checked) setChecked(true);
     }
 
     public OnCheckedChangeListener getOnCheckedChangeListener() {
@@ -134,7 +146,7 @@ public class ImageRadioButton extends LinearLayout implements View.OnClickListen
     }
 
     public interface OnCheckedChangeListener {
-        public void onCheckedChanged(ImageRadioButton view, boolean checked);
+        public void onCheckedChange(ImageRadioButton view, boolean checked);
     }
 
 

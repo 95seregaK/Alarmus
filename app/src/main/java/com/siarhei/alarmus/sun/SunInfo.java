@@ -50,7 +50,7 @@ public class SunInfo {
         init();
     }
 
-    public static SunInfo nextDaySunInfo(SunInfo info,int add) {
+    public static SunInfo nextDaySunInfo(SunInfo info, int add) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(info.year, info.month - 1, info.day);
         calendar.add(Calendar.DAY_OF_MONTH, add);
@@ -223,4 +223,9 @@ public class SunInfo {
         return hour;
     }
 
+    public String getDateString() {
+        return (day < 10 ? "0" : "") + day + "."
+                + (month < 10 ? "0" : "") + month + "."
+                + (year % 100 < 10 ? "0" : "") + year % 100;
+    }
 }

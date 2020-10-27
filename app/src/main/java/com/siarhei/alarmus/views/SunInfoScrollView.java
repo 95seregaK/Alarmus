@@ -67,7 +67,7 @@ public class SunInfoScrollView extends HorizontalScrollView {
                 TextView textSunset = column.findViewById(R.id.text_sunset);
                 TextView textNoon = column.findViewById(R.id.text_noon);
                 TextView textDayDuration = column.findViewById(R.id.text_day_duration);
-                textDay.setText(info.getDay() + "." + info.getMonth() + "." + info.getYear() % 100);
+                textDay.setText(info.getDateString());
                 textSunrise.setText(SunInfo.timeToString(info.getSunriseLocalTime(), SunInfo.HH_MM));
                 textNoon.setText(SunInfo.timeToString(info.getNoonLocalTime(), SunInfo.HH_MM));
                 textSunset.setText(SunInfo.timeToString(info.getSunsetLocalTime(), SunInfo.HH_MM));
