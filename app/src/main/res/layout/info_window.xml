@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.siarhei.alarmus.views.FloatingView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/info_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -18,53 +19,11 @@
     <LinearLayout
         android:id="@+id/sun_info_table"
         android:layout_width="match_parent"
-        android:layout_height="97dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:visibility="visible">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:text="@string/date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="@dimen/info_window_margin"
-                android:textColor="@color/info_color_text"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="@dimen/info_window_margin"
-                android:text="@string/sunrise"
-                android:textColor="@color/info_color_text" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="@dimen/info_window_margin"
-                android:text="@string/noon"
-
-                android:textColor="@color/info_color_text" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="@dimen/info_window_margin"
-                android:text="@string/sunset"
-                android:textColor="@color/info_color_text" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="@dimen/info_window_margin"
-                android:text="@string/day_duration"
-                android:textColor="@color/info_color_text" />
-
-        </LinearLayout>
-
+        <include layout="@layout/sun_info_column" />
 
         <com.siarhei.alarmus.views.SunInfoScrollView
             android:id="@+id/sun_info_view"

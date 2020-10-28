@@ -95,7 +95,7 @@ public class SunInfo {
         double minute = (time - hour) * 60;
         double second = (minute - (int) minute) * 60;
         int millis = (int) ((second - (int) second) * 1000);
-        String timeStr = hour + ":";
+        String timeStr = (hour > 9 ? "" : "0") + hour + ":";
         switch (format) {
             case HH_MM:
                 int min = (int) minute;
@@ -227,5 +227,12 @@ public class SunInfo {
         return (day < 10 ? "0" : "") + day + "."
                 + (month < 10 ? "0" : "") + month + "."
                 + (year % 100 < 10 ? "0" : "") + year % 100;
+    }
+
+    public SunInfo setNewPosition(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        init();
+        return this;
     }
 }

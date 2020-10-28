@@ -38,4 +38,6 @@
     <dimen name="margin_radio_sun_mode">4dp</dimen>
     <dimen name="height_sun_mode_radio">42dp</dimen>
     <dimen name="size_text_image_radio">7sp</dimen>
+    <dimen name="width_column_sun_info">80dp</dimen>
+    <dimen name="height_item_sun_info_table">24dp</dimen>
 </resources>

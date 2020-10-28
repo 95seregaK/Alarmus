@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.Checkable;
@@ -60,7 +61,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private CircleCheckBox[] checkDays;
     private SunInfoScrollView infoView;
     private TextView delayView;
-    private View weekView;
+    private ViewGroup weekView, sunLayout;
     private Alarm currentAlarm;
     private AlarmPreferences preferences;
     private int alarmType;
@@ -68,6 +69,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private double longitude;
     private Toolbar toolbar;
     private AlertDialog editLabelDialog;
+    private ImageButton locationButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +92,8 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         saveBtn = findViewById(R.id.save_button);
         timeView = findViewById(R.id.timeView);
         dateView = findViewById(R.id.dateView);
-        locationView = findViewById(R.id.btn_location);
+        locationView = findViewById(R.id.view_location);
+        locationButton = findViewById(R.id.button_location);
         timePicker = findViewById(R.id.timePicker);
         timePicker.setIs24HourView(true);
         labelEdit = findViewById(R.id.label_edit);
@@ -103,6 +106,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         delayView = findViewById(R.id.delay_view);
         repeatCheck = findViewById(R.id.repeatCheck);
         weekView = findViewById(R.id.view_week);
+        sunLayout = findViewById(R.id.sun_layout);
         checkDays = new CircleCheckBox[]{findViewById(R.id.check_day1),
                 findViewById(R.id.check_day2), findViewById(R.id.check_day3),
                 findViewById(R.id.check_day4), findViewById(R.id.check_day5),
@@ -112,11 +116,8 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
 
     private void setVisibility() {
         if (alarmType == SUN_TYPE) {
-            radioGroupSunMode.setVisibility(View.VISIBLE);
-            locationView.setVisibility(View.VISIBLE);
+            sunLayout.setVisibility(View.VISIBLE);
             timePicker.setVisibility(View.GONE);
-            delayPicker.setVisibility(View.VISIBLE);
-            delayView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -180,7 +181,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private void setListeners() {
         saveBtn.setOnClickListener(this);
         repeatCheck.setOnCheckedChangeListener(this);
-        locationView.setOnClickListener(this);
+        locationButton.setOnClickListener(this);
         timePicker.setOnTimeChangedListener((view, hourOfDay, minute) -> {
             updateAlarm();
             updateTimeView();
@@ -235,7 +236,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             save();
             setResult(RESULT_NEW_ALARM);
             finish();
-        } else if (view.getId() == R.id.btn_location) {
+        } else if (view.getId() == R.id.button_location) {
             chooseLocation();
         }
     }

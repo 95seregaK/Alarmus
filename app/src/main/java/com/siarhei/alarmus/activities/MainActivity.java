@@ -49,12 +49,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toast.makeText(getApplicationContext(), "onCreate()", Toast.LENGTH_SHORT).show();
-        preferences = AlarmPreferences.getInstance(this);
-        alarms = preferences.readAllAlarms();
+        //preferences = AlarmPreferences.getInstance(this);
+        //alarms = preferences.readAllAlarms();
         recycler = findViewById(R.id.recycler);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         alarmAdapter = new AlarmRecyclerAdapter();
-        alarmAdapter.setAlarms(alarms);
+        //alarmAdapter.setAlarms(alarms);
         recycler.setLayoutManager(llm);
         recycler.setAdapter(alarmAdapter);
         recycler.setOnItemSwipeListener(this);
@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         addBtn = findViewById(R.id.add_button);
         addBtn.setOnClickListener(this);
         alarmAdapter.setOnCheckedListener(this);
-
         alarmManager = SunAlarmManager.getService(this);
     }
 
@@ -88,21 +87,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CODE_ADD_NEW && resultCode == EditAlarmActivity.RESULT_NEW_ALARM) {
-            if (alarms.size() == 0) preferences = AlarmPreferences.getInstance(this);
-            alarms = preferences.readAllAlarms();
-            Collections.sort(alarms, MainActivity::compare);
-            alarmAdapter.setAlarms(alarms);
+            //if (alarms.size() == 0) preferences = AlarmPreferences.getInstance(this);
+            //alarms = preferences.readAllAlarms();
+            //Collections.sort(alarms, MainActivity::compare);
+            //alarmAdapter.setAlarms(alarms);
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        //preferences=AlarmPreferences.getInstance(this);
-        //alarms = preferences.readAllAlarms();
-        //Collections.sort(alarms, MainActivity::compare);
-        //alarmAdapter.notifyDataSetChanged();
-        //alarmAdapter.setAlarms(alarms);
+        preferences = AlarmPreferences.getInstance(this);
+        alarms = preferences.readAllAlarms();
+        Collections.sort(alarms, MainActivity::compare);
+        alarmAdapter.setAlarms(alarms);
         //Toast.makeText(getApplicationContext(), "onResume()", Toast.LENGTH_SHORT).show();
     }
 

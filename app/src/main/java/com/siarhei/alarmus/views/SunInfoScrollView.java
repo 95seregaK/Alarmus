@@ -1,12 +1,14 @@
 package com.siarhei.alarmus.views;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.ColorSpace;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,10 +22,13 @@ import com.siarhei.alarmus.sun.SunInfo;
 public class SunInfoScrollView extends HorizontalScrollView {
     private SunInfo sunInfo;
     private LinearLayout container;
+    private int itemCount = 40;
+    private int centralItem = 10;
+    private float columnWidth;
+    private boolean first = true;
 
     public SunInfoScrollView(Context context) {
         super(context);
-        init(context);
     }
 
     public SunInfoScrollView(Context context, @Nullable AttributeSet attrs) {
@@ -47,48 +52,85 @@ public class SunInfoScrollView extends HorizontalScrollView {
         container.setOrientation(LinearLayout.HORIZONTAL);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         setHorizontalScrollBarEnabled(false);
-
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < itemCount; i++) {
             View column = inflater.inflate(R.layout.sun_info_column, null);
             container.addView(column);
         }
         addView(container);
-        updateView();
+    }
+
+    public void setSelectedItem(int i) {
+        smoothScrollTo((int) (columnWidth * i), 0);
     }
 
     private void updateView() {
         if (sunInfo != null) {
             SunInfo info = sunInfo;
-            for (int i = 0; i < container.getChildCount(); i++) {
-                View column = container.getChildAt(i);
-
-                TextView textDay = column.findViewById(R.id.text_day);
-                TextView textSunrise = column.findViewById(R.id.text_sunrise);
-                TextView textSunset = column.findViewById(R.id.text_sunset);
-                TextView textNoon = column.findViewById(R.id.text_noon);
-                TextView textDayDuration = column.findViewById(R.id.text_day_duration);
-                textDay.setText(info.getDateString());
-                textSunrise.setText(SunInfo.timeToString(info.getSunriseLocalTime(), SunInfo.HH_MM));
-                textNoon.setText(SunInfo.timeToString(info.getNoonLocalTime(), SunInfo.HH_MM));
-                textSunset.setText(SunInfo.timeToString(info.getSunsetLocalTime(), SunInfo.HH_MM));
-                textDayDuration.setText(SunInfo.timeToString(info.getDayDuration(), SunInfo.HH_MM));
-                if (!SunInfo.afterNow(info, SunInfo.SUNRISE_MODE)) {
-                    textSunrise.setTextColor(getResources().getColor(R.color.info_color_passive));
-                }
-                if (!SunInfo.afterNow(info, SunInfo.NOON_MODE)) {
-                    textNoon.setTextColor(getResources().getColor(R.color.info_color_passive));
-                }
-                if (!SunInfo.afterNow(info, SunInfo.SUNSET_MODE)) {
-                    textSunset.setTextColor(getResources().getColor(R.color.info_color_passive));
-                }
+            int n = container.getChildCount();
+            updateColumn(centralItem, info);
+            for (int i = centralItem + 1; i < n; i++) {
                 info = SunInfo.nextDaySunInfo(info, 1);
+                updateColumn(i, info);
+            }
+            info = sunInfo;
+            for (int i = centralItem - 1; i >= 0; i--) {
+                info = SunInfo.nextDaySunInfo(info, -1);
+                updateColumn(i, info);
+
             }
         }
     }
 
-    public void setSunInfo(SunInfo sunInfo) {
-        this.sunInfo = sunInfo;
+    private void updateColumn(int i, SunInfo info) {
+        View column = container.getChildAt(i);
+        TextView textDay = column.findViewById(R.id.text_day);
+        TextView textSunrise = column.findViewById(R.id.text_sunrise);
+        TextView textSunset = column.findViewById(R.id.text_sunset);
+        TextView textNoon = column.findViewById(R.id.text_noon);
+        TextView textDayDuration = column.findViewById(R.id.text_day_duration);
+        textDay.setTextAlignment(TEXT_ALIGNMENT_VIEW_END);
+        textSunrise.setTextAlignment(TEXT_ALIGNMENT_VIEW_END);
+        textSunset.setTextAlignment(TEXT_ALIGNMENT_VIEW_END);
+        textNoon.setTextAlignment(TEXT_ALIGNMENT_VIEW_END);
+        textDayDuration.setTextAlignment(TEXT_ALIGNMENT_VIEW_END);
+        textDay.setText(info.getDateString());
+        textSunrise.setText(SunInfo.timeToString(info.getSunriseLocalTime(), SunInfo.HH_MM));
+        textNoon.setText(SunInfo.timeToString(info.getNoonLocalTime(), SunInfo.HH_MM));
+        textSunset.setText(SunInfo.timeToString(info.getSunsetLocalTime(), SunInfo.HH_MM));
+        textDayDuration.setText(SunInfo.timeToString(info.getDayDuration(), SunInfo.HH_MM));
+        textSunrise.setTextColor(getResources().getColor(R.color.info_color_active));
+        textNoon.setTextColor(getResources().getColor(R.color.info_color_active));
+        textSunset.setTextColor(getResources().getColor(R.color.info_color_active));
+        if (!SunInfo.afterNow(info, SunInfo.SUNRISE_MODE)) {
+            textSunrise.setTextColor(getResources().getColor(R.color.info_color_passive));
+        }
+        if (!SunInfo.afterNow(info, SunInfo.NOON_MODE)) {
+            textNoon.setTextColor(getResources().getColor(R.color.info_color_passive));
+        }
+        if (!SunInfo.afterNow(info, SunInfo.SUNSET_MODE)) {
+            textSunset.setTextColor(getResources().getColor(R.color.info_color_passive));
+        }
+    }
+
+    @Override
+    public void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (first) {
+            columnWidth = container.getChildAt(0).getMeasuredWidth();
+            setLayoutParams(new LinearLayout.LayoutParams((int) columnWidth * 3, ViewGroup.LayoutParams.WRAP_CONTENT));
+            goToCentre();
+            first = false;
+        }
+    }
+
+    public void setSunInfo(SunInfo info) {
+        sunInfo = info;
         updateView();
+
+    }
+
+    public void goToCentre() {
+        setSelectedItem(centralItem);
     }
 
     public LinearLayout getContainer() {

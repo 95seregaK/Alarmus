@@ -22,7 +22,6 @@ public class FloatingView extends LinearLayout {
 
     public FloatingView(Context context) {
         super(context);
-        setView(context);
     }
 
     public FloatingView(Context context, @Nullable AttributeSet attrs) {
@@ -71,7 +70,10 @@ public class FloatingView extends LinearLayout {
             animate().y(parentHeight - toolbarHeight)
                     .x(0).setDuration(floatDuration).start();
             shown = false;
-
         }
+    }
+
+    public boolean isHiden() {
+        return !shown;
     }
 }

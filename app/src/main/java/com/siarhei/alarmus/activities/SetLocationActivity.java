@@ -48,14 +48,13 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
 
     private SunInfoMarker defaultMarker;
     private RadiusMarkerClusterer markerClusterer;
-    private MarkerInfoWindow markerInfoWindow;
     private FusedLocationProviderClient fusedLocationClient;
     private FloatingActionButton setPositionBtn;
     private FloatingView infoWindow;
     private MapView map;
     Button dateButton;
-    private TextView subDescription;
     private SunInfoScrollView sunInfoView;
+    private SunInfo currentSunInfo;
     public static final double DEFAULT_LATITUDE = 54.0;
     public static final double DEFAULT_LONGITUDE = 28.0;
 
@@ -98,8 +97,10 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
         defaultMarker = new SunInfoMarker(map, this);
         defaultMarker.setIcon(getResources().getDrawable(R.drawable.ic_current_marker));
         defaultMarker.setOnMarkerClickListener(this);
-        defaultMarker.setPosition(startPoint);
 
+        defaultMarker.setPosition(startPoint);
+        currentSunInfo = new SunInfo(Calendar.getInstance(), lat, lon);
+        sunInfoView.setSunInfo(currentSunInfo);
 
         MapEventsReceiver mapEventsReceiver = new MyMapEventsReceiver() {
             @Override
@@ -149,6 +150,7 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
                             startPoint.setLongitude(addresses.get(0).getLongitude());
                             mapController.animateTo(startPoint);
                             defaultMarker.setPosition(startPoint);
+                            updateSunInfoLocation();
                             map.invalidate();
                         }
                     } catch (IOException e) {
@@ -168,18 +170,21 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
             finish();
         }
         if (view.getId() == R.id.info_view) {
-            if (infoWindow.isShown()) infoWindow.hide();
-            else infoWindow.emerge();
+            if (infoWindow.isHiden()) infoWindow.emerge();
+            else infoWindow.hide();
         } else if (view.getId() == R.id.date_button) {
-            Calendar calendar = Calendar.getInstance();
-            SunInfo info = getCurrentSunInfo();
-            DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                    (v, year, monthOfYear, dayOfMonth) -> {
-                        sunInfoView.setSunInfo(info.setNewDate(dayOfMonth, monthOfYear + 1, year));
-                    }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-
-            datePickerDialog.show();
+            setDate();
         }
+    }
+
+    private void setDate() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                (v, year, monthOfYear, dayOfMonth) -> {
+                    currentSunInfo.setNewDate(dayOfMonth, monthOfYear + 1, year);
+                    sunInfoView.setSunInfo(currentSunInfo);
+                    sunInfoView.goToCentre();
+                }, currentSunInfo.getYear(), currentSunInfo.getMonth() - 1, currentSunInfo.getDay());
+        datePickerDialog.show();
     }
 
     public SunInfo getCurrentSunInfo() {
@@ -188,11 +193,17 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
 
     @Override
     public boolean onMarkerClick(Marker marker, MapView mapView) {
-        //mapView.getController().animateTo(marker.getPosition());
-        //marker.showInfoWindow();
-        sunInfoView.setSunInfo(((SunInfo) marker.getRelatedObject()));
+        mapView.getController().animateTo(marker.getPosition());
+        updateSunInfoLocation();
         infoWindow.emerge();
         return true;
+    }
+
+    private void updateSunInfoLocation() {
+        currentSunInfo.setNewPosition(
+                defaultMarker.getPosition().getLatitude(),
+                defaultMarker.getPosition().getLongitude());
+        sunInfoView.setSunInfo(currentSunInfo);
     }
 
     @Override

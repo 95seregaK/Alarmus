@@ -49,25 +49,44 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/default_margin"
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/edit_alarm_layout"
+                android:id="@+id/sun_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin"
-                android:layout_marginRight="@dimen/default_margin"
                 android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/btn_location"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/medium_height"
-                    android:gravity="center_vertical"
-                    android:text="@string/location"
-                    android:textSize="@dimen/add_alarm_text_size"
-                    android:visibility="gone" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/view_location"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:gravity="center_vertical"
+                        android:text="@string/location"
+                        android:textSize="@dimen/add_alarm_text_size" />
+
+                    <ImageButton
+                        android:id="@+id/button_location"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:adjustViewBounds="true"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:padding="10dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_map"
+                        android:textSize="@dimen/add_alarm_text_size" />
+                </LinearLayout>
 
 
                 <com.siarhei.alarmus.views.ImageRadioGroup
@@ -75,13 +94,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:orientation="horizontal">
 
                     <com.siarhei.alarmus.views.ImageRadioButton
                         android:id="@+id/radioSunrise"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="@dimen/height_sun_mode_radio"
+                        android:layout_weight="1"
+                        android:gravity="left"
                         android:layout_marginHorizontal="4dp"
                         android:background="?android:attr/selectableItemBackground"
                         android:text="@string/sunrise"
@@ -90,8 +110,10 @@
 
                     <com.siarhei.alarmus.views.ImageRadioButton
                         android:id="@+id/radioNoon"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="@dimen/height_sun_mode_radio"
+                        android:layout_weight="1"
+                        android:gravity="center"
                         android:layout_marginHorizontal="@dimen/margin_radio_sun_mode"
                         android:background="?android:attr/selectableItemBackground"
                         android:textColor="@drawable/radio_text"
@@ -99,8 +121,10 @@
 
                     <com.siarhei.alarmus.views.ImageRadioButton
                         android:id="@+id/radioSunset"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="@dimen/height_sun_mode_radio"
+                        android:layout_weight="1"
+                        android:gravity="right"
                         android:layout_marginHorizontal="@dimen/margin_radio_sun_mode"
                         android:background="?android:attr/selectableItemBackground"
                         android:textColor="@drawable/radio_text"
@@ -108,11 +132,6 @@
 
                 </com.siarhei.alarmus.views.ImageRadioGroup>
 
-                <TimePicker
-                    android:id="@+id/timePicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="160dp"
-                    android:timePickerMode="spinner" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -127,8 +146,7 @@
                         android:layout_weight="2"
                         android:gravity="center_vertical"
                         android:text="@string/delay"
-                        android:textSize="@dimen/add_alarm_text_size"
-                        android:visibility="gone" />
+                        android:textSize="@dimen/add_alarm_text_size" />
 
                     <com.siarhei.alarmus.views.DelayPicker
                         android:id="@+id/delay_picker"
@@ -136,108 +154,114 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:marqueeRepeatLimit="-1"
-                        android:textSize="@dimen/delay_picker_size"
-                        android:visibility="gone" />
+                        android:textSize="@dimen/delay_picker_size" />
 
                 </LinearLayout>
-
-                <EditText
-                    android:id="@+id/label_edit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:hint="Label"
-                    android:inputType="text"
-                    android:textSize="@dimen/add_alarm_text_size"
-                    android:typeface="serif" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?android:attr/listDivider" />
-
-                <CheckBox
-                    android:id="@+id/repeatCheck"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/default_height"
-                    android:layoutDirection="rtl"
-                    android:text="Repeat"
-                    android:textSize="@dimen/add_alarm_text_size" />
-
-                <LinearLayout
-                    android:id="@+id/view_week"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:animateLayoutChanges="true"
-                    android:animationCache="true"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <com.siarhei.alarmus.views.CircleCheckBox
-                        android:id="@+id/check_day1"
-                        android:layout_width="@dimen/text_check_size"
-                        android:layout_height="@dimen/text_check_size"
-                        android:layout_margin="@dimen/text_check_margin"
-                        android:text="M" />
-
-                    <com.siarhei.alarmus.views.CircleCheckBox
-                        android:id="@+id/check_day2"
-                        android:layout_width="@dimen/text_check_size"
-                        android:layout_height="@dimen/text_check_size"
-                        android:layout_margin="@dimen/text_check_margin"
-                        android:text="T" />
-
-                    <com.siarhei.alarmus.views.CircleCheckBox
-                        android:id="@+id/check_day3"
-                        android:layout_width="@dimen/text_check_size"
-                        android:layout_height="@dimen/text_check_size"
-                        android:layout_margin="@dimen/text_check_margin"
-                        android:text="W" />
-
-                    <com.siarhei.alarmus.views.CircleCheckBox
-                        android:id="@+id/check_day4"
-                        android:layout_width="@dimen/text_check_size"
-                        android:layout_height="@dimen/text_check_size"
-                        android:layout_margin="@dimen/text_check_margin"
-                        android:text="T" />
-
-                    <com.siarhei.alarmus.views.CircleCheckBox
-                        android:id="@+id/check_day5"
-                        android:layout_width="@dimen/text_check_size"
-                        android:layout_height="@dimen/text_check_size"
-                        android:layout_margin="@dimen/text_check_margin"
-                        android:text="F" />
-
-                    <com.siarhei.alarmus.views.CircleCheckBox
-                        android:id="@+id/check_day6"
-                        android:layout_width="@dimen/text_check_size"
-                        android:layout_height="@dimen/text_check_size"
-                        android:layout_margin="@dimen/text_check_margin"
-                        android:text="S" />
-
-                    <com.siarhei.alarmus.views.CircleCheckBox
-                        android:id="@+id/check_day7"
-                        android:layout_width="@dimen/text_check_size"
-                        android:layout_height="@dimen/text_check_size"
-                        android:layout_margin="@dimen/text_check_margin"
-                        android:text="S" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?android:attr/listDivider" />
-
-                <Switch
-                    android:id="@+id/alarmSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/default_height"
-                    android:text="On/Off"
-                    android:textSize="@dimen/add_alarm_text_size" />
-
             </LinearLayout>
+
+            <TimePicker
+                android:id="@+id/timePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="160dp"
+                android:layout_gravity="center_horizontal"
+                android:timePickerMode="spinner" />
+
+            <EditText
+                android:id="@+id/label_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:hint="Label"
+                android:inputType="text"
+                android:textSize="@dimen/add_alarm_text_size"
+                android:typeface="serif" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
+            <CheckBox
+                android:id="@+id/repeatCheck"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_height"
+                android:layoutDirection="rtl"
+                android:text="Repeat"
+                android:textSize="@dimen/add_alarm_text_size" />
+
+            <LinearLayout
+                android:id="@+id/view_week"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:animationCache="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.siarhei.alarmus.views.CircleCheckBox
+                    android:id="@+id/check_day1"
+                    android:layout_width="@dimen/text_check_size"
+                    android:layout_height="@dimen/text_check_size"
+                    android:layout_margin="@dimen/text_check_margin"
+                    android:text="M" />
+
+                <com.siarhei.alarmus.views.CircleCheckBox
+                    android:id="@+id/check_day2"
+                    android:layout_width="@dimen/text_check_size"
+                    android:layout_height="@dimen/text_check_size"
+                    android:layout_margin="@dimen/text_check_margin"
+                    android:text="T" />
+
+                <com.siarhei.alarmus.views.CircleCheckBox
+                    android:id="@+id/check_day3"
+                    android:layout_width="@dimen/text_check_size"
+                    android:layout_height="@dimen/text_check_size"
+                    android:layout_margin="@dimen/text_check_margin"
+                    android:text="W" />
+
+                <com.siarhei.alarmus.views.CircleCheckBox
+                    android:id="@+id/check_day4"
+                    android:layout_width="@dimen/text_check_size"
+                    android:layout_height="@dimen/text_check_size"
+                    android:layout_margin="@dimen/text_check_margin"
+                    android:text="T" />
+
+                <com.siarhei.alarmus.views.CircleCheckBox
+                    android:id="@+id/check_day5"
+                    android:layout_width="@dimen/text_check_size"
+                    android:layout_height="@dimen/text_check_size"
+                    android:layout_margin="@dimen/text_check_margin"
+                    android:text="F" />
+
+                <com.siarhei.alarmus.views.CircleCheckBox
+                    android:id="@+id/check_day6"
+                    android:layout_width="@dimen/text_check_size"
+                    android:layout_height="@dimen/text_check_size"
+                    android:layout_margin="@dimen/text_check_margin"
+                    android:text="S" />
+
+                <com.siarhei.alarmus.views.CircleCheckBox
+                    android:id="@+id/check_day7"
+                    android:layout_width="@dimen/text_check_size"
+                    android:layout_height="@dimen/text_check_size"
+                    android:layout_margin="@dimen/text_check_margin"
+                    android:text="S" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
+            <Switch
+                android:id="@+id/alarmSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_height"
+                android:text="On/Off"
+                android:textSize="@dimen/add_alarm_text_size" />
+
 
         </LinearLayout>
 

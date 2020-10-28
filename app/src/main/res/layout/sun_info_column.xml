@@ -2,46 +2,48 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:minWidth="@dimen/width_column_sun_info"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/text_day"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/height_item_sun_info_table"
         android:paddingHorizontal="@dimen/info_window_margin"
-        android:textColor="@color/info_color_text"
-         />
+        android:text="@string/date"
+        android:textColor="@color/info_color_text" />
 
     <TextView
         android:id="@+id/text_sunrise"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/height_item_sun_info_table"
         android:paddingHorizontal="@dimen/info_window_margin"
-        android:textAlignment="viewEnd"
-        android:textColor="@color/info_color_active"/>
+        android:text="@string/sunrise"
+        android:textColor="@color/info_color_text" />
 
     <TextView
         android:id="@+id/text_noon"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/height_item_sun_info_table"
         android:paddingHorizontal="@dimen/info_window_margin"
-        android:textAlignment="viewEnd"
-        android:textColor="@color/info_color_active"/>
+        android:text="@string/noon"
+        android:textColor="@color/info_color_text" />
 
     <TextView
         android:id="@+id/text_sunset"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/height_item_sun_info_table"
         android:paddingHorizontal="@dimen/info_window_margin"
-        android:textAlignment="viewEnd"
-        android:textColor="@color/info_color_active"/>
+        android:text="@string/sunset"
+        android:textColor="@color/info_color_text" />
+
     <TextView
         android:id="@+id/text_day_duration"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/height_item_sun_info_table"
         android:paddingHorizontal="@dimen/info_window_margin"
-        android:textAlignment="viewEnd"
-        android:textColor="@color/info_color_text"/>
+        android:text="@string/day_duration"
+        android:textColor="@color/info_color_text" />
 
 
 </LinearLayout>
