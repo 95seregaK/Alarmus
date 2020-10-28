@@ -4,9 +4,10 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
 
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/color_alarm_list_primary</item>
+        <item name="colorPrimaryDark">@color/color_alarm_list_primary_dark</item>
         <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:windowBackground">@color/color_alarm_list_bckg</item>
     </style>
 
     <style name="EditAlarmTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -15,6 +16,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
         <item name="android:textColor">@color/color_text_default</item>
+       <!-- <item name="android:fontFamily">sans-serif-light</item>-->
     </style>
 
     <style name="AlarmTheme" parent="Theme.AppCompat.NoActionBar">
@@ -39,4 +41,8 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
+
+    <color name="color_alarm_list_primary">#FF9800</color>
+    <color name="color_alarm_list_primary_dark">#FF6600</color>
+    <color name="color_alarm_list_bckg">#FFDB94</color>
 </resources>

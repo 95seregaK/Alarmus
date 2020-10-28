@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="5dp"
     android:orientation="vertical"
     tools:context=".activities.EditAlarmActivity">
 
@@ -14,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="true"
-        android:fillViewport="true" />
+        android:fillViewport="true"
+       />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_button"
@@ -29,7 +29,7 @@
         android:clickable="true"
         android:focusable="auto"
         android:src="@drawable/ic_add2"
-        app:backgroundTint="@color/colorPrimaryDark"
+        app:backgroundTint="@color/color_alarm_list_primary_dark"
         app:backgroundTintMode="add" />
 
 </RelativeLayout>

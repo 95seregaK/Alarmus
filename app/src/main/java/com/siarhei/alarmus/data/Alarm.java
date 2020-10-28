@@ -17,6 +17,7 @@ public class Alarm implements Parcelable {
     public static final String ID = "id";
     private static final int HOUR_DEFAULT = 6;
     private static final int MINUTE_DEFAULT = 0;
+    private static final long MAX_DELAY = 10 * 60 * 1000;
 
     final private int id;
     protected String label;
@@ -87,11 +88,10 @@ public class Alarm implements Parcelable {
     }
 
     public void setToday() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, getHour());
-        calendar.set(Calendar.MINUTE, getMinute());
-        calendar.set(Calendar.SECOND, 0);
-        time = calendar;
+        int hour = getHour();
+        int minute = getMinute();
+        time.setTimeInMillis(System.currentTimeMillis());
+        setTime(hour, minute);
     }
 
     public int getMinute() {
@@ -130,47 +130,14 @@ public class Alarm implements Parcelable {
     }
 
     public String toDate() {
-
         int day = time.get(Calendar.DAY_OF_MONTH);
         int month = time.get(Calendar.MONTH) + 1;
-        int year = time.get(Calendar.YEAR);
+        int year = time.get(Calendar.YEAR) % 100;
 
         return (day < 10 ? "0" : "") + day + "."
                 + (month < 10 ? "0" : "") + month + "."
-                + year;
+                + (year < 10 ? "0" : "") + year;
     }
-
-    private PendingIntent prepareIntent(Context context) {
-        Intent intent = new Intent(context, AlarmReceiver.class);
-        intent.setAction(String.valueOf(id));
-        intent.putExtra(ID, id);
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, id,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        return alarmIntent;
-    }
-
-    public void setAlarm(Context context) {
-        setTimeNext();
-        AlarmManager manager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
-        manager.set(AlarmManager.RTC_WAKEUP, getTimeInMillis(), prepareIntent(context));
-        Toast.makeText(context, "Будильник установлен на " + toString(), Toast.LENGTH_SHORT).show();
-    }
-
-    public void setDelayedAlarm(Context context, int delay) {
-        AlarmManager manager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
-        long t = System.currentTimeMillis() + delay * 60000;
-        manager.set(AlarmManager.RTC_WAKEUP, t, prepareIntent(context));
-        Toast.makeText(context, "Будильник сработает через " + delay + " минут",
-                Toast.LENGTH_SHORT).show();
-    }
-
-    public void cancelAlarm(Context context) {
-        AlarmManager manager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
-        manager.cancel(prepareIntent(context));
-        Toast.makeText(context, "Будильник выключен! " + toString(), Toast.LENGTH_SHORT).show();
-    }
-
 
     public boolean isEnabled() {
         return enabled;
@@ -196,17 +163,25 @@ public class Alarm implements Parcelable {
         return id;
     }
 
-
     @Override
     public int describeContents() {
         return 0;
     }
 
     public void setDays(boolean[] days) {
-        this.days = days;
+        boolean check = false;
+        for (int i = 0; i < 7; i++) {
+            check = check || days[i];
+        }
+        if (check)
+            this.days = days;
     }
 
     public boolean[] getDays() {
         return days;
+    }
+
+    public boolean isActual() {
+        return getTimeInMillis() > System.currentTimeMillis() - MAX_DELAY;
     }
 }

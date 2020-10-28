@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.siarhei.alarmus.R;
 import com.siarhei.alarmus.data.Alarm;
 import com.siarhei.alarmus.data.AlarmPreferences;
+import com.siarhei.alarmus.data.SunAlarmManager;
 import com.siarhei.alarmus.views.CircleSlider;
 
 import java.io.IOException;
@@ -27,6 +28,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     private MediaPlayer mMediaPlayer;
     private Alarm currentAlarm;
     private AlarmPreferences preferences;
+    private SunAlarmManager alarmManager;
 
 
     @Override
@@ -38,29 +40,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-        /*final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN;
-        // This work only for android 4.4+
-        getWindow().getDecorView().setSystemUiVisibility(flags);*/
-       /* InputMethodManager inputManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        if (inputManager != null)
-            inputManager.hideSoftInputFromWindow(getWindow().getDecorView().getApplicationWindowToken(), 0);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);*/
-       /* KeyguardManager km = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
-        KeyguardManager.KeyguardLock kl = km.newKeyguardLock("MyApp");
-        kl.disableKeyguard();
-
-        PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-        wl = pm.newWakeLock(
-                PowerManager.PARTIAL_WAKE_LOCK
-                        | PowerManager.ACQUIRE_CAUSES_WAKEUP
-                        | PowerManager.ON_AFTER_RELEASE, "Alarmus:tag");
-        wl.acquire();*/
-
-
+        alarmManager = SunAlarmManager.getService(this);
         sunSlider = findViewById(R.id.slideButton);
         time = findViewById(R.id.time);
         date = findViewById(R.id.date);
@@ -111,7 +91,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
 
     @Override
     public void onBackPressed() {
-        currentAlarm.setDelayedAlarm(this, 1);
+        SunAlarmManager.getService(this).setDelayed(currentAlarm, 1);
         super.onBackPressed();
 
     }
@@ -123,12 +103,12 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
                 if (!currentAlarm.isRepeat()) currentAlarm.setEnable(false);
                 else {
                     currentAlarm.setTimeNext();
-                    currentAlarm.setAlarm(this);
+                    alarmManager.set(currentAlarm);
                     Toast.makeText(getApplicationContext(), "Будильник установлен!!!", Toast.LENGTH_SHORT).show();
                 }
                 preferences.writeAlarm(currentAlarm);
             } else {
-                currentAlarm.setDelayedAlarm(this, 1);
+                alarmManager.setDelayed(currentAlarm, 1);
             }
             finish();
 

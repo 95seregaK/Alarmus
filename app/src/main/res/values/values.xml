@@ -13,9 +13,9 @@
     <dimen name="toolbar_button_margin">8dp</dimen>
     <dimen name="info_window_button_margin">16dp</dimen>
     <dimen name="info_window_margin">16dp</dimen>
-    <dimen name="row_text_size_max">22dp</dimen>
-    <dimen name="row_text_size_medium">16dp</dimen>
-    <dimen name="row_text_size_min">12dp</dimen>
+    <dimen name="row_text_size_max">28sp</dimen>
+    <dimen name="row_text_size_medium">16sp</dimen>
+    <dimen name="row_text_size_min">12sp</dimen>
     <dimen name="toolbar_height">50dp</dimen>
     <dimen name="info_window_toolbar_height">40dp</dimen>
     <dimen name="toolbar_text_size">26dp</dimen>
@@ -36,6 +36,6 @@
     <dimen name="margin_edit_dialog">10dp</dimen>
     <dimen name="radio_sun_mode_size">24dp</dimen>
     <dimen name="margin_radio_sun_mode">4dp</dimen>
-    <dimen name="height_sun_mode_radio">44dp</dimen>
+    <dimen name="height_sun_mode_radio">42dp</dimen>
     <dimen name="size_text_image_radio">7sp</dimen>
 </resources>

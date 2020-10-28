@@ -7,6 +7,7 @@ import com.siarhei.alarmus.activities.SetLocationActivity;
 import com.siarhei.alarmus.sun.SunInfo;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class SunAlarm extends Alarm {
     public static final int MODE_SUNRISE = 1;
@@ -81,8 +82,7 @@ public class SunAlarm extends Alarm {
             default:
                 break;
         }
-        time.set(Calendar.HOUR_OF_DAY, SunInfo.getHour(t));
-        time.set(Calendar.MINUTE, SunInfo.getMinute(t));
+        setTime(SunInfo.getHour(t), SunInfo.getMinute(t));
         time.add(Calendar.MINUTE, delay);
     }
 

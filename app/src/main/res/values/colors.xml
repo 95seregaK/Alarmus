@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimaryDark">#02734F</color>
     <color name="colorAccent">#D81B60</color>
     <color name="infoWindowBckg">#48A9EE</color>
     <color name="scrollBckg">#FFFFFF</color>
     <color name="white">#FFFFFF</color>
     <color name="progressClr">#00FFFFFF</color>
     <color name="alarmBckg">#A11CD535</color>
-    <color name="colorAlarmEnable">@color/colorPrimaryDark</color>
-    <color name="colorAlarmDisable">#757575</color>
+    <color name="colorAlarmEnable">#9E4400</color>
+    <color name="colorAlarmDisable">#FFAD66</color>
     <color name="colorTransparent">#00FFFFFF</color>
     <color name="info_color_text">#FFFFFF</color>
     <color name="info_color_active">#FFE600</color>
@@ -24,6 +24,7 @@
     <color name="colorAlarmActivityBckg">#B24A4A4A</color>
     <color name="color_text_image_radio_checked">#00025C</color>
     <color name="color_text_image_radio_unchecked">#808080</color>
+    <color name="color_row">#FAF7F1</color>
     <color name="color_filter_disable">#A0A0A0</color>
 
 </resources>

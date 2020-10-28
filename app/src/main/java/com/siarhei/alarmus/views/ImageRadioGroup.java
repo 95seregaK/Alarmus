@@ -2,6 +2,7 @@ package com.siarhei.alarmus.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
@@ -20,10 +21,15 @@ public class ImageRadioGroup extends LinearLayout {
         this.onCheckedChangeListener = onCheckedChangeListener;
     }
 
-    public void onCheckedChange(int id) {
+    public void onChildChecked(int id) {
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            if (child instanceof ImageRadioButton && child.getId() != id && ((ImageRadioButton) child).isChecked()) {
+                ((ImageRadioButton) child).setChecked(false);
+            }
+        }
         if (onCheckedChangeListener != null) onCheckedChangeListener.onCheckedChange(id);
     }
-
 
     public interface OnCheckedChangeListener {
         public void onCheckedChange(int id);

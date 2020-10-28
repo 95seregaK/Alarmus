@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.siarhei.alarmus.data.Alarm;
 import com.siarhei.alarmus.data.AlarmPreferences;
+import com.siarhei.alarmus.data.SunAlarmManager;
 
 import java.util.List;
 
@@ -17,7 +18,8 @@ public class BootReceiver extends BroadcastReceiver {
         AlarmPreferences preferences = AlarmPreferences.getInstance(context);
         List<Alarm> alarms = preferences.readAllAlarms();
         for (Alarm alarm : alarms) {
-            if(alarm.isEnabled())alarm.setAlarm(context);
+            if (alarm.isEnabled() && alarm.isActual())
+                SunAlarmManager.getService(context).set(alarm);
         }
     }
 }

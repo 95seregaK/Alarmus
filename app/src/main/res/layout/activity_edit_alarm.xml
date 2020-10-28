@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
 
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
@@ -81,10 +82,11 @@
                         android:id="@+id/radioSunrise"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/height_sun_mode_radio"
-                        android:layout_marginHorizontal="@dimen/margin_radio_sun_mode"
+                        android:layout_marginHorizontal="4dp"
                         android:background="?android:attr/selectableItemBackground"
                         android:text="@string/sunrise"
-                        android:textColor="@drawable/radio_text" />
+                        android:textColor="@drawable/radio_text"
+                        app:button="@drawable/ic_sunrise" />
 
                     <com.siarhei.alarmus.views.ImageRadioButton
                         android:id="@+id/radioNoon"
@@ -92,9 +94,8 @@
                         android:layout_height="@dimen/height_sun_mode_radio"
                         android:layout_marginHorizontal="@dimen/margin_radio_sun_mode"
                         android:background="?android:attr/selectableItemBackground"
-
-
-                        android:textColor="@drawable/radio_text" />
+                        android:textColor="@drawable/radio_text"
+                        app:button="@drawable/ic_noon" />
 
                     <com.siarhei.alarmus.views.ImageRadioButton
                         android:id="@+id/radioSunset"
@@ -102,7 +103,8 @@
                         android:layout_height="@dimen/height_sun_mode_radio"
                         android:layout_marginHorizontal="@dimen/margin_radio_sun_mode"
                         android:background="?android:attr/selectableItemBackground"
-                        android:textColor="@drawable/radio_text" />
+                        android:textColor="@drawable/radio_text"
+                        app:button="@drawable/ic_sunset" />
 
                 </com.siarhei.alarmus.views.ImageRadioGroup>
 

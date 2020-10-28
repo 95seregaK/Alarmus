@@ -100,6 +100,7 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
         defaultMarker.setOnMarkerClickListener(this);
         defaultMarker.setPosition(startPoint);
 
+
         MapEventsReceiver mapEventsReceiver = new MyMapEventsReceiver() {
             @Override
             public boolean singleTapConfirmedHelper(GeoPoint p) {

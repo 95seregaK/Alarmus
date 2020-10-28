@@ -1,6 +1,5 @@
 package com.siarhei.alarmus.activities;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,7 +18,7 @@ import com.siarhei.alarmus.R;
 import com.siarhei.alarmus.data.Alarm;
 import com.siarhei.alarmus.data.AlarmPreferences;
 import com.siarhei.alarmus.data.SunAlarm;
-import com.siarhei.alarmus.sun.SunInfo;
+import com.siarhei.alarmus.data.SunAlarmManager;
 import com.siarhei.alarmus.views.AlarmRecyclerAdapter;
 import com.siarhei.alarmus.views.MyRecyclerView;
 
@@ -38,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static List<Alarm> alarms;
     private FloatingActionButton addBtn;
     private AlarmRecyclerAdapter alarmAdapter;
+    private SunAlarmManager alarmManager;
     private AlertDialog chooseTypeDialog;
 
     private static int compare(Alarm o1, Alarm o2) {
@@ -62,8 +62,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         addBtn = findViewById(R.id.add_button);
         addBtn.setOnClickListener(this);
         alarmAdapter.setOnCheckedListener(this);
-        chooseTypeDialog = createDialog();
 
+        alarmManager = SunAlarmManager.getService(this);
     }
 
     public AlertDialog createDialog() {
@@ -93,26 +93,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Collections.sort(alarms, MainActivity::compare);
             alarmAdapter.setAlarms(alarms);
         }
-/*
-        if (requestCode == CODE_ADD_NEW && resultCode == EditAlarmActivity.RESULT_NEW_ALARM) {
-            AlarmData alarmData = (AlarmData) data.getParcelableExtra(ALARM_EDITING_NAME);
-            alarms.add(alarmData);
-            alarmAdapter.notifyItemInserted(alarms.size() - 1);
-            if (alarmData.isEnabled()) alarmData.setAlarm(this);
-            preferences.writeAlarm(alarmData);
-
-        } else if (requestCode >> SHIFT == CODE_EDIT_CURRENT
-                && resultCode == EditAlarmActivity.RESULT_NEW_ALARM) {
-            AlarmData alarmData = (AlarmData) data.getParcelableExtra(ALARM_EDITING_NAME);
-            int i = requestCode - (CODE_EDIT_CURRENT << SHIFT);
-            if (!alarms.get(i).isEnabled() && alarmData.isEnabled()) alarmData.setAlarm(this);
-            if (alarms.get(i).isEnabled() && !alarmData.isEnabled()) alarmData.cancelAlarm(this);
-            alarms.set(i, alarmData);
-            alarmAdapter.notifyItemChanged(i);
-
-            preferences.writeAlarm(alarmData);
-            Toast.makeText(this, i + "onActivityResult()", Toast.LENGTH_SHORT).show();
-        }*/
     }
 
     @Override
@@ -136,13 +116,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v.getId() == addBtn.getId()) {
+            chooseTypeDialog = createDialog();
             chooseTypeDialog.show();
         } else if (v.getId() == R.id.simple_alarm_btn) {
+            chooseTypeDialog.cancel();
             editAlarm(new Alarm(getNextId()));
-            chooseTypeDialog.cancel();
+
         } else if (v.getId() == R.id.sun_alarm_btn) {
-            editAlarm(new SunAlarm(getNextId()));
             chooseTypeDialog.cancel();
+            editAlarm(new SunAlarm(getNextId()));
         }
     }
 
@@ -162,12 +144,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (dir == MyRecyclerView.LEFT) {
             preferences.remove(alarms.get(position).getId());
-            alarms.get(position).cancelAlarm(this);
+            alarmManager.cancel(alarms.get(position));
             alarms.remove(position);
         }
         alarmAdapter.notifyDataSetChanged();
     }
-
 
     @Override
     public void onCheckedChange(CompoundButton buttonView, int position, boolean isChecked) {
@@ -175,10 +156,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (isChecked && !currentAlarm.isEnabled()) {
             currentAlarm.setEnable(true);
-            currentAlarm.setAlarm(this);
+            currentAlarm.setTimeNext();
+            alarmManager.set(currentAlarm);
         } else if (!isChecked && currentAlarm.isEnabled()) {
             currentAlarm.setEnable(false);
-            currentAlarm.cancelAlarm(this);
+            alarmManager.cancel(currentAlarm);
         }
         preferences.writeAlarm(currentAlarm);
         alarmAdapter.notifyDataSetChanged();

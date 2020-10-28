@@ -36,7 +36,7 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
         final Alarm alarm = alarms.get(position);
         holder.time.setText(alarm.toTime());
         holder.date.setText(alarm.toDate());
-        holder.label.setText(alarm.getId() + "");
+        holder.label.setText(alarm.getLabel() + "");
         holder.days.setText(alarm.isRepeat() ? R.string.repeat : R.string.once);
         holder.enabled.setChecked(alarm.isEnabled());
         holder.enabled.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +70,7 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
 
         } else holder.sunMode.setImageDrawable(null);
         if (alarm.isEnabled()) {
+            holder.layout.setBackgroundColor(context.getResources().getColor(R.color.color_row));
             holder.time.setTextColor(context.getResources().getColor(R.color.colorAlarmEnable));
             holder.date.setTextColor(context.getResources().getColor(R.color.colorAlarmEnable));
             holder.label.setTextColor(context.getResources().getColor(R.color.colorAlarmEnable));
@@ -77,6 +78,7 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
             holder.sunMode.setImageAlpha(context.getResources().getInteger(R.integer.enable_alpha));
             holder.sunMode.setColorFilter(0);
         } else {
+            holder.layout.setBackgroundColor(context.getResources().getColor(R.color.colorTransparent));
             holder.time.setTextColor(context.getResources().getColor(R.color.colorAlarmDisable));
             holder.date.setTextColor(context.getResources().getColor(R.color.colorAlarmDisable));
             holder.label.setTextColor(context.getResources().getColor(R.color.colorAlarmDisable));
@@ -105,9 +107,11 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
         final TextView time, date, label, days;
         final Switch enabled;
         final ImageView sunMode;
+        final View layout;
 
         ViewHolder(View itemView) {
             super(itemView);
+            layout= itemView;
             time = itemView.findViewById(R.id.row_time);
             date = itemView.findViewById(R.id.row_date);
             label = itemView.findViewById(R.id.row_label);

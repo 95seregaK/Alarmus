@@ -5,30 +5,31 @@
     android:layout_height="50dp"
     android:clickable="true"
     android:foreground="?selectableItemBackground"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:clickable="true"
-        android:foreground="?selectableItemBackground"
         android:orientation="horizontal"
         android:padding="@dimen/toolbar_button_margin">
 
         <TextView
             android:id="@+id/row_time"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.2"
+            android:layout_weight="0.3"
+            android:fontFamily="sans-serif-condensed-light"
             android:gravity="center"
             android:textSize="@dimen/row_text_size_max"
             tools:text="7:00" />
 
         <TextView
             android:id="@+id/row_date"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.2"
+            android:fontFamily="sans-serif-condensed-light"
             android:gravity="bottom"
             android:textSize="@dimen/row_text_size_min"
             tools:text="Tomorrow" />
@@ -36,32 +37,34 @@
 
         <TextView
             android:id="@+id/row_label"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.2"
-            android:gravity="center"
+            android:layout_weight="0.25"
+            android:gravity="left"
+            android:singleLine="true"
             android:textSize="@dimen/row_text_size_medium"
+
             tools:text="Get Up" />
 
 
         <TextView
             android:id="@+id/row_days"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.4"
-            android:gravity="center"
+            android:freezesText="false"
             android:textSize="@dimen/row_text_size_medium"
             tools:text="M Tu W Th F Sa Su" />
 
         <ImageView
             android:id="@+id/row_sun_mode"
-            android:layout_width="25dp"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.05" />
+            android:layout_weight="0.2" />
 
         <Switch
             android:id="@+id/row_switch"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.2" />
     </LinearLayout>

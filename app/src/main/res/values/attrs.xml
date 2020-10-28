@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="CircleCheckBox">
-        <attr name="source" format="integer" />
-        <attr name="android:state_checked" format="boolean">
-        </attr>
+        <attr name="button_checked" format="reference" />
+        <attr name="button_unchecked" format="integer" />
+        <attr name="state_checked" format="boolean"/>
+    </declare-styleable>
+    <declare-styleable name="ImageRadioButton">
+        <attr name="button" format="reference" />
+        <attr name="android:state_checked" format="boolean"/>
     </declare-styleable>
 </resources>
