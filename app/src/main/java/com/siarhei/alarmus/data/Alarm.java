@@ -79,8 +79,8 @@ public class Alarm implements Parcelable {
     }
 
     public void setTimeNext() {
-        long now = System.currentTimeMillis();
         setToday();
+        long now = System.currentTimeMillis();
         while (now > time.getTimeInMillis() || (repeat && !days[(time.get(Calendar.DAY_OF_WEEK) + 5) % 7])) {
             time.add(Calendar.DAY_OF_MONTH, 1);
         }
@@ -173,8 +173,10 @@ public class Alarm implements Parcelable {
         for (int i = 0; i < 7; i++) {
             check = check || days[i];
         }
-        if (check)
+        if (check) {
             this.days = days;
+            //setTimeNext();
+        }
     }
 
     public boolean[] getDays() {

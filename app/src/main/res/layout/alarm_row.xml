@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="50dp"
+    android:background="@color/white"
     android:clickable="true"
     android:foreground="?selectableItemBackground"
-    android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -19,22 +19,28 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.3"
-            android:fontFamily="sans-serif-condensed-light"
+            android:textAppearance="@style/SmallDigitStyle"
             android:gravity="center"
             android:textSize="@dimen/row_text_size_max"
             tools:text="7:00" />
+
+
 
         <TextView
             android:id="@+id/row_date"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.2"
-            android:fontFamily="sans-serif-condensed-light"
+            android:textAppearance="@style/SmallDigitStyle"
             android:gravity="bottom"
             android:textSize="@dimen/row_text_size_min"
             tools:text="Tomorrow" />
 
-
+        <ImageView
+            android:id="@+id/row_sun_mode"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.15" />
         <TextView
             android:id="@+id/row_label"
             android:layout_width="0dp"
@@ -43,9 +49,8 @@
             android:gravity="left"
             android:singleLine="true"
             android:textSize="@dimen/row_text_size_medium"
-
+            android:textAppearance="@style/TextStyle"
             tools:text="Get Up" />
-
 
         <TextView
             android:id="@+id/row_days"
@@ -54,13 +59,9 @@
             android:layout_weight="0.4"
             android:freezesText="false"
             android:textSize="@dimen/row_text_size_medium"
-            tools:text="M Tu W Th F Sa Su" />
+            android:textAppearance="@style/TextStyle"
 
-        <ImageView
-            android:id="@+id/row_sun_mode"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.2" />
+            tools:text="M Tu W Th F Sa Su" />
 
         <Switch
             android:id="@+id/row_switch"

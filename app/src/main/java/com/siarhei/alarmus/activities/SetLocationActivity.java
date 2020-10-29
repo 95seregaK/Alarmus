@@ -23,6 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.siarhei.alarmus.R;
 import com.siarhei.alarmus.map.SunInfoMarker;
 import com.siarhei.alarmus.sun.SunInfo;
+import com.siarhei.alarmus.sun.SunMath;
 import com.siarhei.alarmus.views.FloatingView;
 import com.siarhei.alarmus.views.SunInfoScrollView;
 
@@ -57,6 +58,8 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
     private SunInfo currentSunInfo;
     public static final double DEFAULT_LATITUDE = 54.0;
     public static final double DEFAULT_LONGITUDE = 28.0;
+    private TextView locationView;
+    private TextView timeZoneView;
 
 
     @Override
@@ -69,6 +72,8 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
         setPositionBtn.setOnClickListener(this);
         infoWindow = findViewById(R.id.info_view);
         sunInfoView = findViewById(R.id.sun_info_view);
+        locationView = findViewById(R.id.location);
+        timeZoneView = findViewById(R.id.time_zone);
         dateButton = findViewById(R.id.date_button);
         dateButton.setOnClickListener(this);
         infoWindow.setOnClickListener(this);
@@ -100,7 +105,9 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
 
         defaultMarker.setPosition(startPoint);
         currentSunInfo = new SunInfo(Calendar.getInstance(), lat, lon);
-        sunInfoView.setSunInfo(currentSunInfo);
+        updateSunInfoLocation();
+        //sunInfoView.setSunInfo(currentSunInfo);
+
 
         MapEventsReceiver mapEventsReceiver = new MyMapEventsReceiver() {
             @Override
@@ -200,9 +207,12 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
     }
 
     private void updateSunInfoLocation() {
-        currentSunInfo.setNewPosition(
-                defaultMarker.getPosition().getLatitude(),
-                defaultMarker.getPosition().getLongitude());
+        double lat = defaultMarker.getPosition().getLatitude();
+        double lon = defaultMarker.getPosition().getLongitude();
+        currentSunInfo.setNewPosition(lat, lon);
+        locationView.setText("Location: " + SunMath.round(lat, 5) + ", " + SunMath.round(lon, 5));
+        int offset = currentSunInfo.getTimeZoneOffset();
+        timeZoneView.setText("TimeZone: " + currentSunInfo.getTimeZone() + (offset > 0 ? " +" : " ") + offset);
         sunInfoView.setSunInfo(currentSunInfo);
     }
 

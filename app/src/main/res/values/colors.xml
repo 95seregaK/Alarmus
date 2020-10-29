@@ -1,29 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#02734F</color>
-    <color name="colorAccent">#D81B60</color>
-    <color name="infoWindowBckg">#48A9EE</color>
-    <color name="scrollBckg">#FFFFFF</color>
+    <color name="colorPrimary">#008DB1</color>
+    <color name="colorPrimaryDark">#3059AC</color>
+    <color name="colorAccent">#008DB1</color>
+    <color name="infoWindowBckg">#136693</color>
     <color name="white">#FFFFFF</color>
-    <color name="progressClr">#00FFFFFF</color>
-    <color name="alarmBckg">#A11CD535</color>
-    <color name="colorAlarmEnable">#9E4400</color>
-    <color name="colorAlarmDisable">#FFAD66</color>
     <color name="colorTransparent">#00FFFFFF</color>
-    <color name="info_color_text">#FFFFFF</color>
-    <color name="info_color_active">#FFE600</color>
-    <color name="info_color_passive">#AAAAAA</color>
+    <color name="color_info_text">#FFFFFF</color>
+    <color name="color_info_active">#FFE600</color>
+    <color name="color_info_inactive">@color/color_text_inactive</color>
     <color name="colorHalfTransparent">#85191919</color>
     <color name="color_circle_check_checked">@color/color_circle_view</color>
     <color name="color_circle_check_unchecked">#00000000</color>
     <color name="color_text_circle_check_checked">#FFFFFF</color>
-    <color name="color_text_circle_check_unchecked">#888888</color>
-    <color name="color_text_default">#001B6C</color>
-    <color name="color_circle_view">#FD8720</color>
-    <color name="colorAlarmActivityBckg">#B24A4A4A</color>
-    <color name="color_text_image_radio_checked">#00025C</color>
-    <color name="color_text_image_radio_unchecked">#808080</color>
+    <color name="color_text_circle_check_unchecked">@color/color_text_inactive</color>
+    <color name="color_text_default">#813800</color>
+    <color name="color_text_inactive">#9F9F9F</color>
+    <color name="color_circle_view">@color/colorPrimaryDark</color>
+    <color name="color_text_image_radio_checked">@color/color_text_default</color>
+    <color name="color_text_image_radio_unchecked">@color/color_text_inactive</color>
     <color name="color_row">#FAF7F1</color>
     <color name="color_filter_disable">#A0A0A0</color>
 

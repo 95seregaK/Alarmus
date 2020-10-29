@@ -22,11 +22,14 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
     private List<Alarm> alarms;
     private OnCheckedChangeListener onCheckedChangeListener;
     private Context context;
+    private int colorAlarmDisable, colorAlarmEnable;
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
+        colorAlarmEnable = context.getResources().getColor(R.color.color_text_default);
+        colorAlarmDisable = context.getResources().getColor(R.color.color_text_inactive);
         final View v = LayoutInflater.from(context).inflate(R.layout.alarm_row, parent, false);
         return new ViewHolder(v);
     }
@@ -71,20 +74,21 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
         } else holder.sunMode.setImageDrawable(null);
         if (alarm.isEnabled()) {
             holder.layout.setBackgroundColor(context.getResources().getColor(R.color.color_row));
-            holder.time.setTextColor(context.getResources().getColor(R.color.colorAlarmEnable));
-            holder.date.setTextColor(context.getResources().getColor(R.color.colorAlarmEnable));
-            holder.label.setTextColor(context.getResources().getColor(R.color.colorAlarmEnable));
-            holder.days.setTextColor(context.getResources().getColor(R.color.colorAlarmEnable));
+            holder.time.setTextColor(colorAlarmEnable);
+            holder.date.setTextColor(colorAlarmEnable);
+            holder.label.setTextColor(colorAlarmEnable);
+            holder.days.setTextColor(colorAlarmEnable);
             holder.sunMode.setImageAlpha(context.getResources().getInteger(R.integer.enable_alpha));
             holder.sunMode.setColorFilter(0);
         } else {
             holder.layout.setBackgroundColor(context.getResources().getColor(R.color.colorTransparent));
-            holder.time.setTextColor(context.getResources().getColor(R.color.colorAlarmDisable));
-            holder.date.setTextColor(context.getResources().getColor(R.color.colorAlarmDisable));
-            holder.label.setTextColor(context.getResources().getColor(R.color.colorAlarmDisable));
-            holder.days.setTextColor(context.getResources().getColor(R.color.colorAlarmDisable));
+            holder.time.setTextColor(colorAlarmDisable);
+            holder.date.setTextColor(colorAlarmDisable);
+            holder.label.setTextColor(colorAlarmDisable);
+            holder.days.setTextColor(colorAlarmDisable);
             holder.sunMode.setImageAlpha(context.getResources().getInteger(R.integer.disable_alpha));
-            holder.sunMode.setColorFilter(context.getResources().getColor(R.color.color_filter_disable));
+            //holder.sunMode.setColorFilter(context.getResources().getColor(R.color.color_filter_disable));
+            holder.sunMode.setColorFilter(colorAlarmDisable);
         }
     }
 
@@ -111,7 +115,7 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
 
         ViewHolder(View itemView) {
             super(itemView);
-            layout= itemView;
+            layout = itemView;
             time = itemView.findViewById(R.id.row_time);
             date = itemView.findViewById(R.id.row_date);
             label = itemView.findViewById(R.id.row_label);

@@ -24,6 +24,7 @@ public class SunAlarm extends Alarm {
             return new SunAlarm[size];
         }
     };
+    public static int DElAY_DEFAULT = -10;
     protected int sunMode = MODE_SUNRISE;
     protected double latitude;
     protected double longitude;
@@ -41,7 +42,7 @@ public class SunAlarm extends Alarm {
         super(id);
         latitude = SetLocationActivity.DEFAULT_LATITUDE;
         longitude = SetLocationActivity.DEFAULT_LONGITUDE;
-        delay = 0;
+        delay = DElAY_DEFAULT;
         defineTime();
     }
 

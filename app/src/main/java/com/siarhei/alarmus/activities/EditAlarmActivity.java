@@ -9,12 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
-import android.widget.Checkable;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioGroup;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -51,7 +48,6 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
 
     private TextView timeView, dateView, locationView;
     private EditText labelEdit;
-    private Switch alarmSwitch;
     private TimePicker timePicker;
     private ImageButton saveBtn;
     private CheckBox repeatCheck;
@@ -111,7 +107,6 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
                 findViewById(R.id.check_day2), findViewById(R.id.check_day3),
                 findViewById(R.id.check_day4), findViewById(R.id.check_day5),
                 findViewById(R.id.check_day6), findViewById(R.id.check_day7)};
-        alarmSwitch = findViewById(R.id.alarmSwitch);
     }
 
     private void setVisibility() {
@@ -122,7 +117,6 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     }
 
     private void updateContentView() {
-        alarmSwitch.setChecked(currentAlarm.isEnabled());
         repeatCheck.setChecked(currentAlarm.isRepeat());
         weekView.setVisibility(currentAlarm.isRepeat() ? View.VISIBLE : View.GONE);
         for (int i = 0; i < 7; i++) {
@@ -197,9 +191,9 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             updateAlarm();
             updateTimeView();
         });
-        delayPicker.setOnItemSelectedListener(index -> {
-            updateAlarm();
-            updateTimeView();
+        delayPicker.setOnValueChangedListener((picker, oldVal, newVal) -> {
+            EditAlarmActivity.this.updateAlarm();
+            EditAlarmActivity.this.updateTimeView();
         });
         for (int i = 0; i < 7; i++) {
             checkDays[i].setOnCheckedChangeListener((view, checked) -> {
@@ -275,7 +269,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             SunAlarm sunAlarm = (SunAlarm) currentAlarm;
             locationView.setText("Location: " + SunMath.round(latitude, 4) + " " + SunMath.round(longitude, 4));
             SunInfo sunInfo = new SunInfo(currentAlarm.getTime(), latitude, longitude);
-
+            sunInfo = SunInfo.nextDaySunInfo(sunInfo, -1);
             if (!SunInfo.afterNow(sunInfo, SunInfo.SUNSET_MODE))
                 sunInfo = SunInfo.nextDaySunInfo(sunInfo, 1);
             radioSunset.setSubText(sunInfo.getDateString());
@@ -290,21 +284,19 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
                 sunInfo = SunInfo.nextDaySunInfo(sunInfo, 1);
             radioSunrise.setText(SunInfo.timeToString(sunInfo.getSunriseLocalTime(), SunInfo.HH_MM));
             radioSunrise.setSubText(sunInfo.getDateString());
-
-            delayPicker.setValue(sunAlarm.getDelay());
+            delayPicker.setSelectedValue(sunAlarm.getDelay());
         }
     }
 
 
     private void updateAlarm() {
-        currentAlarm.setEnable(alarmSwitch.isChecked());
         if (alarmType == SUN_TYPE) {
             SunAlarm sunAlarm = (SunAlarm) currentAlarm;
             if (radioSunrise.isChecked()) sunAlarm.setSunMode(SunAlarm.MODE_SUNRISE);
             else if (radioNoon.isChecked()) sunAlarm.setSunMode(SunAlarm.MODE_NOON);
             else if (radioSunset.isChecked()) sunAlarm.setSunMode(SunAlarm.MODE_SUNSET);
             sunAlarm.setPosition(latitude, longitude);
-            sunAlarm.setDelay(delayPicker.getValue());
+            sunAlarm.setDelay(delayPicker.getSelectedValue());
         } else {
             currentAlarm.setTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute());
         }

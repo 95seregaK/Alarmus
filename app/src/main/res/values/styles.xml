@@ -4,32 +4,49 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
 
-        <item name="colorPrimary">@color/color_alarm_list_primary</item>
-        <item name="colorPrimaryDark">@color/color_alarm_list_primary_dark</item>
-        <item name="colorAccent">@color/colorPrimary</item>
-        <item name="android:windowBackground">@color/color_alarm_list_bckg</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
     </style>
 
     <style name="EditAlarmTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorPrimary</item>
-        <item name="android:textColor">@color/color_text_default</item>
-       <!-- <item name="android:fontFamily">sans-serif-light</item>-->
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="AlarmTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@drawable/sunrise_bckg</item>
-        <item name="android:typeface">serif</item>
-        <item name="android:textColor">@color/color_text_default</item>
 
     </style>
 
     <style name="InfoWindowStyle">
+        <item name="android:textAppearance">@style/TextStyle</item>
+    </style>
+
+    <style name="TextStyle">
         <item name="android:textSize">@dimen/info_window_text_size</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+    <style name="TextStyle.Dark">
+       <item name="android:textColor">@color/color_text_default</item>
+    </style>
+    <style name="TextStyle.Light">
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="LargeDigitStyle">
+        <item name="android:textSize">@dimen/info_window_text_size</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="SmallDigitStyle">
+        <item name="android:textSize">@dimen/info_window_text_size</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="CustomDialog" parent="android:Theme.Dialog">
@@ -41,8 +58,4 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
-
-    <color name="color_alarm_list_primary">#FF9800</color>
-    <color name="color_alarm_list_primary_dark">#FF6600</color>
-    <color name="color_alarm_list_bckg">#FFDB94</color>
 </resources>

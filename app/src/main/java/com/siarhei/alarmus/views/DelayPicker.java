@@ -2,15 +2,14 @@ package com.siarhei.alarmus.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.widget.NumberPicker;
 
-import com.wefika.horizontalpicker.HorizontalPicker;
-
-public class DelayPicker extends HorizontalPicker {
+public class DelayPicker extends NumberPicker {
     private int maxDelay = 120;
+    private String[] displayedValues;
 
     public DelayPicker(Context context) {
         super(context);
-        init();
     }
 
     public DelayPicker(Context context, AttributeSet attrs) {
@@ -24,20 +23,28 @@ public class DelayPicker extends HorizontalPicker {
     }
 
     private void init() {
-        String str[] = new String[maxDelay * 2 + 1];
+        displayedValues = new String[maxDelay * 2 + 1];
         for (int i = -maxDelay; i <= maxDelay; i++) {
-            str[i + maxDelay] = (i > 0 ? "+" : "") + i;
+            displayedValues[i + maxDelay] = (i > 0 ? "+" : "") + i;
         }
-        setValues(str);
-        setSideItems(1);
-        setSelectedItem(maxDelay);
+        setDisplayedValues(displayedValues);
+        setMaxValue(maxDelay * 2);
+        setDisplayedValues(displayedValues);
+        setSelectedValue(0);
     }
 
-    public int getValue() {
-        return getSelectedItem() - maxDelay;
+    public int getSelectedValue() {
+        return getValue() - maxDelay;
     }
 
+    public void setSelectedValue(int value) {
+        setValue(value + maxDelay);
+        setDisplayedValues(displayedValues);
+    }
+
+    @Override
     public void setValue(int value) {
-        setSelectedItem(value + maxDelay);
+        super.setValue(value);
+        setDisplayedValues(displayedValues);
     }
 }

@@ -63,7 +63,7 @@ public class ImageRadioButton extends LinearLayout implements Checkable {
 
         Typeface face = Typeface.create("sans-serif-light", Typeface.NORMAL);
         mainText.setTypeface(face);
-        //subText.setTypeface(face);
+        subText.setTypeface(face);
         mainText.setTextSize(getResources().getDimension(R.dimen.size_text_image_radio));
         TypedArray a = null;
         if (defStyle != -1)

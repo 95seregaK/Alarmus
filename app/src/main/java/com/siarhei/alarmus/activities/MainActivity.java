@@ -49,12 +49,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toast.makeText(getApplicationContext(), "onCreate()", Toast.LENGTH_SHORT).show();
-        //preferences = AlarmPreferences.getInstance(this);
-        //alarms = preferences.readAllAlarms();
         recycler = findViewById(R.id.recycler);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         alarmAdapter = new AlarmRecyclerAdapter();
-        //alarmAdapter.setAlarms(alarms);
         recycler.setLayoutManager(llm);
         recycler.setAdapter(alarmAdapter);
         recycler.setOnItemSwipeListener(this);
@@ -87,28 +84,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CODE_ADD_NEW && resultCode == EditAlarmActivity.RESULT_NEW_ALARM) {
-            //if (alarms.size() == 0) preferences = AlarmPreferences.getInstance(this);
-            //alarms = preferences.readAllAlarms();
-            //Collections.sort(alarms, MainActivity::compare);
-            //alarmAdapter.setAlarms(alarms);
+           //updateAlarmList();
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        preferences = AlarmPreferences.getInstance(this);
-        alarms = preferences.readAllAlarms();
-        Collections.sort(alarms, MainActivity::compare);
-        alarmAdapter.setAlarms(alarms);
+        updateAlarmList();
         //Toast.makeText(getApplicationContext(), "onResume()", Toast.LENGTH_SHORT).show();
     }
 
-    public void editAlarm(Alarm alarm) {
+    public void updateAlarmList() {
+        if (alarms == null || alarms.size() == 0)
+            preferences = AlarmPreferences.getInstance(this);
+        alarms = preferences.readAllAlarms();
+        Collections.sort(alarms, MainActivity::compare);
+        alarmAdapter.setAlarms(alarms);
+    }
+
+    public void editAlarm(Alarm alarm, int code) {
         Intent intent = new Intent("android.intent.action.ADD_ALARM");
-        if (alarm instanceof Alarm) intent.putExtra(ALARM_EDITING, alarm);
-        else intent.putExtra(ALARM_EDITING, alarm);
-        startActivityForResult(intent, CODE_ADD_NEW);
+        intent.putExtra(ALARM_EDITING, alarm);
+        startActivityForResult(intent, code);
     }
 
     @Override
@@ -118,24 +116,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             chooseTypeDialog.show();
         } else if (v.getId() == R.id.simple_alarm_btn) {
             chooseTypeDialog.cancel();
-            editAlarm(new Alarm(getNextId()));
+            editAlarm(new Alarm(getNextId()), CODE_ADD_NEW);
 
         } else if (v.getId() == R.id.sun_alarm_btn) {
             chooseTypeDialog.cancel();
-            editAlarm(new SunAlarm(getNextId()));
+            editAlarm(new SunAlarm(getNextId()), CODE_ADD_NEW);
         }
     }
 
     @Override
     public void onItemClick(View view, int position) {
-        editAlarm(alarms.get(position));
+        editAlarm(alarms.get(position), CODE_EDIT_CURRENT);
     }
 
     @Override
     public void onLongItemClick(View view, int position) {
 
     }
-
 
     @Override
     public void onItemSwipe(View view, int position, int dir) {

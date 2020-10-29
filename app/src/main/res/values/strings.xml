@@ -4,7 +4,7 @@
     <string name="dialog_title">Будидльник</string>
     <string name="ok">OK</string>
     <string name="once">once</string>
-    <string name="repeat">repeat</string>
+    <string name="repeat">Repeat</string>
     <string name="cancel">CANCEL</string>
     <string name="alarm_deleted">Будильник удален!</string>
     <string name="save_alarm">Save</string>
@@ -18,5 +18,7 @@
     <string name="location">Location</string>
     <string name="delay">Delay:</string>
     <string name="date">Date</string>
+    <string name="minute">minutes</string>
+    <string name="label">Label</string>
 
 </resources>

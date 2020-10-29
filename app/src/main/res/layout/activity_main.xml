@@ -29,7 +29,6 @@
         android:clickable="true"
         android:focusable="auto"
         android:src="@drawable/ic_add2"
-        app:backgroundTint="@color/color_alarm_list_primary_dark"
         app:backgroundTintMode="add" />
 
 </RelativeLayout>

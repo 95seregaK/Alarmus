@@ -26,6 +26,7 @@ public class SunInfoScrollView extends HorizontalScrollView {
     private int centralItem = 10;
     private float columnWidth;
     private boolean first = true;
+    private int colorActive, colorInactive;
 
     public SunInfoScrollView(Context context) {
         super(context);
@@ -48,12 +49,15 @@ public class SunInfoScrollView extends HorizontalScrollView {
     }
 
     public void init(Context context) {
+        colorActive = getResources().getColor(R.color.color_info_active);
+        colorInactive = getResources().getColor(R.color.color_info_inactive);
         container = new LinearLayout(context);
         container.setOrientation(LinearLayout.HORIZONTAL);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         setHorizontalScrollBarEnabled(false);
         for (int i = 0; i < itemCount; i++) {
             View column = inflater.inflate(R.layout.sun_info_column, null);
+            setParams(column);
             container.addView(column);
         }
         addView(container);
@@ -76,13 +80,11 @@ public class SunInfoScrollView extends HorizontalScrollView {
             for (int i = centralItem - 1; i >= 0; i--) {
                 info = SunInfo.nextDaySunInfo(info, -1);
                 updateColumn(i, info);
-
             }
         }
     }
 
-    private void updateColumn(int i, SunInfo info) {
-        View column = container.getChildAt(i);
+    private void setParams(View column) {
         TextView textDay = column.findViewById(R.id.text_day);
         TextView textSunrise = column.findViewById(R.id.text_sunrise);
         TextView textSunset = column.findViewById(R.id.text_sunset);
@@ -93,23 +95,30 @@ public class SunInfoScrollView extends HorizontalScrollView {
         textSunset.setTextAlignment(TEXT_ALIGNMENT_VIEW_END);
         textNoon.setTextAlignment(TEXT_ALIGNMENT_VIEW_END);
         textDayDuration.setTextAlignment(TEXT_ALIGNMENT_VIEW_END);
+    }
+
+    private void updateColumn(int i, SunInfo info) {
+        View column = container.getChildAt(i);
+        TextView textDay = column.findViewById(R.id.text_day);
+        TextView textSunrise = column.findViewById(R.id.text_sunrise);
+        TextView textSunset = column.findViewById(R.id.text_sunset);
+        TextView textNoon = column.findViewById(R.id.text_noon);
+        TextView textDayDuration = column.findViewById(R.id.text_day_duration);
         textDay.setText(info.getDateString());
         textSunrise.setText(SunInfo.timeToString(info.getSunriseLocalTime(), SunInfo.HH_MM));
         textNoon.setText(SunInfo.timeToString(info.getNoonLocalTime(), SunInfo.HH_MM));
         textSunset.setText(SunInfo.timeToString(info.getSunsetLocalTime(), SunInfo.HH_MM));
         textDayDuration.setText(SunInfo.timeToString(info.getDayDuration(), SunInfo.HH_MM));
-        textSunrise.setTextColor(getResources().getColor(R.color.info_color_active));
-        textNoon.setTextColor(getResources().getColor(R.color.info_color_active));
-        textSunset.setTextColor(getResources().getColor(R.color.info_color_active));
-        if (!SunInfo.afterNow(info, SunInfo.SUNRISE_MODE)) {
-            textSunrise.setTextColor(getResources().getColor(R.color.info_color_passive));
-        }
-        if (!SunInfo.afterNow(info, SunInfo.NOON_MODE)) {
-            textNoon.setTextColor(getResources().getColor(R.color.info_color_passive));
-        }
-        if (!SunInfo.afterNow(info, SunInfo.SUNSET_MODE)) {
-            textSunset.setTextColor(getResources().getColor(R.color.info_color_passive));
-        }
+
+        if (!SunInfo.afterNow(info, SunInfo.SUNRISE_MODE))
+            textSunrise.setTextColor(colorInactive);
+        else textSunrise.setTextColor(colorActive);
+        if (!SunInfo.afterNow(info, SunInfo.NOON_MODE))
+            textNoon.setTextColor(colorInactive);
+        else textNoon.setTextColor(colorActive);
+        if (!SunInfo.afterNow(info, SunInfo.SUNSET_MODE))
+            textSunset.setTextColor(colorInactive);
+        else textSunset.setTextColor(colorActive);
     }
 
     @Override

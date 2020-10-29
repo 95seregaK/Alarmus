@@ -18,10 +18,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/color_circle_view"
-        android:fontFamily="sans-serif-thin"
         android:gravity="center_horizontal"
         android:text="Time"
-        android:textColor="@color/info_color_text"
+        android:textAppearance="@style/LargeDigitStyle"
         android:textSize="@dimen/add_alarm_time_text_size" />
 
     <TextView
@@ -29,11 +28,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/color_circle_view"
-        android:fontFamily="sans-serif-light"
         android:gravity="center_horizontal"
         android:paddingBottom="@dimen/padding_time_view"
         android:text="Date"
-        android:textColor="@color/info_color_text"
+        android:textAppearance="@style/SmallDigitStyle"
         android:textSize="@dimen/add_alarm_date_text_size" />
 
     <View
@@ -63,8 +61,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/medium_height"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/view_location"
@@ -73,6 +71,7 @@
                         android:layout_weight="5"
                         android:gravity="center_vertical"
                         android:text="@string/location"
+                        android:textAppearance="@style/TextStyle.Dark"
                         android:textSize="@dimen/add_alarm_text_size" />
 
                     <ImageButton
@@ -83,6 +82,7 @@
                         android:adjustViewBounds="true"
                         android:background="?android:attr/selectableItemBackground"
                         android:padding="10dp"
+
                         android:scaleType="centerInside"
                         android:src="@drawable/ic_map"
                         android:textSize="@dimen/add_alarm_text_size" />
@@ -100,10 +100,10 @@
                         android:id="@+id/radioSunrise"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/height_sun_mode_radio"
-                        android:layout_weight="1"
-                        android:gravity="left"
                         android:layout_marginHorizontal="4dp"
+                        android:layout_weight="1"
                         android:background="?android:attr/selectableItemBackground"
+                        android:gravity="start"
                         android:text="@string/sunrise"
                         android:textColor="@drawable/radio_text"
                         app:button="@drawable/ic_sunrise" />
@@ -112,10 +112,10 @@
                         android:id="@+id/radioNoon"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/height_sun_mode_radio"
-                        android:layout_weight="1"
-                        android:gravity="center"
                         android:layout_marginHorizontal="@dimen/margin_radio_sun_mode"
+                        android:layout_weight="1"
                         android:background="?android:attr/selectableItemBackground"
+                        android:gravity="center"
                         android:textColor="@drawable/radio_text"
                         app:button="@drawable/ic_noon" />
 
@@ -123,10 +123,10 @@
                         android:id="@+id/radioSunset"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/height_sun_mode_radio"
-                        android:layout_weight="1"
-                        android:gravity="right"
                         android:layout_marginHorizontal="@dimen/margin_radio_sun_mode"
+                        android:layout_weight="1"
                         android:background="?android:attr/selectableItemBackground"
+                        android:gravity="end"
                         android:textColor="@drawable/radio_text"
                         app:button="@drawable/ic_sunset" />
 
@@ -141,20 +141,36 @@
 
                     <TextView
                         android:id="@+id/delay_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/default_height"
-                        android:layout_weight="2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:text="@string/delay"
+                        android:textAppearance="@style/TextStyle.Dark"
                         android:textSize="@dimen/add_alarm_text_size" />
 
                     <com.siarhei.alarmus.views.DelayPicker
                         android:id="@+id/delay_picker"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:descendantFocusability="blocksDescendants"
+                        android:focusable="false"
                         android:marqueeRepeatLimit="-1"
+                        android:textAppearance="@style/TextStyle.Dark"
+                        android:textColor="@color/white"
                         android:textSize="@dimen/delay_picker_size" />
+
+                    <TextView
+                        android:id="@+id/minute_view"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/minute"
+                        android:textAppearance="@style/TextStyle.Dark"
+                        android:textSize="@dimen/add_alarm_text_size" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -164,19 +180,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="160dp"
                 android:layout_gravity="center_horizontal"
+                android:descendantFocusability="blocksDescendants"
+                android:numbersTextColor="@color/color_text_default"
                 android:timePickerMode="spinner" />
 
             <EditText
                 android:id="@+id/label_edit"
+                style="@style/TextStyle.Dark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:hint="Label"
-                android:inputType="text"
-                android:textSize="@dimen/add_alarm_text_size"
-                android:typeface="serif" />
+                android:hint="@string/label"
+                android:textSize="@dimen/add_alarm_text_size" />
 
             <View
                 android:layout_width="match_parent"
@@ -185,10 +200,11 @@
 
             <CheckBox
                 android:id="@+id/repeatCheck"
+                style="@style/TextStyle.Dark"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/default_height"
                 android:layoutDirection="rtl"
-                android:text="Repeat"
+                android:text="@string/repeat"
                 android:textSize="@dimen/add_alarm_text_size" />
 
             <LinearLayout
@@ -254,13 +270,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="?android:attr/listDivider" />
-
-            <Switch
-                android:id="@+id/alarmSwitch"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/default_height"
-                android:text="On/Off"
-                android:textSize="@dimen/add_alarm_text_size" />
 
 
         </LinearLayout>
