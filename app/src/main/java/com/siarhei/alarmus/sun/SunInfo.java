@@ -90,51 +90,20 @@ public class SunInfo {
         return mTimeZone.getOffset(Calendar.ZONE_OFFSET) / 1000 / 60 / 60;
     }
 
-    public static String timeToString(double time, int format) {
-        int hour = (int) time;
-        double minute = (time - hour) * 60;
-        double second = (minute - (int) minute) * 60;
-        int millis = (int) ((second - (int) second) * 1000);
-        String timeStr = (hour > 9 ? "" : "0") + hour + ":";
-        switch (format) {
-            case HH_MM:
-                int min = (int) minute;
-                timeStr += (min > 9 ? "" : "0") + min;
-                break;
-            case HH_MM_SS:
-                int min1 = (int) minute;
-                timeStr += (min1 > 9 ? "" : "0") + min1;
-                timeStr += ":";
-                int sec = (int) second;
-                timeStr += (sec > 9 ? "" : "0") + sec;
-                break;
-            case HH_MM_SS_MM:
-                int min2 = (int) minute;
-                timeStr += (min2 > 9 ? "" : "0") + min2;
-                int sec1 = (int) second;
-                timeStr += (sec1 > 9 ? "" : "0") + sec1;
-                timeStr += "." + millis;
-                break;
-            default:
-                break;
-        }
-        return timeStr;
-    }
-
     public String toString(int timeFormat) {
-        String sunriseStr = "Sunrise: " + timeToString(sunriseLocalTime, timeFormat) + '\n';
-        String sunsetStr = "Sunset: " + timeToString(sunsetLocalTime, timeFormat) + '\n';
-        String noonStr = "Solar noon: " + timeToString(noonLocalTime, timeFormat) + '\n';
-        String durationStr = "Day duration: " + timeToString(dayDuration, timeFormat) + '\n';
+        String sunriseStr = "Sunrise: " + toTimeString(sunriseLocalTime, timeFormat) + '\n';
+        String sunsetStr = "Sunset: " + toTimeString(sunsetLocalTime, timeFormat) + '\n';
+        String noonStr = "Solar noon: " + toTimeString(noonLocalTime, timeFormat) + '\n';
+        String durationStr = "Day duration: " + toTimeString(dayDuration, timeFormat) + '\n';
         return sunriseStr + sunsetStr + noonStr + durationStr;
     }
 
     @Override
     public String toString() {
-        String sunriseStr = "Sunrise: " + timeToString(sunriseLocalTime, HH_MM) + '\n';
-        String sunsetStr = "Sunset: " + timeToString(sunsetLocalTime, HH_MM) + '\n';
-        String noonStr = "Solar noon: " + timeToString(noonLocalTime, HH_MM) + '\n';
-        String durationStr = "Day duration: " + timeToString(dayDuration, HH_MM) + '\n';
+        String sunriseStr = "Sunrise: " + toTimeString(sunriseLocalTime, HH_MM) + '\n';
+        String sunsetStr = "Sunset: " + toTimeString(sunsetLocalTime, HH_MM) + '\n';
+        String noonStr = "Solar noon: " + toTimeString(noonLocalTime, HH_MM) + '\n';
+        String durationStr = "Day duration: " + toTimeString(dayDuration, HH_MM) + '\n';
         return sunriseStr + sunsetStr + noonStr + durationStr;
     }
 
@@ -223,10 +192,38 @@ public class SunInfo {
         return hour;
     }
 
-    public String getDateString() {
+    public String toDateString() {
         return (day < 10 ? "0" : "") + day + "."
                 + (month < 10 ? "0" : "") + month + "."
                 + (year % 100 < 10 ? "0" : "") + year % 100;
+    }
+
+    public static String toLocationString(double lat, double lon, int d) {
+
+        return SunMath.round(lat,d)+ (lat < 0 ? "S" : "N") + ", "+ SunMath.round(lon,d)+(lon < 0 ? "W" : "E");
+    }
+
+    public static String toTimeString(double time, int format) {
+        int hour = (int) time;
+        double minute = (time - hour) * 60;
+        int min = (int) minute;
+        double second = (minute - min) * 60;
+        double sec = (int) second;
+        int millis = (int) ((second - sec) * 1000);
+        String timeStr = (hour > 9 ? "" : "0") + hour + (min > 9 ? ":" : ":0") + min;
+        switch (format) {
+            case HH_MM:
+                break;
+            case HH_MM_SS:
+                timeStr += (sec > 9 ? ":" : ":0") + sec;
+                break;
+            case HH_MM_SS_MM:
+                timeStr += sec > 9 ? ":" : ":0" + sec + SunMath.round(millis, 3);
+                break;
+            default:
+                break;
+        }
+        return timeStr;
     }
 
     public SunInfo setNewPosition(double latitude, double longitude) {

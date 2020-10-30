@@ -8,6 +8,7 @@
         android:id="@+id/label_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_label_dialog"
         android:inputType="text" />
 
     <LinearLayout
@@ -19,7 +20,7 @@
             android:id="@+id/button_cancel"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/info_window_button_margin"
+            android:layout_margin="@dimen/margin_label_dialog"
             android:layout_weight="1"
             style="@style/TextStyle.Light"
             android:background="@color/colorPrimary"
@@ -29,7 +30,7 @@
             android:id="@+id/button_ok"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/info_window_button_margin"
+            android:layout_margin="@dimen/margin_label_dialog"
             android:layout_weight="1"
             style="@style/TextStyle.Light"
             android:background="@color/colorPrimary"

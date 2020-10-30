@@ -2,10 +2,8 @@ package com.siarhei.alarmus.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.ColorSpace;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,11 +102,11 @@ public class SunInfoScrollView extends HorizontalScrollView {
         TextView textSunset = column.findViewById(R.id.text_sunset);
         TextView textNoon = column.findViewById(R.id.text_noon);
         TextView textDayDuration = column.findViewById(R.id.text_day_duration);
-        textDay.setText(info.getDateString());
-        textSunrise.setText(SunInfo.timeToString(info.getSunriseLocalTime(), SunInfo.HH_MM));
-        textNoon.setText(SunInfo.timeToString(info.getNoonLocalTime(), SunInfo.HH_MM));
-        textSunset.setText(SunInfo.timeToString(info.getSunsetLocalTime(), SunInfo.HH_MM));
-        textDayDuration.setText(SunInfo.timeToString(info.getDayDuration(), SunInfo.HH_MM));
+        textDay.setText(info.toDateString());
+        textSunrise.setText(SunInfo.toTimeString(info.getSunriseLocalTime(), SunInfo.HH_MM));
+        textNoon.setText(SunInfo.toTimeString(info.getNoonLocalTime(), SunInfo.HH_MM));
+        textSunset.setText(SunInfo.toTimeString(info.getSunsetLocalTime(), SunInfo.HH_MM));
+        textDayDuration.setText(SunInfo.toTimeString(info.getDayDuration(), SunInfo.HH_MM));
 
         if (!SunInfo.afterNow(info, SunInfo.SUNRISE_MODE))
             textSunrise.setTextColor(colorInactive);

@@ -12,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -35,7 +36,8 @@ import com.siarhei.alarmus.views.SunInfoScrollView;
 
 import java.util.Calendar;
 
-public class EditAlarmActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+public class EditAlarmActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener,
+        View.OnClickListener, SeekBar.OnSeekBarChangeListener {
     public static final int RESULT_LOCATION_CHOSEN = 2;
     public static final int RESULT_NEW_ALARM = 1;
     public static final int SUN_TYPE = AlarmPreferences.SUN_TYPE;
@@ -66,6 +68,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private Toolbar toolbar;
     private AlertDialog editLabelDialog;
     private ImageButton locationButton;
+    private SeekBar delayBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +106,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         repeatCheck = findViewById(R.id.repeatCheck);
         weekView = findViewById(R.id.view_week);
         sunLayout = findViewById(R.id.sun_layout);
+        delayBar = findViewById(R.id.delayBar);
         checkDays = new CircleCheckBox[]{findViewById(R.id.check_day1),
                 findViewById(R.id.check_day2), findViewById(R.id.check_day3),
                 findViewById(R.id.check_day4), findViewById(R.id.check_day5),
@@ -192,9 +196,12 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             updateTimeView();
         });
         delayPicker.setOnValueChangedListener((picker, oldVal, newVal) -> {
-            EditAlarmActivity.this.updateAlarm();
-            EditAlarmActivity.this.updateTimeView();
+            updateAlarm();
+            updateTimeView();
         });
+
+        delayBar.setOnSeekBarChangeListener(this);
+
         for (int i = 0; i < 7; i++) {
             checkDays[i].setOnCheckedChangeListener((view, checked) -> {
                 updateAlarm();
@@ -267,24 +274,26 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private void updateLocationViews() {
         if (alarmType == SUN_TYPE) {
             SunAlarm sunAlarm = (SunAlarm) currentAlarm;
-            locationView.setText("Location: " + SunMath.round(latitude, 4) + " " + SunMath.round(longitude, 4));
+            locationView.setText("Location: " + SunInfo.toLocationString(latitude, longitude, 5));
             SunInfo sunInfo = new SunInfo(currentAlarm.getTime(), latitude, longitude);
             sunInfo = SunInfo.nextDaySunInfo(sunInfo, -1);
             if (!SunInfo.afterNow(sunInfo, SunInfo.SUNSET_MODE))
                 sunInfo = SunInfo.nextDaySunInfo(sunInfo, 1);
-            radioSunset.setSubText(sunInfo.getDateString());
-            radioSunset.setText(SunInfo.timeToString(sunInfo.getSunsetLocalTime(), SunInfo.HH_MM));
+            radioSunset.setSubText(sunInfo.toDateString());
+            radioSunset.setText(SunInfo.toTimeString(sunInfo.getSunsetLocalTime(), SunInfo.HH_MM));
 
             if (!SunInfo.afterNow(sunInfo, SunInfo.NOON_MODE))
                 sunInfo = SunInfo.nextDaySunInfo(sunInfo, 1);
-            radioNoon.setSubText(sunInfo.getDateString());
-            radioNoon.setText(SunInfo.timeToString(sunInfo.getNoonLocalTime(), SunInfo.HH_MM));
+            radioNoon.setSubText(sunInfo.toDateString());
+            radioNoon.setText(SunInfo.toTimeString(sunInfo.getNoonLocalTime(), SunInfo.HH_MM));
 
             if (!SunInfo.afterNow(sunInfo, SunInfo.SUNRISE_MODE))
                 sunInfo = SunInfo.nextDaySunInfo(sunInfo, 1);
-            radioSunrise.setText(SunInfo.timeToString(sunInfo.getSunriseLocalTime(), SunInfo.HH_MM));
-            radioSunrise.setSubText(sunInfo.getDateString());
+            radioSunrise.setText(SunInfo.toTimeString(sunInfo.getSunriseLocalTime(), SunInfo.HH_MM));
+            radioSunrise.setSubText(sunInfo.toDateString());
             delayPicker.setSelectedValue(sunAlarm.getDelay());
+            delayBar.setProgress(sunAlarm.getDelay() + 60);
+            delayView.setText("Delay: " + (delayBar.getProgress() - 60));
         }
     }
 
@@ -296,7 +305,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             else if (radioNoon.isChecked()) sunAlarm.setSunMode(SunAlarm.MODE_NOON);
             else if (radioSunset.isChecked()) sunAlarm.setSunMode(SunAlarm.MODE_SUNSET);
             sunAlarm.setPosition(latitude, longitude);
-            sunAlarm.setDelay(delayPicker.getSelectedValue());
+            sunAlarm.setDelay(delayBar.getProgress() - 60);
         } else {
             currentAlarm.setTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute());
         }
@@ -314,5 +323,21 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private void updateTimeView() {
         timeView.setText(currentAlarm.toTime());
         dateView.setText(currentAlarm.toDate());
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        delayView.setText("Delay: " + (delayBar.getProgress() - 60));
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        updateAlarm();
+        updateTimeView();
     }
 }

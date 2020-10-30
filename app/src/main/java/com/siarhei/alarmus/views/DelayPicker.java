@@ -24,12 +24,15 @@ public class DelayPicker extends NumberPicker {
 
     private void init() {
         displayedValues = new String[maxDelay * 2 + 1];
-        for (int i = -maxDelay; i <= maxDelay; i++) {
-            displayedValues[i + maxDelay] = (i > 0 ? "+" : "") + i;
+        displayedValues[maxDelay] = "0:00";
+        for (int i = 1; i <= maxDelay; i++) {
+            int hour = i / 60;
+            int minute = i % 60;
+            displayedValues[maxDelay - i] = "-" + hour + (minute > 9 ? ":" : ":0") + minute;
+            displayedValues[maxDelay + i] = "+" + hour + (minute > 9 ? ":" : ":0") + minute;
         }
         setDisplayedValues(displayedValues);
         setMaxValue(maxDelay * 2);
-        setDisplayedValues(displayedValues);
         setSelectedValue(0);
     }
 
@@ -39,12 +42,12 @@ public class DelayPicker extends NumberPicker {
 
     public void setSelectedValue(int value) {
         setValue(value + maxDelay);
-        setDisplayedValues(displayedValues);
+        //setDisplayedValues(displayedValues);
     }
 
     @Override
     public void setValue(int value) {
         super.setValue(value);
-        setDisplayedValues(displayedValues);
+        //setDisplayedValues(displayedValues);
     }
 }

@@ -6,6 +6,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -26,7 +27,7 @@ public class FloatingView extends LinearLayout {
 
     public FloatingView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        setView(context);
+        setView( context);
     }
 
     public FloatingView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -41,10 +42,10 @@ public class FloatingView extends LinearLayout {
     }
 
     private void setView(Context context) {
-        //addView((LinearLayout) inflate(context, R.layout.info_window, null));
+        int height = (int) getResources().getDimension(R.dimen.info_window_toolbar_height);
+        //setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         //addView(new TextView(context),LayoutParams.MATCH_PARENT,100);
-        setY(DISPLAY_HEIGHT);
-
+        //setY(DISPLAY_HEIGHT);
     }
 
     @Override

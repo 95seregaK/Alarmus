@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int CODE_ADD_NEW = 3;
     private static final int CODE_EDIT_CURRENT = 4;
     static final String ALARM_EDITING = "alarm_for_editing";
-    private static final short SHIFT = 8;
     private MyRecyclerView recycler;
     private AlarmPreferences preferences;
     private static List<Alarm> alarms;
