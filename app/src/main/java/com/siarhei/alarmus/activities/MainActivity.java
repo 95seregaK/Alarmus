@@ -1,177 +1,43 @@
 package com.siarhei.alarmus.activities;
 
+import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.ImageButton;
-import android.widget.Toast;
+import android.widget.TabHost;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
 import com.siarhei.alarmus.R;
-import com.siarhei.alarmus.data.Alarm;
-import com.siarhei.alarmus.data.AlarmPreferences;
-import com.siarhei.alarmus.data.SunAlarm;
-import com.siarhei.alarmus.data.SunAlarmManager;
-import com.siarhei.alarmus.views.AlarmRecyclerAdapter;
-import com.siarhei.alarmus.views.MyRecyclerView;
 
-import java.util.Collections;
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,
-        MyRecyclerView.OnItemSwipeListener, MyRecyclerView.OnItemClickListener,
-        AlarmRecyclerAdapter.OnCheckedChangeListener {
-    private static final int CODE_ADD_NEW = 3;
-    private static final int CODE_EDIT_CURRENT = 4;
-    static final String ALARM_EDITING = "alarm_for_editing";
-    private MyRecyclerView recycler;
-    private AlarmPreferences preferences;
-    private static List<Alarm> alarms;
-    private FloatingActionButton addBtn;
-    private AlarmRecyclerAdapter alarmAdapter;
-    private SunAlarmManager alarmManager;
-    private AlertDialog chooseTypeDialog;
-
-    private static int compare(Alarm o1, Alarm o2) {
-        return (o1.getHour() - o2.getHour()) * 60 + o1.getMinute() - o2.getMinute();
-    }
+public class MainActivity extends TabActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toast.makeText(getApplicationContext(), "onCreate()", Toast.LENGTH_SHORT).show();
-        recycler = findViewById(R.id.recycler);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        alarmAdapter = new AlarmRecyclerAdapter();
-        recycler.setLayoutManager(llm);
-        recycler.setAdapter(alarmAdapter);
-        recycler.setOnItemSwipeListener(this);
-        recycler.setOnItemClickListener(this);
-        addBtn = findViewById(R.id.add_button);
-        addBtn.setOnClickListener(this);
-        alarmAdapter.setOnCheckedListener(this);
-        alarmManager = SunAlarmManager.getService(this);
-    }
 
-    public AlertDialog createDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.CustomDialog);
+        TabHost tabHost = getTabHost();
 
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.choose_type_dialog, null);
+        // инициализация была выполнена в getTabHost
+        // метод setup вызывать не нужно
 
-        // Set the custom layout as alert dialog view
-        builder.setView(dialogView);
+        TabHost.TabSpec tabSpec;
 
-        // Get the custom alert dialog view widgets reference
-        ImageButton simpleAlarmBtn = dialogView.findViewById(R.id.simple_alarm_btn);
-        ImageButton sunAlarmBtn = dialogView.findViewById(R.id.sun_alarm_btn);
-        simpleAlarmBtn.setOnClickListener(this);
-        sunAlarmBtn.setOnClickListener(this);
-        // Create the alert dialog
-        return builder.create();
-    }
+        tabSpec = tabHost.newTabSpec("tag1");
+        tabSpec.setIndicator("Вкладка 1");
+        tabSpec.setContent(new Intent(this, SetLocationActivity.class));
+        tabHost.addTab(tabSpec);
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CODE_ADD_NEW && resultCode == EditAlarmActivity.RESULT_NEW_ALARM) {
-           //updateAlarmList();
-        }
-    }
+        tabSpec = tabHost.newTabSpec("tag2");
+        tabSpec.setIndicator("Вкладка 2");
+        tabSpec.setContent(new Intent(this, AlarmListActivity.class));
+        tabHost.addTab(tabSpec);
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateAlarmList();
-        //Toast.makeText(getApplicationContext(), "onResume()", Toast.LENGTH_SHORT).show();
-    }
-
-    public void updateAlarmList() {
-        if (alarms == null || alarms.size() == 0)
-            preferences = AlarmPreferences.getInstance(this);
-        alarms = preferences.readAllAlarms();
-        Collections.sort(alarms, MainActivity::compare);
-        alarmAdapter.setAlarms(alarms);
-    }
-
-    public void editAlarm(Alarm alarm, int code) {
-        Intent intent = new Intent("android.intent.action.ADD_ALARM");
-        intent.putExtra(ALARM_EDITING, alarm);
-        startActivityForResult(intent, code);
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == addBtn.getId()) {
-            chooseTypeDialog = createDialog();
-            chooseTypeDialog.show();
-        } else if (v.getId() == R.id.simple_alarm_btn) {
-            chooseTypeDialog.cancel();
-            editAlarm(new Alarm(getNextId()), CODE_ADD_NEW);
-
-        } else if (v.getId() == R.id.sun_alarm_btn) {
-            chooseTypeDialog.cancel();
-            editAlarm(new SunAlarm(getNextId()), CODE_ADD_NEW);
-        }
-    }
-
-    @Override
-    public void onItemClick(View view, int position) {
-        editAlarm(alarms.get(position), CODE_EDIT_CURRENT);
-    }
-
-    @Override
-    public void onLongItemClick(View view, int position) {
 
     }
-
-    @Override
-    public void onItemSwipe(View view, int position, int dir) {
-
-        if (dir == MyRecyclerView.LEFT) {
-            preferences.remove(alarms.get(position).getId());
-            alarmManager.cancel(alarms.get(position));
-            alarms.remove(position);
-        }
-        alarmAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onCheckedChange(CompoundButton buttonView, int position, boolean isChecked) {
-        Alarm currentAlarm = alarms.get(position);
-
-        if (isChecked && !currentAlarm.isEnabled()) {
-            currentAlarm.setEnable(true);
-            currentAlarm.setTimeNext();
-            alarmManager.set(currentAlarm);
-        } else if (!isChecked && currentAlarm.isEnabled()) {
-            currentAlarm.setEnable(false);
-            alarmManager.cancel(currentAlarm);
-        }
-        preferences.writeAlarm(currentAlarm);
-        alarmAdapter.notifyDataSetChanged();
-    }
-
-    public int getNextId() {
-        int max = 0;
-        for (Alarm alarm : alarms) {
-            max = Math.max(max, alarm.getId());
-        }
-        return max + 1;
-    }
-
-    public static void addAlarm(Alarm alarm) {
-        if (alarms != null) {
-            alarms.add(alarm);
-        }
-    }
-
 }

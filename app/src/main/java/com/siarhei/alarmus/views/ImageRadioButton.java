@@ -78,6 +78,8 @@ public class ImageRadioButton extends LinearLayout implements Checkable {
         } finally {
             a.recycle();
         }
+        int size = (int)getResources().getDimension(R.dimen.size_image_radio);
+        imageView.setLayoutParams( new LinearLayout.LayoutParams(size,size));
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         imageView.setAdjustViewBounds(true);
         addView(imageView);

@@ -58,6 +58,14 @@
                 android:orientation="vertical"
                 android:visibility="visible">
 
+                <CheckBox
+                    style="@style/TextStyle.Dark"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layoutDirection="rtl"
+                    android:text="@string/set_auto_update"
+                    android:textSize="@dimen/add_alarm_text_size" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/medium_height"
@@ -99,7 +107,7 @@
                     <com.siarhei.alarmus.views.ImageRadioButton
                         android:id="@+id/radioSunrise"
                         android:layout_width="0dp"
-                        android:layout_height="@dimen/height_sun_mode_radio"
+                        android:layout_height="wrap_content"
                         android:layout_marginHorizontal="4dp"
                         android:layout_weight="1"
                         android:background="?android:attr/selectableItemBackground"
@@ -111,7 +119,7 @@
                     <com.siarhei.alarmus.views.ImageRadioButton
                         android:id="@+id/radioNoon"
                         android:layout_width="0dp"
-                        android:layout_height="@dimen/height_sun_mode_radio"
+                        android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/margin_radio_sun_mode"
                         android:layout_weight="1"
                         android:background="?android:attr/selectableItemBackground"
@@ -122,7 +130,7 @@
                     <com.siarhei.alarmus.views.ImageRadioButton
                         android:id="@+id/radioSunset"
                         android:layout_width="0dp"
-                        android:layout_height="@dimen/height_sun_mode_radio"
+                        android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/margin_radio_sun_mode"
                         android:layout_weight="1"
                         android:background="?android:attr/selectableItemBackground"
@@ -162,17 +170,7 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/delay_picker_size"
                         android:visibility="gone" />
-
-                    <TextView
-                        android:id="@+id/minute_view"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/minute"
-                        android:textAppearance="@style/TextStyle.Dark"
-                        android:textSize="@dimen/add_alarm_text_size" />
+                    />
                 </LinearLayout>
 
                 <SeekBar

@@ -2,78 +2,68 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:background="@color/white"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="4dp"
     android:clickable="true"
     android:foreground="?selectableItemBackground"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
         android:orientation="horizontal"
         android:padding="@dimen/toolbar_button_margin">
 
         <TextView
             android:id="@+id/row_time"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.3"
-            android:textAppearance="@style/SmallDigitStyle"
             android:gravity="center"
+            android:textAppearance="@style/SmallDigitStyle"
             android:textSize="@dimen/row_text_size_max"
-            tools:text="7:00" />
-
+            tools:text="07:00" />
 
 
         <TextView
             android:id="@+id/row_date"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.2"
-            android:textAppearance="@style/SmallDigitStyle"
             android:gravity="bottom"
+            android:textAppearance="@style/SmallDigitStyle"
             android:textSize="@dimen/row_text_size_min"
             tools:text="Tomorrow" />
 
-        <ImageView
-            android:id="@+id/row_sun_mode"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.15" />
         <TextView
             android:id="@+id/row_label"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.25"
             android:gravity="left"
             android:singleLine="true"
-            android:textSize="@dimen/row_text_size_medium"
             android:textAppearance="@style/TextStyle"
+            android:textSize="@dimen/row_text_size_medium"
             tools:text="Get Up" />
 
         <TextView
             android:id="@+id/row_days"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.4"
             android:freezesText="false"
-            android:textSize="@dimen/row_text_size_medium"
             android:textAppearance="@style/TextStyle"
-
+            android:textSize="@dimen/row_text_size_medium"
             tools:text="M Tu W Th F Sa Su" />
+        <ImageView
+            android:id="@+id/row_sun_mode"
+            android:layout_width="36dp"
+            android:scaleType="centerCrop"
+            android:layout_height="36dp" />
 
         <Switch
             android:id="@+id/row_switch"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.2" />
+            android:layout_width="match_parent"
+            android:layoutDirection="ltr"
+            android:layout_height="match_parent" />
     </LinearLayout>
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider" />
-
 </LinearLayout>

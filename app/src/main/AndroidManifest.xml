@@ -13,7 +13,6 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_sun_clock"
@@ -21,13 +20,15 @@
         android:roundIcon="@drawable/ic_sun_clock"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".activities.MainActivity">
+        <activity android:name=".activities.AlarmListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.MainActivity"
+            android:label="@string/title_activity_main"/>
         <activity
             android:name=".activities.EditAlarmActivity"
             android:theme="@style/EditAlarmTheme">
@@ -59,7 +60,6 @@
                 <action android:name="android.intent.action.ALARM_CALL" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".receivers.BootReceiver"
             android:enabled="true"

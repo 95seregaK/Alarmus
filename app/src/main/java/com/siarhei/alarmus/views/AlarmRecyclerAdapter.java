@@ -32,7 +32,9 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
         colorAlarmDisable = context.getResources().getColor(R.color.color_text_inactive);
         final View v = LayoutInflater.from(context).inflate(R.layout.alarm_row, parent, false);
         return new ViewHolder(v);
+
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
@@ -73,7 +75,7 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
 
         } else holder.sunMode.setImageDrawable(null);
         if (alarm.isEnabled()) {
-            holder.layout.setBackgroundColor(context.getResources().getColor(R.color.color_row));
+            holder.layout.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
             holder.time.setTextColor(colorAlarmEnable);
             holder.date.setTextColor(colorAlarmEnable);
             holder.label.setTextColor(colorAlarmEnable);
@@ -81,7 +83,7 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
             holder.sunMode.setImageAlpha(context.getResources().getInteger(R.integer.enable_alpha));
             holder.sunMode.setColorFilter(0);
         } else {
-            holder.layout.setBackgroundColor(context.getResources().getColor(R.color.colorTransparent));
+            holder.layout.setBackgroundColor(context.getResources().getColor(R.color.color_text_inactive));
             holder.time.setTextColor(colorAlarmDisable);
             holder.date.setTextColor(colorAlarmDisable);
             holder.label.setTextColor(colorAlarmDisable);

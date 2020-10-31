@@ -16,7 +16,7 @@
     <string name="noon">Solar noon</string>
     <string name="day_duration">Day duration</string>
     <string name="location">Location</string>
-    <string name="delay">Delay:</string>
+    <string name="delay">Alarm offset:</string>
     <string name="date">Date</string>
     <string name="minute">minutes</string>
     <string name="label">Label</string>
@@ -27,5 +27,9 @@
     <string name="friday">F</string>
     <string name="saturday">S</string>
     <string name="sunday">S</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="set_auto_update">Auto-update location</string>
 
 </resources>

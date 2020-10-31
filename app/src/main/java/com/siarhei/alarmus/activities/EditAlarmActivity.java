@@ -27,7 +27,6 @@ import com.siarhei.alarmus.data.AlarmPreferences;
 import com.siarhei.alarmus.data.SunAlarm;
 import com.siarhei.alarmus.data.SunAlarmManager;
 import com.siarhei.alarmus.sun.SunInfo;
-import com.siarhei.alarmus.sun.SunMath;
 import com.siarhei.alarmus.views.CircleCheckBox;
 import com.siarhei.alarmus.views.DelayPicker;
 import com.siarhei.alarmus.views.ImageRadioButton;
@@ -77,7 +76,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
 
         initContentView();
         preferences = AlarmPreferences.getInstance(this);
-        currentAlarm = getIntent().getParcelableExtra(MainActivity.ALARM_EDITING);
+        currentAlarm = getIntent().getParcelableExtra(AlarmListActivity.ALARM_EDITING);
         alarmType = (currentAlarm instanceof SunAlarm) ? SUN_TYPE : SIMPLE_TYPE;
         setVisibility();
         updateContentView();
@@ -117,6 +116,9 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         if (alarmType == SUN_TYPE) {
             sunLayout.setVisibility(View.VISIBLE);
             timePicker.setVisibility(View.GONE);
+        } else {
+            sunLayout.setVisibility(View.GONE);
+            timePicker.setVisibility(View.VISIBLE);
         }
     }
 
@@ -293,7 +295,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             radioSunrise.setSubText(sunInfo.toDateString());
             delayPicker.setSelectedValue(sunAlarm.getDelay());
             delayBar.setProgress(sunAlarm.getDelay() + 60);
-            delayView.setText("Delay: " + (delayBar.getProgress() - 60));
+            updateDelayView();
         }
     }
 
@@ -325,9 +327,15 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         dateView.setText(currentAlarm.toDate());
     }
 
+    private void updateDelayView() {
+        String delayString = getResources().getString(R.string.delay) + "   ";
+        int delay = delayBar.getProgress() - 60;
+        delayView.setText(delayString + (delay < 0 ? "" : "+") + delay + "  minutes");
+    }
+
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        delayView.setText("Delay: " + (delayBar.getProgress() - 60));
+        updateDelayView();
     }
 
     @Override

@@ -194,7 +194,7 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
     @Override
     public boolean onMarkerClick(Marker marker, MapView mapView) {
         //mapView.getController().animateTo(marker.getPosition());
-        //updateSunInfoLocation();
+        updateSunInfoLocation();
         //infoWindow.emerge();
         return true;
     }
