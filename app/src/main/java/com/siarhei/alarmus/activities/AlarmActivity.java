@@ -19,6 +19,7 @@ import com.siarhei.alarmus.data.SunAlarmManager;
 import com.siarhei.alarmus.views.CircleSlider;
 
 import java.io.IOException;
+import java.util.Timer;
 
 
 public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnSliderMoveListener {
@@ -29,6 +30,20 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     private Alarm currentAlarm;
     private AlarmPreferences preferences;
     private SunAlarmManager alarmManager;
+    private static final int s1 = 8;
+    private static final int s2 = 41;
+    private static final int s3 = 74;
+    private static final int s4 = 107;
+    private static final int s5 = 140;
+    private static final int s6 = 173;
+    private static final int s7 = 206;
+    private static final int d1 = 1;
+    private static final int d2 = 2;
+    private static final int d3 = 5;
+    private static final int d4 = 10;
+    private static final int d5 = 15;
+    private static final int d6 = 20;
+    private static final int d7 = 30;
 
 
     @Override
@@ -97,9 +112,9 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     }
 
     @Override
-    public void onSliderMoved(int action, float direction) {
+    public void onSliderMoved(int action, float dir) {
         if (action == CircleSlider.ACTION_SUCCESS) {
-            if (direction < 180) {
+            if (dir > 195 && dir <= 345) {
                 if (!currentAlarm.isRepeat()) currentAlarm.setEnable(false);
                 else {
                     currentAlarm.setTimeNext();
@@ -107,11 +122,23 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
                     Toast.makeText(getApplicationContext(), "Будильник установлен!!!", Toast.LENGTH_SHORT).show();
                 }
                 preferences.writeAlarm(currentAlarm);
+            } else if (dir > s1 && dir <= s2) {
+                alarmManager.setDelayed(currentAlarm, d2);
+            } else if (dir > s2 && dir <= s3) {
+                alarmManager.setDelayed(currentAlarm, d3);
+            } else if (dir > s3 && dir <= s4) {
+                alarmManager.setDelayed(currentAlarm, d4);
+            } else if (dir > s4 && dir <= s5) {
+                alarmManager.setDelayed(currentAlarm, d5);
+            } else if (dir > s5 && dir <= s6) {
+                alarmManager.setDelayed(currentAlarm, d6);
+            } else if (dir > s6 && dir <= s7) {
+                alarmManager.setDelayed(currentAlarm, d7);
             } else {
-                alarmManager.setDelayed(currentAlarm, 1);
+                alarmManager.setDelayed(currentAlarm, d1);
             }
             finish();
-
+            Timer timerTask = new Timer();
         } else if (action == CircleSlider.ACTION_FAILURE)
             Log.d("ACTION_FAILURE", "radius=" + sunSlider.getRadius());
     }

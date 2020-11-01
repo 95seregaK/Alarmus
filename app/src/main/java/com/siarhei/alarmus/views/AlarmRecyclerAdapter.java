@@ -75,21 +75,20 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
 
         } else holder.sunMode.setImageDrawable(null);
         if (alarm.isEnabled()) {
-            holder.layout.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
+            //holder.layout.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
             holder.time.setTextColor(colorAlarmEnable);
             holder.date.setTextColor(colorAlarmEnable);
             holder.label.setTextColor(colorAlarmEnable);
             holder.days.setTextColor(colorAlarmEnable);
-            holder.sunMode.setImageAlpha(context.getResources().getInteger(R.integer.enable_alpha));
+            //holder.sunMode.setImageAlpha(context.getResources().getInteger(R.integer.enable_alpha));
             holder.sunMode.setColorFilter(0);
         } else {
-            holder.layout.setBackgroundColor(context.getResources().getColor(R.color.color_text_inactive));
+            //holder.layout.setBackgroundColor(context.getResources().getColor(R.color.color_text_inactive));
             holder.time.setTextColor(colorAlarmDisable);
             holder.date.setTextColor(colorAlarmDisable);
             holder.label.setTextColor(colorAlarmDisable);
             holder.days.setTextColor(colorAlarmDisable);
-            holder.sunMode.setImageAlpha(context.getResources().getInteger(R.integer.disable_alpha));
-            //holder.sunMode.setColorFilter(context.getResources().getColor(R.color.color_filter_disable));
+            //holder.sunMode.setImageAlpha(context.getResources().getInteger(R.integer.disable_alpha));
             holder.sunMode.setColorFilter(colorAlarmDisable);
         }
     }
@@ -128,6 +127,6 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
     }
 
     public interface OnCheckedChangeListener {
-        public void onCheckedChange(CompoundButton buttonView, int position, boolean isChecked);
+        void onCheckedChange(CompoundButton buttonView, int position, boolean isChecked);
     }
 }

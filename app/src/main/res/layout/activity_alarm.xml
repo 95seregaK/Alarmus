@@ -35,5 +35,6 @@
     <com.siarhei.alarmus.views.CircleSlider
         android:id="@+id/slideButton"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        src="@drawable/snooze_clock"/>
 </LinearLayout>

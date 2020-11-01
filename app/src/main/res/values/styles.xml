@@ -46,7 +46,7 @@
     <style name="SmallDigitStyle">
         <item name="android:textSize">@dimen/info_window_text_size</item>
         <item name="android:fontFamily">sans-serif-light</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/color_text_default</item>
     </style>
 
     <style name="CustomDialog" parent="android:Theme.Dialog">

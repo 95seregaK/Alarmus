@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginHorizontal="8dp"
+    android:layout_height="52dp"
+    android:layout_marginHorizontal="4dp"
     android:layout_marginVertical="4dp"
     android:clickable="true"
     android:foreground="?selectableItemBackground"
-    android:orientation="vertical"
-    android:paddingBottom="1dp">
+    android:background="@color/color_row"
+    android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:layout_alignParentLeft="true"
         android:orientation="horizontal"
         android:padding="@dimen/toolbar_button_margin">
 
@@ -22,9 +22,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:text="07:00"
             android:textAppearance="@style/SmallDigitStyle"
-            android:textSize="@dimen/row_text_size_max"
-            tools:text="07:00" />
+            android:textSize="@dimen/row_text_size_max" />
 
 
         <TextView
@@ -36,9 +36,10 @@
             android:textSize="@dimen/row_text_size_min"
             tools:text="Tomorrow" />
 
+
         <TextView
             android:id="@+id/row_label"
-            android:layout_width="wrap_content"
+            android:layout_width="63dp"
             android:layout_height="match_parent"
             android:gravity="left"
             android:singleLine="true"
@@ -48,22 +49,24 @@
 
         <TextView
             android:id="@+id/row_days"
-            android:layout_width="wrap_content"
+            android:layout_width="49dp"
             android:layout_height="match_parent"
             android:freezesText="false"
             android:textAppearance="@style/TextStyle"
             android:textSize="@dimen/row_text_size_medium"
             tools:text="M Tu W Th F Sa Su" />
+
         <ImageView
             android:id="@+id/row_sun_mode"
             android:layout_width="36dp"
-            android:scaleType="centerCrop"
-            android:layout_height="36dp" />
-
-        <Switch
-            android:id="@+id/row_switch"
-            android:layout_width="match_parent"
-            android:layoutDirection="ltr"
-            android:layout_height="match_parent" />
+            android:layout_height="36dp"
+            android:scaleType="centerCrop" />
     </LinearLayout>
-</LinearLayout>
+
+    <Switch
+        android:id="@+id/row_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true" />
+
+</RelativeLayout>

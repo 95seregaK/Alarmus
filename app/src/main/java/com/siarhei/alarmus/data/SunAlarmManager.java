@@ -11,11 +11,11 @@ import com.siarhei.alarmus.receivers.AlarmReceiver;
 import static com.siarhei.alarmus.data.Alarm.ID;
 
 public class SunAlarmManager {
-    private AlarmManager alarmManager;
-    private Context context;
+    private final AlarmManager alarmManager;
+    private final Context context;
 
     protected SunAlarmManager(Context context) {
-        alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
+        alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         this.context = context;
     }
 
@@ -35,6 +35,7 @@ public class SunAlarmManager {
     public void set(Alarm alarm) {
         alarmManager.set(AlarmManager.RTC_WAKEUP, alarm.getTimeInMillis(), prepareIntent(alarm));
         Toast.makeText(context, "Будильник установлен на " + alarm.toString(), Toast.LENGTH_SHORT).show();
+
     }
 
     public void setDelayed(Alarm alarm, int delay) {

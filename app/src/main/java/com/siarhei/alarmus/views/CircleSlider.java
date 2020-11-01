@@ -5,18 +5,17 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.os.Build;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 
 import com.siarhei.alarmus.R;
 
-public class CircleSlider extends View implements View.OnTouchListener {
+public class CircleSlider extends androidx.appcompat.widget.AppCompatImageView implements View.OnTouchListener {
 
     public static final int ACTION_SUCCESS = 1;
     public static final int ACTION_FAILURE = 2;
@@ -28,6 +27,7 @@ public class CircleSlider extends View implements View.OnTouchListener {
     private boolean motion, first = true;
     private RectF circleRect, backgroundRect;
     private Paint circlePaint, backgroundPaint;
+    private Drawable image;
 
     public CircleSlider(Context context) {
         super(context);
@@ -44,19 +44,23 @@ public class CircleSlider extends View implements View.OnTouchListener {
         init(context);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+   /* @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public CircleSlider(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
-    }
+    }*/
 
     //public void setRadius(int r) { sliderRadius = r; }
 
     public void init(Context context) {
-        setBackgroundColor(getResources().getColor(R.color.colorTransparent));
+        //setBackgroundColor(getResources().getColor(R.color.colorTransparent));
         setOnTouchListener(this);
         sliderRadius = (int) getResources().getDimension(R.dimen.slider_radius);
         padding = (int) getResources().getDimension(R.dimen.slider_padding);
+
+        setImageResource(R.drawable.snooze_clock);
+        //image = getResources().getDrawable(R.drawable.snooze_clock);
+        //setScaleType(ScaleType.FIT_XY);
         circlePaint = new Paint();
         backgroundPaint = new Paint();
         circlePaint.setColor(Color.WHITE);
@@ -129,11 +133,12 @@ public class CircleSlider extends View implements View.OnTouchListener {
             backgroundRect.set(cx - radius, cy - radius,
                     cx + radius, cy + radius);
             first = false;
+
             Log.d("onDraw", circleRect.left + ", " + circleRect.right
                     + ", " + circleRect.top + ", " + circleRect.bottom + ", " + sliderRadius);
         }
         canvas.drawOval(circleRect, circlePaint);
-        canvas.drawOval(backgroundRect, backgroundPaint);
+        //canvas.drawOval(backgroundRect, backgroundPaint);
     }
 
     public int getRadius() {
