@@ -9,6 +9,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.CalendarContract;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.siarhei.alarmus.receivers.AlarmReceiver;
@@ -17,7 +18,11 @@ import java.util.Calendar;
 
 public class Alarm implements Parcelable {
     public static final String ID = "id";
-    public static String[] DAYS = {"M", "Tu", "W", "Th", "F", "Sa", "Su"};
+    public static final int FULL = 1;
+    public static final int SHORT = 2;
+    // public static String[] DAYS = {"Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"};
+    public static String[] DAYS_SHORT = {"M", "T", "W", "T", "F", "S", "S"};
+    public static String[] DAYS_FULL = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};
     private static final int HOUR_DEFAULT = 6;
     private static final int MINUTE_DEFAULT = 0;
     private static final long MAX_DELAY = 10 * 60 * 1000;
@@ -50,6 +55,12 @@ public class Alarm implements Parcelable {
         enabled = in.readByte() == 1;
         repeat = in.readByte() == 1;
         days = AlarmPreferences.toBooleanArray(in.readInt());
+    }
+
+    public static String toDay(Calendar calendar,int mode) {
+        if(mode==FULL)
+        return DAYS_FULL[(calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7];
+        else return DAYS_SHORT[(calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7];
     }
 
     @Override
@@ -92,6 +103,7 @@ public class Alarm implements Parcelable {
             now = System.currentTimeMillis();
         } else {
             Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
             calendar.set(Calendar.HOUR_OF_DAY, 0);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
@@ -155,6 +167,24 @@ public class Alarm implements Parcelable {
                 + (year < 10 ? "0" : "") + year;
     }
 
+    public static String toTime(Calendar calendar) {
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        return (hour < 10 ? "0" : "") + hour + ":"
+                + (minute < 10 ? "0" : "") + minute;
+    }
+
+    public static String toDate(Calendar calendar) {
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int year = calendar.get(Calendar.YEAR) % 100;
+
+        return (day < 10 ? "0" : "") + day + "."
+                + (month < 10 ? "0" : "") + month + "."
+                + (year < 10 ? "0" : "") + year;
+    }
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -202,4 +232,6 @@ public class Alarm implements Parcelable {
     public boolean isActual() {
         return getTimeInMillis() > System.currentTimeMillis() - MAX_DELAY;
     }
+
+
 }

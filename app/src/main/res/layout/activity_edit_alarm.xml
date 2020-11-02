@@ -21,6 +21,7 @@
         android:gravity="center_horizontal"
         android:text="Time"
         android:textAppearance="@style/LargeDigitStyle"
+        android:textColor="@color/white"
         android:textSize="@dimen/add_alarm_time_text_size" />
 
     <TextView
@@ -32,6 +33,8 @@
         android:paddingBottom="@dimen/padding_time_view"
         android:text="Date"
         android:textAppearance="@style/SmallDigitStyle"
+
+        android:textColor="@color/white"
         android:textSize="@dimen/add_alarm_date_text_size" />
 
     <View
@@ -58,51 +61,48 @@
                 android:orientation="vertical"
                 android:visibility="visible">
 
-                <CheckBox
-                    android:id="@+id/check_update"
-                    style="@style/TextStyle.Dark"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layoutDirection="rtl"
-                    android:text="@string/set_auto_update"
-                    android:textSize="@dimen/add_alarm_text_size" />
-
                 <LinearLayout
+                    android:id="@+id/button_location"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/medium_height"
+                    android:background="?android:attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:padding="2dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_map"
+                        android:textSize="@dimen/add_alarm_text_size" />
+
                     <TextView
                         android:id="@+id/view_location"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="5"
                         android:gravity="center_vertical"
                         android:text="@string/location"
                         android:textAppearance="@style/TextStyle.Dark"
                         android:textSize="@dimen/add_alarm_text_size" />
-
-                    <ImageButton
-                        android:id="@+id/button_location"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_weight="1"
-                        android:adjustViewBounds="true"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:padding="10dp"
-
-                        android:scaleType="centerInside"
-                        android:src="@drawable/ic_map"
-                        android:textSize="@dimen/add_alarm_text_size" />
                 </LinearLayout>
 
+                <CheckBox
+                    android:id="@+id/check_update"
+                    style="@style/TextStyle.Dark"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/medium_height"
+                    android:layoutDirection="rtl"
+                    android:text="@string/set_auto_update"
+                    android:textSize="@dimen/add_alarm_text_size" />
 
                 <com.siarhei.alarmus.views.ImageRadioGroup
                     android:id="@+id/radio_group_sun_mode"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
+                    android:layout_height="@dimen/medium_height"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <com.siarhei.alarmus.views.ImageRadioButton
@@ -191,21 +191,8 @@
                 android:layout_gravity="center_horizontal"
                 android:descendantFocusability="blocksDescendants"
                 android:numbersTextColor="@color/color_text_default"
-                android:scrollbarSize="100dp" />
-
-            <EditText
-                android:id="@+id/label_edit"
-                style="@style/TextStyle.Dark"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:hint="@string/label"
-                android:textSize="@dimen/add_alarm_text_size" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?android:attr/listDivider" />
+                android:scrollbarSize="100dp"
+                android:timePickerMode="spinner" />
 
             <CheckBox
                 android:id="@+id/repeatCheck"
@@ -275,11 +262,14 @@
                     android:text="@string/sunday" />
             </LinearLayout>
 
-            <View
+            <EditText
+                android:id="@+id/label_edit"
+                style="@style/TextStyle.Dark"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?android:attr/listDivider" />
-
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:hint="@string/label"
+                android:textSize="@dimen/add_alarm_text_size" />
 
         </LinearLayout>
     </ScrollView>

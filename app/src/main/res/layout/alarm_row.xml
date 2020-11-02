@@ -53,7 +53,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="140dp"
+            android:layout_width="110dp"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
@@ -68,19 +68,78 @@
                 android:textSize="@dimen/row_text_size_medium"
                 tools:text="Get Up" />
 
-            <TextView
-                android:id="@+id/row_days"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:gravity="bottom"
-                android:textAppearance="@style/TextStyle"
-                android:textSize="@dimen/row_text_size_min"
-                tools:text="M Tu W Th F Sa Su" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/row_day1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:paddingRight="3dp"
+                    android:textAppearance="@style/TextStyle"
+                    android:textSize="@dimen/row_text_size_min" />
+
+                <TextView
+                    android:id="@+id/row_day2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:paddingRight="3dp"
+                    android:textAppearance="@style/TextStyle"
+                    android:textSize="@dimen/row_text_size_min" />
+
+                <TextView
+                    android:id="@+id/row_day3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:paddingRight="3dp"
+                    android:textAppearance="@style/TextStyle"
+                    android:textSize="@dimen/row_text_size_min" />
+
+                <TextView
+                    android:id="@+id/row_day4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:paddingRight="3dp"
+                    android:textAppearance="@style/TextStyle"
+                    android:textSize="@dimen/row_text_size_min" />
+
+                <TextView
+                    android:id="@+id/row_day5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:paddingRight="3dp"
+                    android:textAppearance="@style/TextStyle"
+                    android:textSize="@dimen/row_text_size_min" />
+
+                <TextView
+                    android:id="@+id/row_day6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:paddingRight="3dp"
+                    android:textAppearance="@style/TextStyle"
+                    android:textSize="@dimen/row_text_size_min" />
+
+                <TextView
+                    android:id="@+id/row_day7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:textAppearance="@style/TextStyle"
+                    android:textSize="@dimen/row_text_size_min" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
@@ -89,6 +148,7 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:scaleType="centerCrop" />
+
             <TextView
                 android:id="@+id/row_location"
                 android:layout_width="match_parent"

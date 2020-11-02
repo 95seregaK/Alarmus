@@ -28,8 +28,9 @@ public class SunAlarm extends Alarm {
     protected int sunMode = MODE_SUNRISE;
     protected double latitude;
     protected double longitude;
-    private int delay;
-    private boolean update = true;
+    protected int delay;
+    protected boolean update = true;
+    protected String city = "";
 
     public SunAlarm(Parcel in) {
         super(in);
@@ -38,6 +39,7 @@ public class SunAlarm extends Alarm {
         longitude = in.readDouble();
         delay = in.readInt();
         update = in.readByte() == 1;
+        city = in.readString();
     }
 
     public SunAlarm(int id) {
@@ -56,6 +58,7 @@ public class SunAlarm extends Alarm {
         dest.writeDouble(longitude);
         dest.writeInt(delay);
         dest.writeByte((byte) (update ? 1 : 0));
+        dest.writeString(city);
     }
 
     @Override
@@ -112,6 +115,7 @@ public class SunAlarm extends Alarm {
     }
 
     public void setDelay(int value) {
+        time.add(Calendar.MINUTE, value - delay);
         delay = value;
     }
 
@@ -120,7 +124,7 @@ public class SunAlarm extends Alarm {
     }
 
     public String getCity() {
-        return "Minsk";
+        return city;
     }
 
     public boolean isUpdate() {
@@ -129,5 +133,9 @@ public class SunAlarm extends Alarm {
 
     public void setUpdate(boolean update) {
         this.update = update;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

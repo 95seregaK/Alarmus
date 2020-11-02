@@ -199,8 +199,8 @@ public class SunInfo {
     }
 
     public static String toLocationString(double lat, double lon, int d) {
-
-        return SunMath.round(lat,d)+ (lat < 0 ? "S" : "N") + ", "+ SunMath.round(lon,d)+(lon < 0 ? "W" : "E");
+        return Math.abs(SunMath.round(lat, d)) + (lat < 0 ? "S" : "N") + ", "
+                + Math.abs(SunMath.round(lon, d)) + (lon < 0 ? "W" : "E");
     }
 
     public static String toTimeString(double time, int format) {

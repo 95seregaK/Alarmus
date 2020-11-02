@@ -17,6 +17,7 @@ public class AlarmPreferences {
 
     public static final int SUN_TYPE = 1;
     public static final int SIMPLE_TYPE = 2;
+
     private final SharedPreferences pref;
     private final Context context;
     private final Set<String> idSet;
@@ -33,6 +34,7 @@ public class AlarmPreferences {
     public static final String KEY_LATITUDE = "latitude";
     public static final String KEY_LONGITUDE = "longitude";
     public static final String KEY_UPDATE = "update";
+    public static final String KEY_CITY = "city";
 
     private AlarmPreferences(Context context) {
         this.context = context;
@@ -63,6 +65,7 @@ public class AlarmPreferences {
             ed.putLong(id + KEY_LONGITUDE, Double.doubleToLongBits(sunAlarm.getLongitude()));
             ed.putInt(id + KEY_DELAY, sunAlarm.getDelay());
             ed.putBoolean(id + KEY_UPDATE, sunAlarm.isUpdate());
+            ed.putString(id+KEY_CITY,sunAlarm.getCity());
         } else {
             ed.putInt(id + KEY_TYPE, SIMPLE_TYPE);
         }
@@ -85,22 +88,25 @@ public class AlarmPreferences {
             double lat = Double.longBitsToDouble(pref.getLong(id + KEY_LATITUDE, 0));
             double lon = Double.longBitsToDouble(pref.getLong(id + KEY_LONGITUDE, 0));
             int delay = pref.getInt(id + KEY_DELAY, 0);
-            boolean update = pref.getBoolean(KEY_UPDATE, true);
+            boolean update = pref.getBoolean(id + KEY_UPDATE, true);
+            String city=pref.getString(id + KEY_CITY, "");
             alarm = new SunAlarm(id);
             SunAlarm sunAlarm = (SunAlarm) alarm;
-            sunAlarm.setSunMode(sunMode);
-            sunAlarm.setPosition(lat, lon);
-            sunAlarm.setDelay(delay);
-            sunAlarm.setUpdate(update);
+            sunAlarm.sunMode=sunMode;
+            sunAlarm.latitude=lat;
+            sunAlarm.longitude=lon;
+            sunAlarm.delay=delay;
+            sunAlarm.update=update;
+            sunAlarm.city=city;
         } else {
             alarm = new Alarm(id);
         }
 
-        alarm.setLabel(name);
-        alarm.setEnable(enable);
+        alarm.label=name;
+        alarm.enabled=enable;
         alarm.setTime(time);
-        alarm.setRepeat(once);
-        alarm.setDays(days);
+        alarm.repeat=once;
+        alarm.days=days;
 
         return alarm;
     }
@@ -153,6 +159,7 @@ public class AlarmPreferences {
         ed.remove(id + KEY_DELAY);
         ed.remove(id + KEY_DAYS);
         ed.remove(id + KEY_UPDATE);
+        ed.remove(id + KEY_CITY);
         ed.apply();
         Toast.makeText(context, R.string.alarm_deleted, Toast.LENGTH_SHORT).show();
     }

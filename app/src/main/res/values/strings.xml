@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">Alarmus</string>
-    <string name="dialog_message">Вставай!!!</string>
-    <string name="dialog_title">Будидльник</string>
+    <string name="dialog_message">Wake up!!!</string>
+    <string name="dialog_title">Alarm</string>
     <string name="ok">OK</string>
     <string name="once">once</string>
     <string name="repeat">Repeat</string>
     <string name="cancel">CANCEL</string>
-    <string name="alarm_deleted">Будильник удален!</string>
+    <string name="alarm_deleted">Alarm deleted!</string>
     <string name="save_alarm">Save</string>
     <string name="sunrise">Sunrise</string>
     <string name="sunset">Sunset</string>

@@ -26,6 +26,7 @@ import com.siarhei.alarmus.data.SunAlarmManager;
 import com.siarhei.alarmus.views.CircleSlider;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Timer;
 
 
@@ -37,6 +38,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     private Alarm currentAlarm;
     private AlarmPreferences preferences;
     private SunAlarmManager alarmManager;
+    private static final int s0 = 335;
     private static final int s1 = 8;
     private static final int s2 = 41;
     private static final int s3 = 74;
@@ -45,7 +47,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     private static final int s6 = 173;
     private static final int s7 = 206;
     private static final int d1 = 1;
-    private static final int d2 = 2;
+    private static final int d2 = 3;
     private static final int d3 = 5;
     private static final int d4 = 10;
     private static final int d5 = 15;
@@ -70,8 +72,9 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         mMediaPlayer = new MediaPlayer();
         preferences = AlarmPreferences.getInstance(this);
         currentAlarm = preferences.readAlarm(getIntent().getIntExtra(Alarm.ID, 0));
-        time.setText(currentAlarm.toTime());
-        date.setText(currentAlarm.toDate());
+        Calendar calendar = Calendar.getInstance();
+        time.setText(Alarm.toTime(calendar));
+        date.setText(Alarm.toDate(calendar) + ", " + Alarm.toDay(calendar, Alarm.FULL));
         label.setText(currentAlarm.getLabel());
         sunSlider.setOnSliderMoveListener(this);
         try {
@@ -121,29 +124,31 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     @Override
     public void onSliderMoved(int action, float dir) {
         if (action == CircleSlider.ACTION_SUCCESS) {
-            if (dir > 195 && dir <= 345) {
+            if (dir > s7 && dir <= s0) {
                 if (currentAlarm instanceof SunAlarm && ((SunAlarm) (currentAlarm)).isUpdate())
                     defineCurrentLocation();
                 else {
                     setIfRepeating();
                     preferences.writeAlarm(currentAlarm);
-                    finish();
                 }
 
-            } else if (dir > s1 && dir <= s2) {
-                alarmManager.setDelayed(currentAlarm, d2);
-            } else if (dir > s2 && dir <= s3) {
-                alarmManager.setDelayed(currentAlarm, d3);
-            } else if (dir > s3 && dir <= s4) {
-                alarmManager.setDelayed(currentAlarm, d4);
-            } else if (dir > s4 && dir <= s5) {
-                alarmManager.setDelayed(currentAlarm, d5);
-            } else if (dir > s5 && dir <= s6) {
-                alarmManager.setDelayed(currentAlarm, d6);
-            } else if (dir > s6 && dir <= s7) {
-                alarmManager.setDelayed(currentAlarm, d7);
             } else {
-                alarmManager.setDelayed(currentAlarm, d1);
+                if (dir > s1 && dir <= s2) {
+                    alarmManager.setDelayed(currentAlarm, d2);
+                } else if (dir > s2 && dir <= s3) {
+                    alarmManager.setDelayed(currentAlarm, d3);
+                } else if (dir > s3 && dir <= s4) {
+                    alarmManager.setDelayed(currentAlarm, d4);
+                } else if (dir > s4 && dir <= s5) {
+                    alarmManager.setDelayed(currentAlarm, d5);
+                } else if (dir > s5 && dir <= s6) {
+                    alarmManager.setDelayed(currentAlarm, d6);
+                } else if (dir > s6 && dir <= s7) {
+                    alarmManager.setDelayed(currentAlarm, d7);
+                } else {
+                    alarmManager.setDelayed(currentAlarm, d1);
+                }
+                finish();
             }
         } else if (action == CircleSlider.ACTION_FAILURE)
             Log.d("ACTION_FAILURE", "radius=" + sunSlider.getRadius());
@@ -159,7 +164,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            Toast.makeText(this, "Location cannot be determined! Please set location manually", Toast.LENGTH_LONG);
+            Toast.makeText(this, "Location cannot be determined", Toast.LENGTH_LONG);
         } else {
             FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
             fusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
@@ -182,7 +187,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         if (currentAlarm.isRepeat()) {
             currentAlarm.setTimeNext(false);
             alarmManager.set(currentAlarm);
-        }else{
+        } else {
             currentAlarm.setEnable(false);
         }
     }

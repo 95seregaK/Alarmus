@@ -5,7 +5,10 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,7 +46,10 @@ import com.siarhei.alarmus.views.SunInfoScrollView;
 
 import org.osmdroid.util.GeoPoint;
 
+import java.io.IOException;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 public class EditAlarmActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener,
         View.OnClickListener, SeekBar.OnSeekBarChangeListener {
@@ -67,7 +73,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private CircleCheckBox[] checkDays;
     private SunInfoScrollView infoView;
     private TextView delayView;
-    private ViewGroup weekView, sunLayout;
+    private ViewGroup weekView, sunLayout, locationButton;
     private Alarm currentAlarm;
     private AlarmPreferences preferences;
     private int alarmType;
@@ -75,8 +81,8 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private double longitude;
     private Toolbar toolbar;
     private AlertDialog editLabelDialog;
-    private ImageButton locationButton;
     private DelayPicker delayBar;
+    private String cityName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +151,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             latitude = sunAlarm.getLatitude();
             longitude = sunAlarm.getLongitude();
             updateCheck.setChecked(sunAlarm.isUpdate());
-            defineCurrentLocation();
+            if (sunAlarm.isUpdate()) defineCurrentLocation();
             updateLocationViews();
         } else {
             timePicker.setCurrentHour(currentAlarm.getHour());
@@ -218,6 +224,12 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
                 updateLocationViews();
             });
         }
+        updateCheck.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            ((SunAlarm) currentAlarm).setUpdate(isChecked);
+            if (isChecked) {
+                defineCurrentLocation();
+            }
+        });
     }
 
     @Override
@@ -272,6 +284,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         if (resultCode == RESULT_LOCATION_CHOSEN) {
             latitude = data.getDoubleExtra(LATITUDE, 0);
             longitude = data.getDoubleExtra(LONGITUDE, 0);
+            cityName = defineCityName(latitude, longitude);
             updateAlarm();
             updateLocationViews();
             updateTimeView();
@@ -282,7 +295,9 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private void updateLocationViews() {
         if (alarmType == SUN_TYPE) {
             SunAlarm sunAlarm = (SunAlarm) currentAlarm;
-            locationView.setText("Location: " + SunInfo.toLocationString(latitude, longitude, 5));
+            cityName = defineCityName(latitude, longitude);
+            locationView.setText("Location: " + cityName + " "
+                    + SunInfo.toLocationString(latitude, longitude, 5));
             SunInfo sunInfo = new SunInfo(currentAlarm.getTime(), latitude, longitude);
             sunInfo = SunInfo.nextDaySunInfo(sunInfo, -1);
             if (!SunInfo.afterNow(sunInfo, SunInfo.SUNSET_MODE))
@@ -318,6 +333,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             sunAlarm.setPosition(latitude, longitude);
             sunAlarm.setDelay(delayBar.getValue());
             sunAlarm.setUpdate(updateCheck.isChecked());
+            sunAlarm.setCity(cityName);
         } else {
             currentAlarm.setTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute());
         }
@@ -334,7 +350,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
 
     private void updateTimeView() {
         timeView.setText(currentAlarm.toTime());
-        dateView.setText(currentAlarm.toDate());
+        dateView.setText(currentAlarm.toDate() + ", " + Alarm.toDay(currentAlarm.getTime(), Alarm.FULL));
     }
 
     private void updateDelayView() {
@@ -346,6 +362,8 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         updateDelayView();
+        ((SunAlarm) currentAlarm).setDelay(delayBar.getValue());
+        updateTimeView();
     }
 
     @Override
@@ -369,6 +387,10 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 12);
+
+            }
             Toast.makeText(this, "Location cannot be determined! Please set location manually", Toast.LENGTH_LONG);
             return;
         }
@@ -378,6 +400,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             if (location != null) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
+                cityName = defineCityName(latitude, longitude);
                 updateAlarm();
                 updateLocationViews();
                 updateTimeView();
@@ -387,4 +410,18 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         });
     }
 
+    private String defineCityName(double lat, double lon) {
+        Geocoder gcd = new Geocoder(getBaseContext(), Locale.getDefault());
+        List<Address> addresses;
+        try {
+            addresses = gcd.getFromLocation(lat, lon, 1);
+            if (addresses.size() > 0) {
+                if (addresses.get(0).getLocality() != null) return addresses.get(0).getLocality();
+                return "";
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 }

@@ -195,7 +195,7 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
 
     @Override
     public boolean onMarkerClick(Marker marker, MapView mapView) {
-        //mapView.getController().animateTo(marker.getPosition());
+        mapView.getController().animateTo(marker.getPosition());
         updateSunInfoLocation();
         //infoWindow.emerge();
         return true;
@@ -204,8 +204,8 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
     private void updateSunInfoLocation() {
         double lat = defaultMarker.getPosition().getLatitude();
         double lon = defaultMarker.getPosition().getLongitude();
-        String cityName = " ";
-        //cityName= defineCityName(lat,lon);
+        String cityName = "";
+        //cityName += defineCityName(lat, lon);
         currentSunInfo.setNewPosition(lat, lon);
         locationView.setText("Location: " + cityName + SunInfo.toLocationString(lat, lon, 5));
         int offset = currentSunInfo.getTimeZoneOffset();
@@ -266,8 +266,8 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
 
         defaultMarker.setPosition(p);
         //map.getController().animateTo(p);
-        onMarkerClick(defaultMarker, map);
-        //map.invalidate();
+        updateSunInfoLocation();
+        map.invalidate();
         return false;
     }
 

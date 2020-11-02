@@ -1,6 +1,7 @@
 package com.siarhei.alarmus.views;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,22 +43,24 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
         holder.time.setText(alarm.toTime());
         holder.date.setText(alarm.toDate());
         holder.label.setText(alarm.getLabel() + "");
-        if (!alarm.isRepeat()) holder.days.setText(R.string.once);
+        for (int i = 0; i < 7; i++) {
+            holder.days[i].setText(null);
+        }
+        if (!alarm.isRepeat()) holder.days[0].setText(R.string.once);
+
         else {
             boolean everyday = true;
             for (int i = 0; i < 7; i++) {
                 everyday = everyday && alarm.getDays()[i];
             }
-            if (everyday) holder.days.setText(R.string.every_day);
+            if (everyday) holder.days[0].setText(R.string.every_day);
             else {
                 String days = "";
                 for (int i = 0; i < 7; i++) {
-                    if (alarm.getDays()[i]) days += Alarm.DAYS[i] + " ";
+                    holder.days[i].setText(Alarm.DAYS_SHORT[i]);
                 }
-                holder.days.setText(days);
             }
         }
-        if (alarm instanceof SunAlarm) holder.location.setText(((SunAlarm)alarm).getCity());
         holder.enabled.setChecked(alarm.isEnabled());
         holder.enabled.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +84,7 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
         });*/
         if (alarm instanceof SunAlarm) {
             SunAlarm sunAlarm = (SunAlarm) alarm;
+            holder.location.setText(sunAlarm.getCity());
             if (sunAlarm.getSunMode() == SunAlarm.MODE_SUNRISE)
                 holder.sunMode.setImageResource(R.drawable.ic_sunrise);
             else if (sunAlarm.getSunMode() == SunAlarm.MODE_NOON)
@@ -88,22 +92,31 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
             else if (sunAlarm.getSunMode() == SunAlarm.MODE_SUNSET)
                 holder.sunMode.setImageResource(R.drawable.ic_sunset);
 
-        } else holder.sunMode.setImageDrawable(null);
+        } else {
+            holder.sunMode.setImageDrawable(null);
+            holder.location.setText("");
+        }
         if (alarm.isEnabled()) {
             //holder.layout.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
             holder.time.setTextColor(colorAlarmEnable);
             holder.date.setTextColor(colorAlarmEnable);
             holder.label.setTextColor(colorAlarmEnable);
-            holder.days.setTextColor(colorAlarmEnable);
             holder.sunMode.setImageAlpha(context.getResources().getInteger(R.integer.enable_alpha));
             holder.sunMode.setColorFilter(0);
             holder.location.setTextColor(colorAlarmEnable);
+            for (int i = 0; i < 7; i++) {
+                if (alarm.getDays()[i]) holder.days[i].setTextColor(colorAlarmEnable);
+                else holder.days[i].setTextColor(Color.WHITE);
+            }
         } else {
             //holder.layout.setBackgroundColor(context.getResources().getColor(R.color.color_text_inactive));
             holder.time.setTextColor(colorAlarmDisable);
             holder.date.setTextColor(colorAlarmDisable);
             holder.label.setTextColor(colorAlarmDisable);
-            holder.days.setTextColor(colorAlarmDisable);
+            for (int i = 0; i < 7; i++) {
+                if (alarm.getDays()[i]) holder.days[i].setTextColor(colorAlarmDisable);
+                else holder.days[i].setTextColor(Color.WHITE);
+            }
             holder.sunMode.setImageAlpha(context.getResources().getInteger(R.integer.disable_alpha));
             holder.sunMode.setColorFilter(colorAlarmDisable);
             holder.location.setTextColor(colorAlarmDisable);
@@ -126,7 +139,8 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
 
     static final class ViewHolder extends RecyclerView.ViewHolder {
 
-        final TextView time, date, label, days, location;
+        final TextView time, date, label, location;
+        final TextView days[];
         final Switch enabled;
         final ImageView sunMode;
         final View layout;
@@ -137,10 +151,17 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
             time = itemView.findViewById(R.id.row_time);
             date = itemView.findViewById(R.id.row_date);
             label = itemView.findViewById(R.id.row_label);
-            days = itemView.findViewById(R.id.row_days);
             enabled = itemView.findViewById(R.id.row_switch);
             sunMode = itemView.findViewById(R.id.row_sun_mode);
             location = itemView.findViewById(R.id.row_location);
+            days = new TextView[]{itemView.findViewById(R.id.row_day1),
+                    itemView.findViewById(R.id.row_day2),
+                    itemView.findViewById(R.id.row_day3),
+                    itemView.findViewById(R.id.row_day4),
+                    itemView.findViewById(R.id.row_day5),
+                    itemView.findViewById(R.id.row_day6),
+                    itemView.findViewById(R.id.row_day7)};
+
         }
     }
 
