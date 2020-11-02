@@ -176,7 +176,7 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            Log.d("Location1", "LocationNo");
+            Toast.makeText(this, "Location cannot be determined! Please set location manually", Toast.LENGTH_LONG);
             return;
         }
         fusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
@@ -187,6 +187,8 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
                 defaultMarker.setPosition(startPoint);
                 //Log.d("Location1", "Location" + location.getLatitude() + " " + location.getLatitude());
                 updateSunInfoLocation();
+            } else {
+                Toast.makeText(this, "Location cannot be determined! Please set location manually", Toast.LENGTH_LONG);
             }
         });
     }
@@ -263,7 +265,7 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
     public boolean singleTapConfirmedHelper(GeoPoint p) {
 
         defaultMarker.setPosition(p);
-        map.getController().animateTo(p);
+        //map.getController().animateTo(p);
         onMarkerClick(defaultMarker, map);
         //map.invalidate();
         return false;

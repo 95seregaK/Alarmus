@@ -1,5 +1,8 @@
 package com.siarhei.alarmus.activities;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
@@ -11,10 +14,14 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.siarhei.alarmus.R;
 import com.siarhei.alarmus.data.Alarm;
 import com.siarhei.alarmus.data.AlarmPreferences;
+import com.siarhei.alarmus.data.SunAlarm;
 import com.siarhei.alarmus.data.SunAlarmManager;
 import com.siarhei.alarmus.views.CircleSlider;
 
@@ -115,13 +122,14 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     public void onSliderMoved(int action, float dir) {
         if (action == CircleSlider.ACTION_SUCCESS) {
             if (dir > 195 && dir <= 345) {
-                if (!currentAlarm.isRepeat()) currentAlarm.setEnable(false);
+                if (currentAlarm instanceof SunAlarm && ((SunAlarm) (currentAlarm)).isUpdate())
+                    defineCurrentLocation();
                 else {
-                    currentAlarm.setTimeNext();
-                    alarmManager.set(currentAlarm);
-                    Toast.makeText(getApplicationContext(), "Будильник установлен!!!", Toast.LENGTH_SHORT).show();
+                    setIfRepeating();
+                    preferences.writeAlarm(currentAlarm);
+                    finish();
                 }
-                preferences.writeAlarm(currentAlarm);
+
             } else if (dir > s1 && dir <= s2) {
                 alarmManager.setDelayed(currentAlarm, d2);
             } else if (dir > s2 && dir <= s3) {
@@ -137,9 +145,45 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
             } else {
                 alarmManager.setDelayed(currentAlarm, d1);
             }
-            finish();
-            Timer timerTask = new Timer();
         } else if (action == CircleSlider.ACTION_FAILURE)
             Log.d("ACTION_FAILURE", "radius=" + sunSlider.getRadius());
+    }
+
+    public void defineCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            Toast.makeText(this, "Location cannot be determined! Please set location manually", Toast.LENGTH_LONG);
+        } else {
+            FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            fusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
+                Location location = task.getResult();
+                if (location != null) {
+                    SunAlarm sunAlarm = (SunAlarm) currentAlarm;
+                    sunAlarm.setPosition(location.getLatitude(), location.getLongitude());
+                    setIfRepeating();
+                    preferences.writeAlarm(currentAlarm);
+                    finish();
+                } else
+                    Toast.makeText(this, "Location cannot be determined! Please set location manually", Toast.LENGTH_LONG);
+
+            });
+        }
+        finish();
+    }
+
+    public void setIfRepeating() {
+        if (currentAlarm.isRepeat()) {
+            currentAlarm.setTimeNext(false);
+            alarmManager.set(currentAlarm);
+        }else{
+            currentAlarm.setEnable(false);
+        }
     }
 }

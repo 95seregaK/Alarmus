@@ -4,8 +4,10 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -15,6 +17,7 @@ import java.util.Calendar;
 
 public class Alarm implements Parcelable {
     public static final String ID = "id";
+    public static String[] DAYS = {"M", "Tu", "W", "Th", "F", "Sa", "Su"};
     private static final int HOUR_DEFAULT = 6;
     private static final int MINUTE_DEFAULT = 0;
     private static final long MAX_DELAY = 10 * 60 * 1000;
@@ -64,7 +67,7 @@ public class Alarm implements Parcelable {
         this.id = id;
         this.time = Calendar.getInstance();
         setTime(HOUR_DEFAULT, MINUTE_DEFAULT);
-        setTimeNext();
+        setTimeNext(true);
     }
 
 
@@ -78,11 +81,24 @@ public class Alarm implements Parcelable {
         time.set(Calendar.SECOND, 0);
     }
 
-    public void setTimeNext() {
-        setToday();
-        long now = System.currentTimeMillis();
+    public void addDay() {
+        time.add(Calendar.DAY_OF_MONTH, 1);
+    }
+
+    public void setTimeNext(boolean fromNow) {
+        long now;
+        if (fromNow) {
+            setToday();
+            now = System.currentTimeMillis();
+        } else {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            now = calendar.getTimeInMillis();
+        }
         while (now > time.getTimeInMillis() || (repeat && !days[(time.get(Calendar.DAY_OF_WEEK) + 5) % 7])) {
-            time.add(Calendar.DAY_OF_MONTH, 1);
+            addDay();
         }
         Log.d("alarmType", "Alarm");
     }

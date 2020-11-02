@@ -31,5 +31,6 @@
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
     <string name="set_auto_update">Auto-update location</string>
+    <string name="every_day">every day</string>
 
 </resources>

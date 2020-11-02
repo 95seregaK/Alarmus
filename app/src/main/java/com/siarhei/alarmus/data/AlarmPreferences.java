@@ -32,6 +32,7 @@ public class AlarmPreferences {
     public static final String KEY_TIME = "time";
     public static final String KEY_LATITUDE = "latitude";
     public static final String KEY_LONGITUDE = "longitude";
+    public static final String KEY_UPDATE = "update";
 
     private AlarmPreferences(Context context) {
         this.context = context;
@@ -61,6 +62,7 @@ public class AlarmPreferences {
             ed.putLong(id + KEY_LATITUDE, Double.doubleToLongBits(sunAlarm.getLatitude()));
             ed.putLong(id + KEY_LONGITUDE, Double.doubleToLongBits(sunAlarm.getLongitude()));
             ed.putInt(id + KEY_DELAY, sunAlarm.getDelay());
+            ed.putBoolean(id + KEY_UPDATE, sunAlarm.isUpdate());
         } else {
             ed.putInt(id + KEY_TYPE, SIMPLE_TYPE);
         }
@@ -83,11 +85,13 @@ public class AlarmPreferences {
             double lat = Double.longBitsToDouble(pref.getLong(id + KEY_LATITUDE, 0));
             double lon = Double.longBitsToDouble(pref.getLong(id + KEY_LONGITUDE, 0));
             int delay = pref.getInt(id + KEY_DELAY, 0);
+            boolean update = pref.getBoolean(KEY_UPDATE, true);
             alarm = new SunAlarm(id);
             SunAlarm sunAlarm = (SunAlarm) alarm;
             sunAlarm.setSunMode(sunMode);
             sunAlarm.setPosition(lat, lon);
             sunAlarm.setDelay(delay);
+            sunAlarm.setUpdate(update);
         } else {
             alarm = new Alarm(id);
         }
@@ -148,6 +152,7 @@ public class AlarmPreferences {
         ed.remove(id + KEY_LONGITUDE);
         ed.remove(id + KEY_DELAY);
         ed.remove(id + KEY_DAYS);
+        ed.remove(id + KEY_UPDATE);
         ed.apply();
         Toast.makeText(context, R.string.alarm_deleted, Toast.LENGTH_SHORT).show();
     }

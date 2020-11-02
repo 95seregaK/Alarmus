@@ -29,6 +29,7 @@ public class SunAlarm extends Alarm {
     protected double latitude;
     protected double longitude;
     private int delay;
+    private boolean update = true;
 
     public SunAlarm(Parcel in) {
         super(in);
@@ -36,6 +37,7 @@ public class SunAlarm extends Alarm {
         latitude = in.readDouble();
         longitude = in.readDouble();
         delay = in.readInt();
+        update = in.readByte() == 1;
     }
 
     public SunAlarm(int id) {
@@ -53,18 +55,19 @@ public class SunAlarm extends Alarm {
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
         dest.writeInt(delay);
+        dest.writeByte((byte) (update ? 1 : 0));
     }
 
     @Override
-    public void setTimeNext() {
-        long now = System.currentTimeMillis();
-        time.setTimeInMillis(now);
+    public void setToday() {
+        time.setTimeInMillis(System.currentTimeMillis());
         defineTime();
-        while (now > time.getTimeInMillis() || (repeat && !days[(time.get(Calendar.DAY_OF_WEEK) + 5) % 7])) {
-            time.add(Calendar.DAY_OF_MONTH, 1);
-            defineTime();
-        }
-        Log.d("AlarmType", "Sun alarm");
+    }
+
+    @Override
+    public void addDay() {
+        time.add(Calendar.DAY_OF_MONTH, 1);
+        defineTime();
     }
 
     public void defineTime() {
@@ -114,5 +117,17 @@ public class SunAlarm extends Alarm {
 
     public int getDelay() {
         return delay;
+    }
+
+    public String getCity() {
+        return "Minsk";
+    }
+
+    public boolean isUpdate() {
+        return update;
+    }
+
+    public void setUpdate(boolean update) {
+        this.update = update;
     }
 }

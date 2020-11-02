@@ -154,7 +154,7 @@ public class AlarmListActivity extends AppCompatActivity implements View.OnClick
 
         if (isChecked && !currentAlarm.isEnabled()) {
             currentAlarm.setEnable(true);
-            currentAlarm.setTimeNext();
+            currentAlarm.setTimeNext(true);
             alarmManager.set(currentAlarm);
         } else if (!isChecked && currentAlarm.isEnabled()) {
             currentAlarm.setEnable(false);

@@ -8,7 +8,7 @@
     <color name="colorTransparent">#00FFFFFF</color>
     <color name="color_info_text">#FFFFFF</color>
     <color name="color_info_active">#FFE600</color>
-    <color name="color_info_inactive">@color/color_text_inactive</color>
+    <color name="color_info_inactive">#BCBCBC</color>
     <color name="colorHalfTransparent">#85191919</color>
     <color name="color_circle_check_checked">@color/colorPrimary</color>
     <color name="color_circle_check_unchecked">#00000000</color>

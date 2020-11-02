@@ -1,9 +1,13 @@
 package com.siarhei.alarmus.activities;
 
+import android.Manifest;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +19,16 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.siarhei.alarmus.R;
 import com.siarhei.alarmus.data.Alarm;
 import com.siarhei.alarmus.data.AlarmPreferences;
@@ -32,6 +40,8 @@ import com.siarhei.alarmus.views.DelayPicker;
 import com.siarhei.alarmus.views.ImageRadioButton;
 import com.siarhei.alarmus.views.ImageRadioGroup;
 import com.siarhei.alarmus.views.SunInfoScrollView;
+
+import org.osmdroid.util.GeoPoint;
 
 import java.util.Calendar;
 
@@ -51,10 +61,9 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private EditText labelEdit;
     private TimePicker timePicker;
     private ImageButton saveBtn;
-    private CheckBox repeatCheck;
+    private CheckBox repeatCheck, updateCheck;
     private ImageRadioGroup radioGroupSunMode;
     private ImageRadioButton radioSunrise, radioSunset, radioNoon;
-    private DelayPicker delayPicker;
     private CircleCheckBox[] checkDays;
     private SunInfoScrollView infoView;
     private TextView delayView;
@@ -67,7 +76,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private Toolbar toolbar;
     private AlertDialog editLabelDialog;
     private ImageButton locationButton;
-    private SeekBar delayBar;
+    private DelayPicker delayBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,12 +109,12 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         radioSunrise = findViewById(R.id.radioSunrise);
         radioNoon = findViewById(R.id.radioNoon);
         radioSunset = findViewById(R.id.radioSunset);
-        delayPicker = findViewById(R.id.delay_picker);
         delayView = findViewById(R.id.delay_view);
         repeatCheck = findViewById(R.id.repeatCheck);
         weekView = findViewById(R.id.view_week);
         sunLayout = findViewById(R.id.sun_layout);
         delayBar = findViewById(R.id.delayBar);
+        updateCheck = findViewById(R.id.check_update);
         checkDays = new CircleCheckBox[]{findViewById(R.id.check_day1),
                 findViewById(R.id.check_day2), findViewById(R.id.check_day3),
                 findViewById(R.id.check_day4), findViewById(R.id.check_day5),
@@ -135,6 +144,8 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             radioSunset.setChecked(sunAlarm.getSunMode() == SunAlarm.MODE_SUNSET);
             latitude = sunAlarm.getLatitude();
             longitude = sunAlarm.getLongitude();
+            updateCheck.setChecked(sunAlarm.isUpdate());
+            defineCurrentLocation();
             updateLocationViews();
         } else {
             timePicker.setCurrentHour(currentAlarm.getHour());
@@ -197,10 +208,6 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             updateAlarm();
             updateTimeView();
         });
-        delayPicker.setOnValueChangedListener((picker, oldVal, newVal) -> {
-            updateAlarm();
-            updateTimeView();
-        });
 
         delayBar.setOnSeekBarChangeListener(this);
 
@@ -250,7 +257,6 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         SunAlarmManager.getService(this).set(currentAlarm);
         //MainActivity.addAlarm(currentAlarm);
         preferences.writeAlarm(currentAlarm);
-        //Toast.makeText(this, "Будильник!!!", Toast.LENGTH_SHORT).show();
     }
 
     private void chooseLocation() {
@@ -293,12 +299,15 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
                 sunInfo = SunInfo.nextDaySunInfo(sunInfo, 1);
             radioSunrise.setText(SunInfo.toTimeString(sunInfo.getSunriseLocalTime(), SunInfo.HH_MM));
             radioSunrise.setSubText(sunInfo.toDateString());
-            delayPicker.setSelectedValue(sunAlarm.getDelay());
-            delayBar.setProgress(sunAlarm.getDelay() + 60);
+            delayBar.setValue(sunAlarm.getDelay());
             updateDelayView();
         }
     }
 
+    public void setLocation() {
+        SunAlarm sunAlarm = (SunAlarm) currentAlarm;
+
+    }
 
     private void updateAlarm() {
         if (alarmType == SUN_TYPE) {
@@ -307,7 +316,8 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             else if (radioNoon.isChecked()) sunAlarm.setSunMode(SunAlarm.MODE_NOON);
             else if (radioSunset.isChecked()) sunAlarm.setSunMode(SunAlarm.MODE_SUNSET);
             sunAlarm.setPosition(latitude, longitude);
-            sunAlarm.setDelay(delayBar.getProgress() - 60);
+            sunAlarm.setDelay(delayBar.getValue());
+            sunAlarm.setUpdate(updateCheck.isChecked());
         } else {
             currentAlarm.setTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute());
         }
@@ -317,7 +327,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             days[i] = checkDays[i].isChecked();
         }
         currentAlarm.setDays(days);
-        currentAlarm.setTimeNext();
+        currentAlarm.setTimeNext(true);
         currentAlarm.setLabel(labelEdit.getText().toString());
         //Log.d("update", "update");
     }
@@ -329,7 +339,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
 
     private void updateDelayView() {
         String delayString = getResources().getString(R.string.delay) + "   ";
-        int delay = delayBar.getProgress() - 60;
+        int delay = delayBar.getValue();
         delayView.setText(delayString + (delay < 0 ? "" : "+") + delay + "  minutes");
     }
 
@@ -348,4 +358,33 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         updateAlarm();
         updateTimeView();
     }
+
+    public void defineCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            Toast.makeText(this, "Location cannot be determined! Please set location manually", Toast.LENGTH_LONG);
+            return;
+        }
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
+            Location location = task.getResult();
+            if (location != null) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+                updateAlarm();
+                updateLocationViews();
+                updateTimeView();
+            } else {
+                Toast.makeText(this, "Location cannot be determined! Please set location manually", Toast.LENGTH_LONG);
+            }
+        });
+    }
+
 }
