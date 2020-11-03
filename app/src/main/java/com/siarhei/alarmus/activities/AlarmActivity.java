@@ -148,8 +148,8 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
                 } else {
                     alarmManager.setDelayed(currentAlarm, d1);
                 }
-                finish();
             }
+            finish();
         } else if (action == CircleSlider.ACTION_FAILURE)
             Log.d("ACTION_FAILURE", "radius=" + sunSlider.getRadius());
     }
@@ -164,6 +164,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+            setAndExit();
             Toast.makeText(this, "Location cannot be determined", Toast.LENGTH_LONG);
         } else {
             FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -172,12 +173,11 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
                 if (location != null) {
                     SunAlarm sunAlarm = (SunAlarm) currentAlarm;
                     sunAlarm.setPosition(location.getLatitude(), location.getLongitude());
-                    setIfRepeating();
-                    preferences.writeAlarm(currentAlarm);
-                    finish();
-                } else
+                    setAndExit();
+                } else {
+                    setAndExit();
                     Toast.makeText(this, "Location cannot be determined! Please set location manually", Toast.LENGTH_LONG);
-
+                }
             });
         }
         finish();
@@ -190,5 +190,11 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         } else {
             currentAlarm.setEnable(false);
         }
+    }
+
+    public void setAndExit() {
+        setIfRepeating();
+        preferences.writeAlarm(currentAlarm);
+        finish();
     }
 }

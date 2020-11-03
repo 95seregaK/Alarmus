@@ -45,4 +45,5 @@
     <dimen name="size_button_current_location">36dp</dimen>
     <dimen name="margin_edit_alarm">16dp</dimen>
     <dimen name="size_image_radio">38dp</dimen>
+    <dimen name="padding_layout_bottom">100dp</dimen>
 </resources>
