@@ -22,6 +22,7 @@ public class Alarm implements Parcelable {
     public static final int SHORT = 2;
     // public static String[] DAYS = {"Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"};
     public static String[] DAYS_SHORT = {"M", "T", "W", "T", "F", "S", "S"};
+   // public static String[] DAYS_SHORT = {"m", "t", "w", "t", "f", "s", "s"};
     public static String[] DAYS_FULL = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};
     private static final int HOUR_DEFAULT = 6;
     private static final int MINUTE_DEFAULT = 0;
@@ -32,7 +33,7 @@ public class Alarm implements Parcelable {
     protected Calendar time;
 
     protected boolean enabled = false;
-    protected boolean repeat = false;
+    protected boolean repeat = true;
     protected boolean[] days = {true, true, true, true, true, true, true};
 
     public static final Creator<Alarm> CREATOR = new Creator<Alarm>() {
@@ -112,7 +113,7 @@ public class Alarm implements Parcelable {
         while (now > time.getTimeInMillis() || (repeat && !days[(time.get(Calendar.DAY_OF_WEEK) + 5) % 7])) {
             addDay();
         }
-        Log.d("alarmType", "Alarm");
+        //Log.d("alarmType", "Alarm");
     }
 
     public void setToday() {

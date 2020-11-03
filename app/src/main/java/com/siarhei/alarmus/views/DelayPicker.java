@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 
 public class DelayPicker extends androidx.appcompat.widget.AppCompatSeekBar {
     private int maxDelay = 120;
+    private int zeroOffset = 5;
     private String[] displayedValues;
 
     public DelayPicker(Context context) {
@@ -31,17 +32,21 @@ public class DelayPicker extends androidx.appcompat.widget.AppCompatSeekBar {
             displayedValues[maxDelay + i] = "+" + hour + (minute > 9 ? ":" : ":0") + minute;
         }
         setDisplayedValues(displayedValues);*/
-        setMax(maxDelay * 2);
+        setMax((maxDelay + zeroOffset) * 2);
         setValue(0);
     }
 
     public int getValue() {
-        return getProgress() - maxDelay;
+        if (getProgress() - maxDelay < 0)
+            return getProgress() - maxDelay;
+        else if (getProgress() - maxDelay > 2 * zeroOffset)
+            return getProgress() - 2 * zeroOffset - maxDelay;
+        return 0;
     }
 
     public void setValue(int value) {
-        setProgress(value + maxDelay);
-        //setDisplayedValues(displayedValues);
+        if (value == 0) setProgress(maxDelay + zeroOffset);
+        else if (value < 0) setProgress(value + maxDelay);
+        else setProgress(value + maxDelay + 2 * zeroOffset);
     }
-
 }

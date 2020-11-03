@@ -28,6 +28,7 @@ import com.siarhei.alarmus.views.CircleSlider;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnSliderMoveListener {
@@ -38,6 +39,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     private Alarm currentAlarm;
     private AlarmPreferences preferences;
     private SunAlarmManager alarmManager;
+    private int timerDelay = 1000 * 60 * 3;
     private static final int s0 = 335;
     private static final int s1 = 8;
     private static final int s2 = 41;
@@ -53,6 +55,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     private static final int d5 = 15;
     private static final int d6 = 20;
     private static final int d7 = 30;
+    private Timer timer;
 
 
     @Override
@@ -77,6 +80,8 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         date.setText(Alarm.toDate(calendar) + ", " + Alarm.toDay(calendar, Alarm.FULL));
         label.setText(currentAlarm.getLabel());
         sunSlider.setOnSliderMoveListener(this);
+        timer = new Timer();
+        timer.schedule(new MyTimerTask(), timerDelay);
         try {
             play();
         } catch (IOException e) {
@@ -89,6 +94,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     @Override
     public void finish() {
         //wl.release();
+        timer.cancel();
         mMediaPlayer.stop();
         super.finish();
     }
@@ -164,7 +170,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            setAndExit();
+            setAndFinish();
             Toast.makeText(this, "Location cannot be determined", Toast.LENGTH_LONG);
         } else {
             FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -173,9 +179,9 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
                 if (location != null) {
                     SunAlarm sunAlarm = (SunAlarm) currentAlarm;
                     sunAlarm.setPosition(location.getLatitude(), location.getLongitude());
-                    setAndExit();
+                    setAndFinish();
                 } else {
-                    setAndExit();
+                    setAndFinish();
                     Toast.makeText(this, "Location cannot be determined! Please set location manually", Toast.LENGTH_LONG);
                 }
             });
@@ -192,9 +198,26 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         }
     }
 
-    public void setAndExit() {
+    public void setAndFinish() {
         setIfRepeating();
         preferences.writeAlarm(currentAlarm);
         finish();
     }
+
+    class MyTimerTask extends TimerTask {
+        @Override
+        public void run() {
+            runOnUiThread(new Runnable() {
+                // Отображаем информацию в текстовом поле count:
+                @Override
+                public void run() {
+                    mMediaPlayer.stop();
+                    alarmManager.setDelayed(currentAlarm, d3);
+                    timer.cancel();
+                    finish();
+                }
+            });
+        }
+    }
+
 }

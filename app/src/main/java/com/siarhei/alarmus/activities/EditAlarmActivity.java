@@ -295,7 +295,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private void updateLocationViews() {
         if (alarmType == SUN_TYPE) {
             SunAlarm sunAlarm = (SunAlarm) currentAlarm;
-            cityName = defineCityName(latitude, longitude);
+            //cityName = defineCityName(latitude, longitude);
             locationView.setText("Location: " + cityName + " "
                     + SunInfo.toLocationString(latitude, longitude, 5));
             SunInfo sunInfo = new SunInfo(currentAlarm.getTime(), latitude, longitude);
@@ -380,16 +380,8 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     public void defineCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 12);
-
             }
             Toast.makeText(this, "Location cannot be determined! Please set location manually", Toast.LENGTH_LONG);
             return;
@@ -400,7 +392,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             if (location != null) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
-                cityName = defineCityName(latitude, longitude);
+                //cityName = defineCityName(latitude, longitude);
                 updateAlarm();
                 updateLocationViews();
                 updateTimeView();
@@ -420,7 +412,8 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
                 return "";
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            return "";
+            //e.printStackTrace();
         }
         return "";
     }
