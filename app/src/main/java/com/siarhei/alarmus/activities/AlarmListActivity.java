@@ -58,7 +58,7 @@ public class AlarmListActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_list);
-        requestPermissions();
+        //requestPermissions();
         recycler = findViewById(R.id.recycler);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         alarmAdapter = new AlarmRecyclerAdapter();
@@ -159,8 +159,8 @@ public class AlarmListActivity extends AppCompatActivity implements View.OnClick
         Alarm alarm = alarms.get(position);
         if (isChecked && !alarm.isEnabled()) {
             if (alarm instanceof SunAlarm && ((SunAlarm) alarm).isUpdate()) {
-                SetLocationActivity.defineCurrentLocation(this, (code, location) -> {
-                    if (code == SetLocationActivity.CODE_SUCCESS)
+                MapActivity.defineCurrentLocation(this, (code, location) -> {
+                    if (code == MapActivity.CODE_SUCCESS)
                         ((SunAlarm) alarm).setPosition(location.getLatitude(), location.getLongitude());
                     else
                         Toast.makeText(this, R.string.message_location_cannot, Toast.LENGTH_SHORT).show();

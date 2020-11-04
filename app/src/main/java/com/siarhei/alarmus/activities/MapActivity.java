@@ -48,7 +48,7 @@ import java.util.Locale;
 
 import static android.media.MediaCodec.MetricsConstants.MODE;
 
-public class SetLocationActivity extends Activity implements Marker.OnMarkerClickListener,
+public class MapActivity extends Activity implements Marker.OnMarkerClickListener,
         View.OnClickListener, LocationListener, MapEventsReceiver {
 
 
@@ -57,7 +57,6 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
     public static final double DEFAULT_LATITUDE = 54.0;
     public static final double DEFAULT_LONGITUDE = 28.0;
     public static final String MODE_MAP = "mode";
-    Button dateButton;
     private SunInfoMarker defaultMarker;
     private RadiusMarkerClusterer markerClusterer;
     private FusedLocationProviderClient fusedLocationClient;
@@ -69,20 +68,23 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
     private TextView locationView;
     private TextView timeZoneView;
     private IMapController mapController;
-    private View currentLocationButton;
+    private View currentLocationButton, dateButton;
 
     public static void defineCurrentLocation(Context context, OnLocationDefinedCallback callback) {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             callback.onLocationDefined(CODE_FAILURE, null);
+            Log.d("Location", "No permissions");
             return;
         }
         FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
         fusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
             Location location = task.getResult();
             if (location != null) {
+                Log.d("Location", "location!");
                 callback.onLocationDefined(CODE_SUCCESS, location);
             } else {
+                Log.d("Location", "location=null");
                 callback.onLocationDefined(CODE_FAILURE, null);
             }
         });
@@ -129,6 +131,10 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
         defaultMarker = new SunInfoMarker(map, this);
         Drawable icon = getResources().getDrawable(R.drawable.ic_default_marker);
         defaultMarker.setIcon(icon);
+        defaultMarker.setPanToView(true);
+
+        //defaultMarker.setImage(icon);
+        //defaultMarker.setDefaultIcon();
         defaultMarker.setOnMarkerClickListener(this);
         defaultMarker.setPosition(startPoint);
         currentSunInfo = new SunInfo(Calendar.getInstance(), lat, lon);
@@ -137,7 +143,7 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
         map.getOverlays().add(mapEventsOverlay);
         map.getOverlays().add(defaultMarker);
 
-        if(mode==0){
+        if (mode == 0) {
             setPositionBtn.setVisibility(View.GONE);
             defineCurrentLocation(this, (code, location) -> {
                 if (code == CODE_SUCCESS)
@@ -149,10 +155,10 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
         }
 
         mapController.setCenter(startPoint);
-       // markerClusterer = new RadiusMarkerClusterer(this);
-       // markerClusterer.setRadius(20);
+        // markerClusterer = new RadiusMarkerClusterer(this);
+        // markerClusterer.setRadius(20);
 
-       // map.getOverlays().add(markerClusterer);
+        // map.getOverlays().add(markerClusterer);
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         //startPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
@@ -285,7 +291,7 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
 
     @Override
     public boolean longPressHelper(GeoPoint p) {
-        Marker marker = new SunInfoMarker(map, SetLocationActivity.this);
+        /*Marker marker = new SunInfoMarker(map, SetLocationActivity.this);
 
         marker.setPosition(p);
         marker.setOnMarkerClickListener(SetLocationActivity.this);
@@ -294,7 +300,7 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
         markerClusterer.invalidate();
         map.invalidate();
 
-        onMarkerClick(marker, map);
+        onMarkerClick(marker, map);*/
         return false;
     }
 

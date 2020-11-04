@@ -144,8 +144,8 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             longitude = sunAlarm.getLongitude();
             updateCheck.setChecked(sunAlarm.isUpdate());
             if (sunAlarm.isUpdate())
-                SetLocationActivity.defineCurrentLocation(this, (code, location) -> {
-                    if (code == SetLocationActivity.CODE_SUCCESS) updateLocation(location);
+                MapActivity.defineCurrentLocation(this, (code, location) -> {
+                    if (code == MapActivity.CODE_SUCCESS) updateLocation(location);
                     else
                         Toast.makeText(this, R.string.message_location_cannot, Toast.LENGTH_SHORT).show();
                 });
@@ -234,8 +234,8 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         updateCheck.setOnCheckedChangeListener((buttonView, isChecked) -> {
             ((SunAlarm) currentAlarm).setUpdate(isChecked);
             if (isChecked) {
-                SetLocationActivity.defineCurrentLocation(this, (code, location) -> {
-                    if (code == SetLocationActivity.CODE_SUCCESS) updateLocation(location);
+                MapActivity.defineCurrentLocation(this, (code, location) -> {
+                    if (code == MapActivity.CODE_SUCCESS) updateLocation(location);
                     else
                         Toast.makeText(this, R.string.message_location_cannot, Toast.LENGTH_SHORT).show();
                 });
@@ -288,7 +288,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         Intent mapIntent = new Intent("android.intent.action.SET_LOCATION");
         mapIntent.putExtra(LATITUDE, ((SunAlarm) currentAlarm).getLatitude());
         mapIntent.putExtra(LONGITUDE, ((SunAlarm) currentAlarm).getLongitude());
-        mapIntent.putExtra(SetLocationActivity.MODE_MAP, 1);
+        mapIntent.putExtra(MapActivity.MODE_MAP, 1);
         this.startActivityForResult(mapIntent, 1);
     }
 

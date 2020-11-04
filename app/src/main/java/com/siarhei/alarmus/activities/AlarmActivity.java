@@ -113,7 +113,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
 
     @Override
     public void onBackPressed() {
-        SunAlarmManager.getService(this).setDelayed(currentAlarm, 1);
+        snooze(1);
         super.onBackPressed();
 
     }
@@ -140,8 +140,8 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
 
     private void dismiss() {
         if (currentAlarm instanceof SunAlarm && ((SunAlarm) (currentAlarm)).isUpdate())
-            SetLocationActivity.defineCurrentLocation(this, (code, location) -> {
-                if (code == SetLocationActivity.CODE_SUCCESS)
+            MapActivity.defineCurrentLocation(this, (code, location) -> {
+                if (code == MapActivity.CODE_SUCCESS)
                     ((SunAlarm) (currentAlarm)).setPosition(location.getLatitude(), location.getLongitude());
                 else
                     Toast.makeText(this, R.string.message_location_cannot, Toast.LENGTH_SHORT).show();

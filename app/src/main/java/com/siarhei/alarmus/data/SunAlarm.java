@@ -1,13 +1,11 @@
 package com.siarhei.alarmus.data;
 
 import android.os.Parcel;
-import android.util.Log;
 
-import com.siarhei.alarmus.activities.SetLocationActivity;
+import com.siarhei.alarmus.activities.MapActivity;
 import com.siarhei.alarmus.sun.SunInfo;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class SunAlarm extends Alarm implements Cloneable{
     public static final int MODE_SUNRISE = 1;
@@ -44,8 +42,8 @@ public class SunAlarm extends Alarm implements Cloneable{
 
     public SunAlarm(int id) {
         super(id);
-        latitude = SetLocationActivity.DEFAULT_LATITUDE;
-        longitude = SetLocationActivity.DEFAULT_LONGITUDE;
+        latitude = MapActivity.DEFAULT_LATITUDE;
+        longitude = MapActivity.DEFAULT_LONGITUDE;
         delay = DElAY_DEFAULT;
         defineTime();
     }

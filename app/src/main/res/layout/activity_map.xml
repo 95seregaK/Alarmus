@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context=".activities.SetLocationActivity">
+    tools:context=".activities.MapActivity">
 
     <org.osmdroid.views.MapView
         android:id="@+id/map"
@@ -48,6 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:paddingBottom="24dp"
         android:background="@color/colorPrimary"
         android:orientation="vertical">
 
@@ -98,11 +99,13 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/text_day"
+                        android:id="@+id/date_button"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/height_item_sun_info_table"
+                        android:background="@color/white"
                         android:text="@string/date"
-                        android:textAppearance="@style/TextStyle.Light"
+                        android:textAppearance="@style/TextStyle.Dark"
+                        android:textColor="@color/colorPrimaryDark"
                         />
 
                     <TextView
@@ -146,16 +149,6 @@
                     android:layout_height="wrap_content"
                     android:background="@color/colorPrimary" />
             </LinearLayout>
-        <Button
-            android:id="@+id/date_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/info_window_button_margin"
-            android:background="@color/white"
-            android:text="DATE"
-            style="@style/TextStyle.Dark"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/add_alarm_text_size" />
         </LinearLayout>
     </com.siarhei.alarmus.views.FloatingView>
 

@@ -4,6 +4,8 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.util.Log;
 
 import com.siarhei.alarmus.receivers.AlarmReceiver;
 
@@ -31,7 +33,11 @@ public class SunAlarmManager {
     }
 
     public void set(Alarm alarm) {
-        alarmManager.set(AlarmManager.RTC_WAKEUP, alarm.getTimeInMillis(), prepareIntent(alarm));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm.getTimeInMillis(), prepareIntent(alarm));
+            Log.d("alarmmanager","setAndAllowWhileIdle");
+        }
+        else  alarmManager.set(AlarmManager.RTC_WAKEUP, alarm.getTimeInMillis(), prepareIntent(alarm));
     }
 
     public void setDelayed(Alarm alarm, int delay) {
