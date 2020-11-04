@@ -17,22 +17,17 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.siarhei.alarmus.R;
 import com.siarhei.alarmus.map.SunInfoMarker;
 import com.siarhei.alarmus.sun.SunInfo;
-import com.siarhei.alarmus.sun.SunMath;
 import com.siarhei.alarmus.views.FloatingView;
 import com.siarhei.alarmus.views.SunInfoScrollView;
 
@@ -45,33 +40,53 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 
 import java.io.IOException;
-import java.time.Month;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class SetLocationActivity extends Activity implements Marker.OnMarkerClickListener, View.OnClickListener, LocationListener, MapEventsReceiver {
+import static android.media.MediaCodec.MetricsConstants.MODE;
+
+public class SetLocationActivity extends Activity implements Marker.OnMarkerClickListener,
+        View.OnClickListener, LocationListener, MapEventsReceiver {
 
 
+    public static final int CODE_SUCCESS = 1;
+    public static final int CODE_FAILURE = 2;
+    public static final double DEFAULT_LATITUDE = 54.0;
+    public static final double DEFAULT_LONGITUDE = 28.0;
+    public static final String MODE_MAP = "mode";
+    Button dateButton;
     private SunInfoMarker defaultMarker;
     private RadiusMarkerClusterer markerClusterer;
     private FusedLocationProviderClient fusedLocationClient;
     private FloatingActionButton setPositionBtn;
     private FloatingView infoWindow;
     private MapView map;
-    Button dateButton;
     private SunInfoScrollView sunInfoView;
     private SunInfo currentSunInfo;
-    public static final double DEFAULT_LATITUDE = 54.0;
-    public static final double DEFAULT_LONGITUDE = 28.0;
     private TextView locationView;
     private TextView timeZoneView;
     private IMapController mapController;
     private View currentLocationButton;
 
+    public static void defineCurrentLocation(Context context, OnLocationDefinedCallback callback) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            callback.onLocationDefined(CODE_FAILURE, null);
+            return;
+        }
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
+        fusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
+            Location location = task.getResult();
+            if (location != null) {
+                callback.onLocationDefined(CODE_SUCCESS, location);
+            } else {
+                callback.onLocationDefined(CODE_FAILURE, null);
+            }
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,25 +123,37 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
         mapController.setZoom(9.5);
         double lat = getIntent().getDoubleExtra(EditAlarmActivity.LATITUDE, DEFAULT_LATITUDE);
         double lon = getIntent().getDoubleExtra(EditAlarmActivity.LONGITUDE, DEFAULT_LONGITUDE);
-        GeoPoint startPoint = new GeoPoint(lat, lon);
-        mapController.setCenter(startPoint);
-        markerClusterer = new RadiusMarkerClusterer(this);
-        markerClusterer.setRadius(20);
+        int mode = getIntent().getIntExtra(MODE_MAP, 0);
 
+        GeoPoint startPoint = new GeoPoint(lat, lon);
         defaultMarker = new SunInfoMarker(map, this);
         Drawable icon = getResources().getDrawable(R.drawable.ic_default_marker);
         defaultMarker.setIcon(icon);
         defaultMarker.setOnMarkerClickListener(this);
-
         defaultMarker.setPosition(startPoint);
         currentSunInfo = new SunInfo(Calendar.getInstance(), lat, lon);
         updateSunInfoLocation();
         MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(this);
         map.getOverlays().add(mapEventsOverlay);
         map.getOverlays().add(defaultMarker);
-        map.getOverlays().add(markerClusterer);
+
+        if(mode==0){
+            setPositionBtn.setVisibility(View.GONE);
+            defineCurrentLocation(this, (code, location) -> {
+                if (code == CODE_SUCCESS)
+                    onLocationDefined(location);
+                else
+                    Toast.makeText(this, R.string.message_location_cannot, Toast.LENGTH_SHORT).show();
+
+            });
+        }
+
+        mapController.setCenter(startPoint);
+       // markerClusterer = new RadiusMarkerClusterer(this);
+       // markerClusterer.setRadius(20);
+
+       // map.getOverlays().add(markerClusterer);
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         //Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         //startPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
         //mapController.animateTo(startPoint);
@@ -137,7 +164,6 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
 
     }
 
-
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.button_choose_position) {
@@ -147,7 +173,13 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
             setResult(EditAlarmActivity.RESULT_LOCATION_CHOSEN, intent);
             finish();
         } else if (view.getId() == R.id.button_define_location) {
-            defineCurrentLocation();
+            defineCurrentLocation(this, (code, location) -> {
+                if (code == CODE_SUCCESS)
+                    onLocationDefined(location);
+                else
+                    Toast.makeText(this, R.string.message_location_cannot, Toast.LENGTH_SHORT).show();
+
+            });
         } else if (view.getId() == R.id.info_view) {
             if (infoWindow.isHiden()) infoWindow.emerge();
             else infoWindow.hide();
@@ -166,31 +198,11 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
         datePickerDialog.show();
     }
 
-    public void defineCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            Toast.makeText(this, "Location cannot be determined! Please set location manually", Toast.LENGTH_LONG);
-            return;
-        }
-        fusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
-            Location location = task.getResult();
-            if (location != null) {
-                GeoPoint startPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
-                mapController.animateTo(startPoint);
-                defaultMarker.setPosition(startPoint);
-                //Log.d("Location1", "Location" + location.getLatitude() + " " + location.getLatitude());
-                updateSunInfoLocation();
-            } else {
-                Toast.makeText(this, "Location cannot be determined! Please set location manually", Toast.LENGTH_LONG);
-            }
-        });
+    private void onLocationDefined(Location location) {
+        GeoPoint startPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+        mapController.animateTo(startPoint);
+        defaultMarker.setPosition(startPoint);
+        updateSunInfoLocation();
     }
 
     @Override
@@ -208,8 +220,8 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
         //cityName += defineCityName(lat, lon);
         currentSunInfo.setNewPosition(lat, lon);
         locationView.setText("Location: " + cityName + SunInfo.toLocationString(lat, lon, 5));
-        int offset = currentSunInfo.getTimeZoneOffset();
-        timeZoneView.setText("Time zone: " + currentSunInfo.getTimeZone() + (offset > 0 ? " +" : " ") + offset);
+        float offset = currentSunInfo.getTimeZoneOffset();
+        timeZoneView.setText("Time zone: " + currentSunInfo.getTimeZone() + (offset > 0 ? " +" : " ") + offset + " h");
         sunInfoView.setSunInfo(currentSunInfo);
     }
 
@@ -284,6 +296,10 @@ public class SetLocationActivity extends Activity implements Marker.OnMarkerClic
 
         onMarkerClick(marker, map);
         return false;
+    }
+
+    public interface OnLocationDefinedCallback {
+        void onLocationDefined(int code, Location location);
     }
 
 }

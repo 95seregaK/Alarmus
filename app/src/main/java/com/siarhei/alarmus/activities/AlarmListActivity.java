@@ -32,13 +32,13 @@ import java.util.List;
 public class AlarmListActivity extends AppCompatActivity implements View.OnClickListener,
         MyRecyclerView.OnItemSwipeListener, MyRecyclerView.OnItemClickListener,
         AlarmRecyclerAdapter.OnCheckedChangeListener {
+    static final String ALARM_EDITING = "alarm_for_editing";
     private static final int CODE_ADD_NEW = 3;
     private static final int CODE_EDIT_CURRENT = 4;
-    static final String ALARM_EDITING = "alarm_for_editing";
     private static final short SHIFT = 8;
+    private static List<Alarm> alarms;
     private MyRecyclerView recycler;
     private AlarmPreferences preferences;
-    private static List<Alarm> alarms;
     private FloatingActionButton addBtn;
     private AlarmRecyclerAdapter alarmAdapter;
     private SunAlarmManager alarmManager;
@@ -46,6 +46,12 @@ public class AlarmListActivity extends AppCompatActivity implements View.OnClick
 
     private static int compare(Alarm o1, Alarm o2) {
         return (o1.getHour() - o2.getHour()) * 60 + o1.getMinute() - o2.getMinute();
+    }
+
+    public static void addAlarm(Alarm alarm) {
+        if (alarms != null) {
+            alarms.add(alarm);
+        }
     }
 
     @Override
@@ -137,7 +143,6 @@ public class AlarmListActivity extends AppCompatActivity implements View.OnClick
 
     }
 
-
     @Override
     public void onItemSwipe(View view, int position, int dir) {
 
@@ -151,18 +156,44 @@ public class AlarmListActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onCheckedChange(CompoundButton buttonView, int position, boolean isChecked) {
-        Alarm currentAlarm = alarms.get(position);
-
-        if (isChecked && !currentAlarm.isEnabled()) {
-            currentAlarm.setEnable(true);
-            currentAlarm.setTimeNext(true);
-            alarmManager.set(currentAlarm);
-        } else if (!isChecked && currentAlarm.isEnabled()) {
-            currentAlarm.setEnable(false);
-            alarmManager.cancel(currentAlarm);
+        Alarm alarm = alarms.get(position);
+        if (isChecked && !alarm.isEnabled()) {
+            if (alarm instanceof SunAlarm && ((SunAlarm) alarm).isUpdate()) {
+                SetLocationActivity.defineCurrentLocation(this, (code, location) -> {
+                    if (code == SetLocationActivity.CODE_SUCCESS)
+                        ((SunAlarm) alarm).setPosition(location.getLatitude(), location.getLongitude());
+                    else
+                        Toast.makeText(this, R.string.message_location_cannot, Toast.LENGTH_SHORT).show();
+                    setAlarm(alarm);
+                    alarmAdapter.notifyItemChanged(position);
+                });
+            } else {
+                setAlarm(alarm);
+                alarmAdapter.notifyItemChanged(position);
+            }
+        } else if (!isChecked && alarm.isEnabled()) {
+            cancelAlarm(alarm);
+            alarmAdapter.notifyItemChanged(position);
         }
-        preferences.writeAlarm(currentAlarm);
+
+    }
+
+    private void setAlarm(Alarm alarm) {
+        alarm.setEnable(true);
+        alarm.setTimeNext(true);
+        alarmManager.set(alarm);
+        preferences.writeAlarm(alarm);
         alarmAdapter.notifyDataSetChanged();
+        Toast.makeText(this, this.getResources().getString(R.string.message_alarm_set)
+                + " " + alarm.toString(), Toast.LENGTH_SHORT).show();
+    }
+
+    private void cancelAlarm(Alarm alarm) {
+        alarm.setEnable(false);
+        alarmManager.cancel(alarm);
+        preferences.writeAlarm(alarm);
+        Toast.makeText(this, this.getResources().getString(R.string.message_alarm_canceled),
+                Toast.LENGTH_SHORT).show();
     }
 
     public int getNextId() {
@@ -173,18 +204,12 @@ public class AlarmListActivity extends AppCompatActivity implements View.OnClick
         return max + 1;
     }
 
-    public static void addAlarm(Alarm alarm) {
-        if (alarms != null) {
-            alarms.add(alarm);
-        }
-    }
-    public void requestPermissions(){
+    public void requestPermissions() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
             }
         }
     }
-
 }

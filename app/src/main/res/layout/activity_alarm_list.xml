@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-
+    tools:actionBarNavMode="tabs"
     tools:context=".activities.EditAlarmActivity">
 
 
@@ -15,8 +15,7 @@
         android:layout_height="match_parent"
         android:clipToPadding="true"
         android:fillViewport="true"
-        android:paddingTop="10dp"
-    />
+        android:paddingTop="10dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_button"

@@ -9,7 +9,7 @@ import com.siarhei.alarmus.sun.SunInfo;
 import java.util.Calendar;
 import java.util.Date;
 
-public class SunAlarm extends Alarm {
+public class SunAlarm extends Alarm implements Cloneable{
     public static final int MODE_SUNRISE = 1;
     public static final int MODE_NOON = 2;
     public static final int MODE_SUNSET = 3;

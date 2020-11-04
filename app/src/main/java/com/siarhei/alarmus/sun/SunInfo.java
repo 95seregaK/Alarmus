@@ -28,8 +28,8 @@ public class SunInfo {
     private double sunsetLocalTime;
     private double noonLocalTime;
     private double dayDuration;
-    private int timeZoneOffset;
-    private String timeZone;
+    private float timeZoneOffset;
+    private String timeZoneName;
 
 
     public SunInfo(int day, int month, int year, double latitude, double longitude) {
@@ -79,15 +79,9 @@ public class SunInfo {
         return calendar.getTimeInMillis() > currentTime;
     }
 
-    public static double toLocalTime(double julianTime, int offset) {
+    public static double toLocalTime(double julianTime, float offset) {
         double time = (julianTime + 0.5 + offset / 24.0) % 1;
         return time >= 0 ? 24 * time : 24 * time + 24;
-    }
-
-    public static int timeZoneOffset(double latitude, double longitude) {
-        String timeZone = TimezoneMapper.tzNameAt(latitude, longitude);
-        TimeZone mTimeZone = TimeZone.getTimeZone(timeZone);
-        return mTimeZone.getOffset(Calendar.ZONE_OFFSET) / 1000 / 60 / 60;
     }
 
     public String toString(int timeFormat) {
@@ -115,12 +109,12 @@ public class SunInfo {
         return sunsetLocalTime;
     }
 
-    public int getTimeZoneOffset() {
+    public float getTimeZoneOffset() {
         return timeZoneOffset;
     }
 
     public String getTimeZone() {
-        return timeZone;
+        return timeZoneName;
     }
 
     public double getDayDuration() {
@@ -152,9 +146,14 @@ public class SunInfo {
     }
 
     private void init() {
-        timeZone = TimezoneMapper.tzNameAt(latitude, longitude);
-        TimeZone mTimeZone = TimeZone.getTimeZone(timeZone);
-        timeZoneOffset = mTimeZone.getOffset(Calendar.ZONE_OFFSET) / 1000 / 60 / 60;
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+
+        timeZoneName = TimezoneMapper.tzNameAt(latitude, longitude);
+        TimeZone mTimeZone = TimeZone.getTimeZone(timeZoneName);
+        timeZoneOffset = mTimeZone.getOffset(calendar.getTimeInMillis()) / 1000 / 60 / 60;
 
         julianDate = (double) SunMath.toJulianDayNumber(day, month, year);
         double n = SunMath.daysSince2000(julianDate);

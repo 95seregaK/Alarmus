@@ -19,7 +19,7 @@ public class FloatingView extends LinearLayout {
     private int parentHeight;
     private int toolbarHeight = (int) getResources().getDimension(R.dimen.info_window_toolbar_height);
     private long floatDuration = 200;
-    private boolean shown = false;
+    private boolean shown = true;
 
     public FloatingView(Context context) {
         super(context);

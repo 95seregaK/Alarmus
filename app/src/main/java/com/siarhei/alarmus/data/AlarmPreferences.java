@@ -71,7 +71,7 @@ public class AlarmPreferences {
         }
         ed.apply();
         //ed.commit();
-        Toast.makeText(context, "Будильник записан!!!", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(context, "Будильник записан!!!", Toast.LENGTH_SHORT).show();
     }
 
     public Alarm readAlarm(int id) {

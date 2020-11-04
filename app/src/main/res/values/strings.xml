@@ -32,5 +32,14 @@
     <string name="tab_text_2">Tab 2</string>
     <string name="set_auto_update">Auto-update location</string>
     <string name="every_day">every day</string>
+    <string name="message_request_permissions">Location cannot be determined! Please allow permissions</string>
+    <string name="message_set_location">Location cannot be determined! Please set location manually</string>
+    <string name="message_location_cannot">Location cannot be determined!</string>
+    <string name="message_alarm_set">Alarm set on </string>
+    <string name="message_alarm_canceled">Alarm is canceled!</string>
+    <string name="message_delayed">"Alarm snozeed "</string>
+    <string name="minutes">minutes</string>
+    <string name="alarms">Alarms</string>
+    <string name="map">Map</string>
 
 </resources>

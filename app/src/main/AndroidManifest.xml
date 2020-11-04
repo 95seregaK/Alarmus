@@ -20,15 +20,24 @@
         android:roundIcon="@drawable/ic_sun_clock"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.AlarmListActivity">
+
+        <activity
+            android:name=".activities.MainActivity"
+            android:label="@string/title_activity_main">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.MainActivity"
-            android:label="@string/title_activity_main"/>
+
+        <activity android:name=".activities.AlarmListActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.ALARM_LIST" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".activities.EditAlarmActivity"
             android:theme="@style/EditAlarmTheme">
@@ -37,12 +46,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <activity android:name=".activities.SetLocationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SET_LOCATION" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.AlarmActivity"
             android:theme="@style/AlarmTheme">
@@ -60,6 +71,7 @@
                 <action android:name="android.intent.action.ALARM_CALL" />
             </intent-filter>
         </receiver>
+
         <receiver
             android:name=".receivers.BootReceiver"
             android:enabled="true"
