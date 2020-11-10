@@ -1,5 +1,8 @@
 package com.siarhei.alarmus.activities;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
@@ -10,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import com.siarhei.alarmus.R;
 import com.siarhei.alarmus.data.Alarm;
@@ -158,6 +163,19 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
 
     private void snooze(int d) {
         alarmManager.setDelayed(currentAlarm, d);
+ /*       NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setColor(ContextCompat.getColor(this, R.color.colorAccent));
+        builder.setContentTitle(this.getString(R.string.app_name));
+        builder.setContentText("Hello!");
+        builder.setTicker("Hello!");
+        builder.setVibrate(new long[]{1000, 500, 1000, 500, 1000, 500});
+        builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
+        //builder.setContentIntent(launchAlarmLandingPage(context));
+        builder.setAutoCancel(true);
+        builder.setPriority(Notification.PRIORITY_HIGH);
+        Notification notification = builder.build();
+        nm.notify(1, notification);*/
         Toast.makeText(this, getResources().getString(R.string.message_delayed)
                 + " " + d + " " + getResources().getString(R.string.minutes), Toast.LENGTH_SHORT).show();
     }

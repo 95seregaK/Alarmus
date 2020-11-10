@@ -15,10 +15,9 @@
         android:layout_width="?attr/actionBarSize"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        android:padding="@dimen/toolbar_button_margin"
         android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
         android:background="?android:attr/selectableItemBackground"
-        android:src="@drawable/ic_ok2"
-        />
+        android:padding="@dimen/toolbar_button_margin"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_ok" />
 </androidx.appcompat.widget.Toolbar>

@@ -24,28 +24,30 @@ public class SunAlarmManager {
         return new SunAlarmManager(context);
     }
 
-    private PendingIntent prepareIntent(Alarm alarm) {
+    private PendingIntent prepareIntent(Alarm alarm, int id) {
         Intent intent = new Intent(context, AlarmReceiver.class);
         intent.putExtra(ID, alarm.getId());
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, alarm.getId(),
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, id,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         return alarmIntent;
     }
 
     public void set(Alarm alarm) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm.getTimeInMillis(), prepareIntent(alarm));
+            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+                    alarm.getTimeInMillis(), prepareIntent(alarm,alarm.getId()));
             Log.d("alarmmanager","setAndAllowWhileIdle");
         }
-        else  alarmManager.set(AlarmManager.RTC_WAKEUP, alarm.getTimeInMillis(), prepareIntent(alarm));
+        else  alarmManager.set(AlarmManager.RTC_WAKEUP, alarm.getTimeInMillis(),
+                prepareIntent(alarm,alarm.getId()));
     }
 
     public void setDelayed(Alarm alarm, int delay) {
         long time = System.currentTimeMillis() + delay * 60000;
-        alarmManager.set(AlarmManager.RTC_WAKEUP, time, prepareIntent(alarm));
+        alarmManager.set(AlarmManager.RTC_WAKEUP, time, prepareIntent(alarm,0));
     }
 
     public void cancel(Alarm alarm) {
-        alarmManager.cancel(prepareIntent(alarm));
+        alarmManager.cancel(prepareIntent(alarm,alarm.getId()));
     }
 }
