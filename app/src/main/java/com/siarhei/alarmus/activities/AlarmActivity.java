@@ -220,12 +220,12 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         calendar.add(Calendar.MINUTE, d);
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this, "default")
-                        .setSmallIcon(R.drawable.ic_sun)
+                        .setSmallIcon(R.drawable.ic_sun2)
                         .setContentTitle(getResources().getString(R.string.message_snoozed_to) +" "+ Alarm.toTime(calendar))
                         .setContentText(getResources().getString(R.string.tap_to_cancel))
                         //.addAction(R.drawable.ic_alarm, "Dismiss", pendingIntent)
                         .setContentIntent(pendingIntent)
-                        .setTimeoutAfter(d * 60 * 1000)
+                        //.setTimeoutAfter(d * 60 * 1000)
                         .setPriority(NotificationCompat.PRIORITY_HIGH);
         notificationManager.notify(DEFAULT_NOTIFICATION_ID, builder.build());
     }

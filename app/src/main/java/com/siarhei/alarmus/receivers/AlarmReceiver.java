@@ -38,6 +38,9 @@ public class AlarmReceiver extends BroadcastReceiver {
             } else
                 alarm.setEnable(false);
             preferences.writeAlarm(alarm);
+        }else{
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+            notificationManager.cancel(AlarmActivity.DEFAULT_NOTIFICATION_ID);
         }
         alarmIntent.putExtra(ALARM, alarm);
         context.startActivity(alarmIntent);
