@@ -15,7 +15,7 @@ public class SunInfoMarker extends Marker {
 
     public SunInfoMarker(MapView mapView, Context resourceProxy) {
         super(mapView, resourceProxy);
-        setIcon(resourceProxy.getResources().getDrawable(R.drawable.ic_default_marker));
+        //setIcon(resourceProxy.getResources().getDrawable(R.drawable.ic_default_marker));
     }
 
     @Override

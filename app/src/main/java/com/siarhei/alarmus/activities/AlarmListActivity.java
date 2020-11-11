@@ -149,6 +149,7 @@ public class AlarmListActivity extends AppCompatActivity implements View.OnClick
         if (dir == MyRecyclerView.LEFT) {
             preferences.remove(alarms.get(position).getId());
             alarmManager.cancel(alarms.get(position));
+            alarmManager.cancelSnoozed(alarms.get(position));
             alarms.remove(position);
         }
         alarmAdapter.notifyDataSetChanged();
@@ -191,6 +192,7 @@ public class AlarmListActivity extends AppCompatActivity implements View.OnClick
     private void cancelAlarm(Alarm alarm) {
         alarm.setEnable(false);
         alarmManager.cancel(alarm);
+        alarmManager.cancelSnoozed(alarm);
         preferences.writeAlarm(alarm);
         Toast.makeText(this, this.getResources().getString(R.string.message_alarm_canceled),
                 Toast.LENGTH_SHORT).show();

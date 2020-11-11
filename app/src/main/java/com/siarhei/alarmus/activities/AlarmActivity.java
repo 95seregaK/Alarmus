@@ -13,6 +13,7 @@ import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.WindowManager;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ import com.siarhei.alarmus.data.AlarmPreferences;
 import com.siarhei.alarmus.data.SunAlarm;
 import com.siarhei.alarmus.data.SunAlarmManager;
 import com.siarhei.alarmus.receivers.AlarmReceiver;
+import com.siarhei.alarmus.receivers.SnoozeReceiver;
 import com.siarhei.alarmus.views.CircleSlider;
 
 import java.io.IOException;
@@ -37,6 +39,7 @@ import java.util.TimerTask;
 
 
 public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnSliderMoveListener {
+    public static final int DEFAULT_NOTIFICATION_ID = 101;
 
     private static final int s0 = 335;
     private static final int s1 = 8;
@@ -96,7 +99,8 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     @Override
     public void finish() {
         timer.cancel();
-        mMediaPlayer.stop();
+        mMediaPlayer.release();
+        //mMediaPlayer.stop();
         super.finish();
     }
 
@@ -168,42 +172,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
 
     private void snooze(int d) {
         alarmManager.setDelayed(currentAlarm, d);
-        Intent intent = new Intent(DevicePolicyManager.ACTION_SET_NEW_PASSWORD);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1001, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        if (Build.VERSION.SDK_INT >= 26) {
-            NotificationChannel channel = new NotificationChannel("default",
-                    "Channel name",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setDescription("Channel description");
-            notificationManager.createNotificationChannel(channel);
-        }
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(this, "default")
-                        .setSmallIcon(R.drawable.ic_sun)
-                        .setContentTitle("Alarm")
-                        .setContentText(getResources().getString(R.string.message_delayed)
-                                + " " + d + " " + getResources().getString(R.string.minutes))
-
-                        //.setContentIntent(pendingIntent)
-                        .setPriority(NotificationCompat.PRIORITY_HIGH);
-
-
-        notificationManager.notify(null, 101, builder.build());
- /*       NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setColor(ContextCompat.getColor(this, R.color.colorAccent));
-        builder.setContentTitle(this.getString(R.string.app_name));
-        builder.setContentText("Hello!");
-        builder.setTicker("Hello!");
-        builder.setVibrate(new long[]{1000, 500, 1000, 500, 1000, 500});
-        builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
-        //builder.setContentIntent(launchAlarmLandingPage(context));
-        builder.setAutoCancel(true);
-        builder.setPriority(Notification.PRIORITY_HIGH);
-        Notification notification = builder.build();
-        nm.notify(1, notification);*/
+        makeNotification(d);
         Toast.makeText(this, getResources().getString(R.string.message_delayed)
                 + " " + d + " " + getResources().getString(R.string.minutes), Toast.LENGTH_SHORT).show();
     }
@@ -230,6 +199,35 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
                 finish();
             });
         }
+    }
+
+    public void makeNotification(int d) {
+        Intent intent = new Intent(this, SnoozeReceiver.class);
+        intent.putExtra(AlarmReceiver.ALARM, currentAlarm);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1001,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        if (Build.VERSION.SDK_INT >= 26) {
+            NotificationChannel channel = new NotificationChannel("default",
+                    "Channel Alarm",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription("Channel description");
+            notificationManager.createNotificationChannel(channel);
+        }
+        RemoteViews notificationView = new RemoteViews(getPackageName(), R.layout.layout_notification);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, d);
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(this, "default")
+                        .setSmallIcon(R.drawable.ic_sun)
+                        .setContentTitle(getResources().getString(R.string.message_snoozed_to) +" "+ Alarm.toTime(calendar))
+                        .setContentText(getResources().getString(R.string.tap_to_cancel))
+                        //.addAction(R.drawable.ic_alarm, "Dismiss", pendingIntent)
+                        .setContentIntent(pendingIntent)
+                        .setTimeoutAfter(d * 60 * 1000)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH);
+        notificationManager.notify(DEFAULT_NOTIFICATION_ID, builder.build());
     }
 
 }

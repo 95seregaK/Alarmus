@@ -12,6 +12,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -129,12 +130,12 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
 
         GeoPoint startPoint = new GeoPoint(lat, lon);
         defaultMarker = new SunInfoMarker(map, this);
-        Drawable icon = getResources().getDrawable(R.drawable.ic_default_marker);
-        defaultMarker.setIcon(icon);
-        defaultMarker.setPanToView(true);
-
-        //defaultMarker.setImage(icon);
-        //defaultMarker.setDefaultIcon();
+        if (Build.VERSION.SDK_INT <= 28) {
+            Drawable icon = getResources().getDrawable(R.drawable.ic_default_marker);
+            //defaultMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            defaultMarker.setIcon(icon);
+            //defaultMarker.setPanToView(true);
+        }
         defaultMarker.setOnMarkerClickListener(this);
         defaultMarker.setPosition(startPoint);
         currentSunInfo = new SunInfo(Calendar.getInstance(), lat, lon);
