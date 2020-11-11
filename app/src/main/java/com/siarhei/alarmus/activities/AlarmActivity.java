@@ -1,11 +1,16 @@
 package com.siarhei.alarmus.activities;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.admin.DevicePolicyManager;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -14,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import com.siarhei.alarmus.R;
@@ -21,6 +27,7 @@ import com.siarhei.alarmus.data.Alarm;
 import com.siarhei.alarmus.data.AlarmPreferences;
 import com.siarhei.alarmus.data.SunAlarm;
 import com.siarhei.alarmus.data.SunAlarmManager;
+import com.siarhei.alarmus.receivers.AlarmReceiver;
 import com.siarhei.alarmus.views.CircleSlider;
 
 import java.io.IOException;
@@ -50,10 +57,9 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     private CircleSlider sunSlider;
     private MediaPlayer mMediaPlayer;
     private Alarm currentAlarm;
-    private AlarmPreferences preferences;
-    private SunAlarmManager alarmManager;
     private int timerDelay = 1000 * 60 * 3;
     private Timer timer;
+    private SunAlarmManager alarmManager;
 
 
     @Override
@@ -71,8 +77,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         date = findViewById(R.id.date);
         label = findViewById(R.id.label);
         mMediaPlayer = new MediaPlayer();
-        preferences = AlarmPreferences.getInstance(this);
-        currentAlarm = preferences.readAlarm(getIntent().getIntExtra(Alarm.ID, 0));
+        currentAlarm = getIntent().getParcelableExtra(AlarmReceiver.ALARM);
         Calendar calendar = Calendar.getInstance();
         time.setText(Alarm.toTime(calendar));
         date.setText(Alarm.toDate(calendar) + ", " + Alarm.toDay(calendar, Alarm.FULL));
@@ -150,19 +155,42 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
                     ((SunAlarm) (currentAlarm)).setPosition(location.getLatitude(), location.getLongitude());
                 else
                     Toast.makeText(this, R.string.message_location_cannot, Toast.LENGTH_SHORT).show();
-                setIfRepeating();
-                preferences.writeAlarm(currentAlarm);
+                //setIfRepeating();
+                // preferences.writeAlarm(currentAlarm);
                 finish();
             });
         else {
-            setIfRepeating();
-            preferences.writeAlarm(currentAlarm);
+            //setIfRepeating();
+            // preferences.writeAlarm(currentAlarm);
             finish();
         }
     }
 
     private void snooze(int d) {
         alarmManager.setDelayed(currentAlarm, d);
+        Intent intent = new Intent(DevicePolicyManager.ACTION_SET_NEW_PASSWORD);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1001, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        if (Build.VERSION.SDK_INT >= 26) {
+            NotificationChannel channel = new NotificationChannel("default",
+                    "Channel name",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription("Channel description");
+            notificationManager.createNotificationChannel(channel);
+        }
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(this, "default")
+                        .setSmallIcon(R.drawable.ic_sun)
+                        .setContentTitle("Alarm")
+                        .setContentText(getResources().getString(R.string.message_delayed)
+                                + " " + d + " " + getResources().getString(R.string.minutes))
+
+                        //.setContentIntent(pendingIntent)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+
+        notificationManager.notify(null, 101, builder.build());
  /*       NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setColor(ContextCompat.getColor(this, R.color.colorAccent));
@@ -180,18 +208,15 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
                 + " " + d + " " + getResources().getString(R.string.minutes), Toast.LENGTH_SHORT).show();
     }
 
-    public void setIfRepeating() {
-        if (currentAlarm.isRepeat()) {
-            currentAlarm.setTimeNext(false);
-            alarmManager.set(currentAlarm);
-        } else {
+ /*   public void setIfRepeating() {
+        if (!currentAlarm.isRepeat()) {
             currentAlarm.setEnable(false);
         }
-    }
+    }*/
 
     public void setAndFinish() {
-        setIfRepeating();
-        preferences.writeAlarm(currentAlarm);
+        //setIfRepeating();
+        //preferences.writeAlarm(currentAlarm);
         finish();
     }
 
