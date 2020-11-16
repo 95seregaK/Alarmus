@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,8 +46,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import static android.media.MediaCodec.MetricsConstants.MODE;
-
 public class MapActivity extends Activity implements Marker.OnMarkerClickListener,
         View.OnClickListener, LocationListener, MapEventsReceiver {
 
@@ -69,7 +66,7 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
     private TextView locationView;
     private TextView timeZoneView;
     private IMapController mapController;
-    private View currentLocationButton, dateButton;
+    private View currentLocationButton, dateButton, infoWindowBar;
 
     public static void defineCurrentLocation(Context context, OnLocationDefinedCallback callback) {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -103,11 +100,12 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
         currentLocationButton.setOnClickListener(this);
         infoWindow = findViewById(R.id.info_view);
         sunInfoView = findViewById(R.id.sun_info_view);
+        infoWindowBar=findViewById(R.id.info_window_bar);
         locationView = findViewById(R.id.location);
         timeZoneView = findViewById(R.id.time_zone);
         dateButton = findViewById(R.id.date_button);
         dateButton.setOnClickListener(this);
-        infoWindow.setOnClickListener(this);
+        infoWindowBar.setOnClickListener(this);
 
         //setting this before the layout is inflated is a good idea
         //it 'should' ensure that the map has a writable location for the map cache, even without permissions
@@ -187,7 +185,7 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
                     Toast.makeText(this, R.string.message_location_cannot, Toast.LENGTH_SHORT).show();
 
             });
-        } else if (view.getId() == R.id.info_view) {
+        } else if (view.getId() == R.id.info_window_bar) {
             if (infoWindow.isHiden()) infoWindow.emerge();
             else infoWindow.hide();
         } else if (view.getId() == R.id.date_button) {

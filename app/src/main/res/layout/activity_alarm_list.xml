@@ -27,8 +27,6 @@
         android:layout_marginTop="@dimen/float_button_margin"
         android:layout_marginEnd="@dimen/float_button_margin"
         android:layout_marginBottom="@dimen/float_button_margin"
-        android:clickable="true"
-        android:focusable="auto"
         android:src="@drawable/ic_add_alarm"
         app:backgroundTintMode="add" />
 

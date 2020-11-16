@@ -101,7 +101,7 @@ public class MainActivity extends TabActivity {
 
         builder.setOnCancelListener(dialog -> {
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:" + this.getPackageName()));
+                   Uri.parse("package:" + this.getPackageName()));
             startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
         });
         AlertDialog dialog = builder.create();

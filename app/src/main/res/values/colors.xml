@@ -19,7 +19,9 @@
     <color name="color_circle_view">@color/colorPrimaryDark</color>
     <color name="color_text_image_radio_checked">@color/color_text_default</color>
     <color name="color_text_image_radio_unchecked">@color/color_text_inactive</color>
-    <color name="color_row">#FFF8C9</color>
+    <color name="color_row">#E7FDF6</color>
     <color name="color_filter_disable">#A0A0A0</color>
+    <color name="color_days_default">#782200</color>
+    <color name="color_days_disable">#DFDFDF</color>
 
 </resources>

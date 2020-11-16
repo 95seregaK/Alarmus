@@ -23,13 +23,15 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
     private List<Alarm> alarms;
     private OnCheckedChangeListener onCheckedChangeListener;
     private Context context;
-    private int colorAlarmDisable, colorAlarmEnable;
+    private int colorAlarmDisable, colorAlarmEnable,colorDaysEnable,colorDaysDisable;
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         colorAlarmEnable = context.getResources().getColor(R.color.color_text_default);
+        colorDaysEnable = context.getResources().getColor(R.color.color_days_default);
+        colorDaysDisable = context.getResources().getColor(R.color.color_days_disable);
         colorAlarmDisable = context.getResources().getColor(R.color.color_text_inactive);
         final View v = LayoutInflater.from(context).inflate(R.layout.alarm_row, parent, false);
         return new ViewHolder(v);
@@ -105,8 +107,8 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
             holder.sunMode.setColorFilter(0);
             holder.location.setTextColor(colorAlarmEnable);
             for (int i = 0; i < 7; i++) {
-                if (alarm.getDays()[i]) holder.days[i].setTextColor(colorAlarmEnable);
-                else holder.days[i].setTextColor(Color.WHITE);
+                if (alarm.getDays()[i]) holder.days[i].setTextColor(colorDaysEnable);
+                else holder.days[i].setTextColor(colorDaysDisable);
             }
         } else {
             //holder.layout.setBackgroundColor(context.getResources().getColor(R.color.color_text_inactive));
@@ -115,7 +117,7 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
             holder.label.setTextColor(colorAlarmDisable);
             for (int i = 0; i < 7; i++) {
                 if (alarm.getDays()[i]) holder.days[i].setTextColor(colorAlarmDisable);
-                else holder.days[i].setTextColor(Color.WHITE);
+                else holder.days[i].setTextColor(colorDaysDisable);
             }
             holder.sunMode.setImageAlpha(context.getResources().getInteger(R.integer.disable_alpha));
             holder.sunMode.setColorFilter(colorAlarmDisable);

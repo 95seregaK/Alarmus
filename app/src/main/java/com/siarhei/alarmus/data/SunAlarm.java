@@ -22,7 +22,7 @@ public class SunAlarm extends Alarm implements Cloneable{
             return new SunAlarm[size];
         }
     };
-    public static int DElAY_DEFAULT = -10;
+    public static int DElAY_DEFAULT = 0;
     protected int sunMode = MODE_SUNRISE;
     protected double latitude;
     protected double longitude;
