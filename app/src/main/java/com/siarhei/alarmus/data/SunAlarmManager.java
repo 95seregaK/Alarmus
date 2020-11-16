@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Parcelable;
 import android.util.Log;
 
 import com.siarhei.alarmus.receivers.AlarmReceiver;
@@ -26,7 +25,7 @@ public class SunAlarmManager {
         return new SunAlarmManager(context);
     }
 
-    private PendingIntent prepareIntent(Alarm alarm, boolean snoozed) {
+    public PendingIntent prepareIntent(Alarm alarm, boolean snoozed) {
         Intent intent = new Intent(context, AlarmReceiver.class);
         if (snoozed) intent.setAction(SOOZED);
         intent.putExtra(ID, alarm.getId());
@@ -39,9 +38,12 @@ public class SunAlarmManager {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
                     alarm.getTimeInMillis(), prepareIntent(alarm, false));
-            Log.d("alarmmanager", "setAndAllowWhileIdle");
+
         } else alarmManager.set(AlarmManager.RTC_WAKEUP, alarm.getTimeInMillis(),
                 prepareIntent(alarm, false));
+
+       // Log.d("alarmManager", "prepareIntent " + (prepareIntent(alarm, true).equals(prepareIntent(alarm, true))));
+
     }
 
     public void setDelayed(Alarm alarm, int delay) {
