@@ -230,7 +230,7 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
         sunInfoView.setSunInfo(currentSunInfo);
     }
 
-    private String defineCityName(double lat, double lon) {
+    public String defineCityName(double lat, double lon) {
         Geocoder gcd = new Geocoder(getBaseContext(), Locale.getDefault());
         List<Address> addresses;
         try {

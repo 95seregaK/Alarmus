@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.RemoteViews;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.siarhei.alarmus.R;
 import com.siarhei.alarmus.data.Alarm;
+import com.siarhei.alarmus.data.AlarmPreferences;
 import com.siarhei.alarmus.data.SunAlarm;
 import com.siarhei.alarmus.data.SunAlarmManager;
 import com.siarhei.alarmus.receivers.AlarmReceiver;
@@ -54,7 +56,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     private TextView time, date, label;
     private CircleSlider sunSlider;
     private MediaPlayer mMediaPlayer;
-    private Alarm currentAlarm;
+    private Alarm alarm;
     private int timerDelay = 1000 * 60 * 3;
     private Timer timer;
     private SunAlarmManager alarmManager;
@@ -75,13 +77,14 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         date = findViewById(R.id.date);
         label = findViewById(R.id.label);
         mMediaPlayer = new MediaPlayer();
-        currentAlarm = getIntent().getParcelableExtra(AlarmReceiver.ALARM);
+        alarm = getIntent().getParcelableExtra(AlarmReceiver.ALARM);
         Calendar calendar = Calendar.getInstance();
         time.setText(Alarm.toTime(calendar));
         date.setText(Alarm.toDate(calendar) + ", " + Alarm.toDay(calendar, Alarm.FULL));
-        String text = currentAlarm.getLabel() + '\n';
-        if (currentAlarm instanceof SunAlarm) {
-            SunAlarm sunAlarm = (SunAlarm) currentAlarm;
+        String text = alarm.getLabel();
+        if (alarm instanceof SunAlarm) {
+            if (text != "" && text != null) text += '\n';
+            SunAlarm sunAlarm = (SunAlarm) alarm;
             if (sunAlarm.getDelay() == 0)
                 text += "It is ";
             else if (sunAlarm.getDelay() > 0)
@@ -99,6 +102,9 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         sunSlider.setOnSliderMoveListener(this);
         timer = new Timer();
         timer.schedule(new MyTimerTask(), timerDelay);
+        if (alarm instanceof SunAlarm && ((SunAlarm) alarm).isUpdate())
+            setNewLocation();
+
         try {
             play();
         } catch (IOException e) {
@@ -115,6 +121,21 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         super.finish();
     }
 
+    private void setNewLocation() {
+        MapActivity.defineCurrentLocation(this, (code, location) -> {
+            if (code == MapActivity.CODE_SUCCESS && location != null) {
+                SunAlarm sunAlarm =(SunAlarm) alarm;
+                sunAlarm.setPosition(location.getLatitude(), location.getLongitude());
+                Log.d("defineCurrentLocation", "yes!!!");
+                sunAlarm.defineTime();
+                sunAlarm.setTimeNext(false);
+                sunAlarm.setCity("jkjlkj");
+                SunAlarmManager.getService(this).set(sunAlarm);
+                AlarmPreferences.getInstance(this).writeAlarm(sunAlarm);
+            }
+        });
+    }
+
     public void play() throws IOException {
 
         AudioManager mAudioManager = (AudioManager) this.getSystemService(AUDIO_SERVICE);
@@ -129,7 +150,6 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         mMediaPlayer.prepare();
         mMediaPlayer.start();
     }
-
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
@@ -164,25 +184,21 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     }
 
     private void dismiss() {
-        if (currentAlarm instanceof SunAlarm && ((SunAlarm) (currentAlarm)).isUpdate())
+        if (alarm instanceof SunAlarm && ((SunAlarm) (alarm)).isUpdate())
             MapActivity.defineCurrentLocation(this, (code, location) -> {
                 if (code == MapActivity.CODE_SUCCESS)
-                    ((SunAlarm) (currentAlarm)).setPosition(location.getLatitude(), location.getLongitude());
+                    ((SunAlarm) (alarm)).setPosition(location.getLatitude(), location.getLongitude());
                 else
                     Toast.makeText(this, R.string.message_location_cannot, Toast.LENGTH_SHORT).show();
-                //setIfRepeating();
-                // preferences.writeAlarm(currentAlarm);
                 finish();
             });
         else {
-            //setIfRepeating();
-            // preferences.writeAlarm(currentAlarm);
             finish();
         }
     }
 
     private void snooze(int d) {
-        alarmManager.setDelayed(currentAlarm, d);
+        alarmManager.setDelayed(alarm, d);
         makeNotification(d);
         Toast.makeText(this, getResources().getString(R.string.message_delayed)
                 + " " + d + " " + getResources().getString(R.string.minutes), Toast.LENGTH_SHORT).show();
@@ -190,7 +206,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
 
     public void makeNotification(int d) {
         Intent intent = new Intent(this, SnoozeReceiver.class);
-        intent.putExtra(AlarmReceiver.ALARM, currentAlarm);
+        intent.putExtra(AlarmReceiver.ALARM, alarm);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1001,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
 

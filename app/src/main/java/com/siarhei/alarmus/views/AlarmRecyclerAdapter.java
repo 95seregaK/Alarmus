@@ -35,7 +35,6 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
         colorAlarmDisable = context.getResources().getColor(R.color.color_text_inactive);
         final View v = LayoutInflater.from(context).inflate(R.layout.alarm_row, parent, false);
         return new ViewHolder(v);
-
     }
 
 

@@ -149,6 +149,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
                     else
                         Toast.makeText(this, R.string.message_location_cannot, Toast.LENGTH_SHORT).show();
                 });
+            cityName = sunAlarm.getCity();
             updateLocationViews();
             updateDelayView();
         } else {
@@ -298,7 +299,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         if (resultCode == RESULT_LOCATION_CHOSEN) {
             latitude = data.getDoubleExtra(LATITUDE, 0);
             longitude = data.getDoubleExtra(LONGITUDE, 0);
-            //cityName = defineCityName(latitude, longitude);
+            cityName = defineCityName(latitude, longitude);
             updateAlarm();
             updateLocationViews();
             updateTimeView();
