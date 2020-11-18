@@ -233,6 +233,4 @@ public class Alarm implements Parcelable {
     public boolean isActual() {
         return getTimeInMillis() > System.currentTimeMillis() - MAX_DELAY;
     }
-
-
 }

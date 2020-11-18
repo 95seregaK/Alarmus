@@ -1,11 +1,8 @@
 package com.siarhei.alarmus.activities;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.admin.DevicePolicyManager;
-import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -21,11 +18,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 
 import com.siarhei.alarmus.R;
 import com.siarhei.alarmus.data.Alarm;
-import com.siarhei.alarmus.data.AlarmPreferences;
 import com.siarhei.alarmus.data.SunAlarm;
 import com.siarhei.alarmus.data.SunAlarmManager;
 import com.siarhei.alarmus.receivers.AlarmReceiver;
@@ -84,7 +79,23 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         Calendar calendar = Calendar.getInstance();
         time.setText(Alarm.toTime(calendar));
         date.setText(Alarm.toDate(calendar) + ", " + Alarm.toDay(calendar, Alarm.FULL));
-        label.setText(currentAlarm.getLabel());
+        String text = currentAlarm.getLabel() + '\n';
+        if (currentAlarm instanceof SunAlarm) {
+            SunAlarm sunAlarm = (SunAlarm) currentAlarm;
+            if (sunAlarm.getDelay() == 0)
+                text += "It is ";
+            else if (sunAlarm.getDelay() > 0)
+                text += sunAlarm.getDelay() + " " + getResources().getString(R.string.after) + " ";
+            else if (sunAlarm.getDelay() < 0)
+                text += (-sunAlarm.getDelay()) + " " + getResources().getString(R.string.before) + " ";
+            if (sunAlarm.getSunMode() == SunAlarm.MODE_SUNRISE)
+                text += getResources().getString(R.string.sunrise);
+            else if (sunAlarm.getSunMode() == SunAlarm.MODE_NOON)
+                text += getResources().getString(R.string.noon);
+            else if (sunAlarm.getSunMode() == SunAlarm.MODE_SUNSET)
+                text += getResources().getString(R.string.sunset);
+        }
+        label.setText(text);
         sunSlider.setOnSliderMoveListener(this);
         timer = new Timer();
         timer.schedule(new MyTimerTask(), timerDelay);
@@ -177,30 +188,6 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
                 + " " + d + " " + getResources().getString(R.string.minutes), Toast.LENGTH_SHORT).show();
     }
 
- /*   public void setIfRepeating() {
-        if (!currentAlarm.isRepeat()) {
-            currentAlarm.setEnable(false);
-        }
-    }*/
-
-    public void setAndFinish() {
-        //setIfRepeating();
-        //preferences.writeAlarm(currentAlarm);
-        finish();
-    }
-
-    class MyTimerTask extends TimerTask {
-        @Override
-        public void run() {
-            runOnUiThread(() -> {
-                mMediaPlayer.stop();
-                alarmManager.setDelayed(currentAlarm, d3);
-                timer.cancel();
-                finish();
-            });
-        }
-    }
-
     public void makeNotification(int d) {
         Intent intent = new Intent(this, SnoozeReceiver.class);
         intent.putExtra(AlarmReceiver.ALARM, currentAlarm);
@@ -221,13 +208,25 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this, "default")
                         .setSmallIcon(R.drawable.ic_sun)
-                        .setContentTitle(getResources().getString(R.string.message_snoozed_to) +" "+ Alarm.toTime(calendar))
+                        .setContentTitle(getResources().getString(R.string.message_snoozed_to) + " " + Alarm.toTime(calendar))
                         .setContentText(getResources().getString(R.string.tap_to_cancel))
                         //.addAction(R.drawable.ic_alarm, "Dismiss", pendingIntent)
                         .setContentIntent(pendingIntent)
-                        .setTimeoutAfter(d * 60 * 1000)
+                        //.setTimeoutAfter(d * 60 * 1000)
                         .setPriority(NotificationCompat.PRIORITY_HIGH);
         notificationManager.notify(DEFAULT_NOTIFICATION_ID, builder.build());
+    }
+
+    class MyTimerTask extends TimerTask {
+        @Override
+        public void run() {
+            runOnUiThread(() -> {
+                mMediaPlayer.release();
+                snooze(d3);
+                timer.cancel();
+                finish();
+            });
+        }
     }
 
 }

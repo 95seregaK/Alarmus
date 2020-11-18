@@ -336,7 +336,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private void updateLocationViews() {
         if (alarmType == SUN_TYPE) {
             SunAlarm sunAlarm = (SunAlarm) currentAlarm;
-            cityName = defineCityName(latitude, longitude);
+            //cityName = defineCityName(latitude, longitude);
             if (cityName == null || cityName == "")
                 locationView.setText("Location: " + SunInfo.toLocationString(latitude, longitude, 5));
             else
