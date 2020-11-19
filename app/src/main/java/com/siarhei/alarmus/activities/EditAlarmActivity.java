@@ -3,9 +3,6 @@ package com.siarhei.alarmus.activities;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,10 +35,7 @@ import com.siarhei.alarmus.views.ImageRadioButton;
 import com.siarhei.alarmus.views.ImageRadioGroup;
 import com.siarhei.alarmus.views.SunInfoScrollView;
 
-import java.io.IOException;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
 
 public class EditAlarmActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener,
         View.OnClickListener, SeekBar.OnSeekBarChangeListener {
@@ -145,7 +139,8 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             updateCheck.setChecked(sunAlarm.isUpdate());
             if (sunAlarm.isUpdate())
                 MapActivity.defineCurrentLocation(this, (code, location) -> {
-                    if (code == MapActivity.CODE_SUCCESS) updateLocation(location);
+                    if (code == MapActivity.CODE_SUCCESS)
+                        updateLocation(location.getLatitude(), location.getLongitude());
                     else
                         Toast.makeText(this, R.string.message_location_cannot, Toast.LENGTH_SHORT).show();
                 });
@@ -159,10 +154,10 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         labelEdit.setText(currentAlarm.getLabel());
     }
 
-    private void updateLocation(Location location) {
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-        cityName = defineCityName(latitude, longitude);
+    private void updateLocation(double lat, double lon) {
+        latitude = lat;
+        longitude = lon;
+        cityName = MapActivity.defineCityName(getBaseContext(), latitude, longitude);
         updateAlarm();
         updateLocationViews();
         updateTimeView();
@@ -236,7 +231,8 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             ((SunAlarm) currentAlarm).setUpdate(isChecked);
             if (isChecked) {
                 MapActivity.defineCurrentLocation(this, (code, location) -> {
-                    if (code == MapActivity.CODE_SUCCESS) updateLocation(location);
+                    if (code == MapActivity.CODE_SUCCESS)
+                        updateLocation(location.getLatitude(), location.getLongitude());
                     else
                         Toast.makeText(this, R.string.message_location_cannot, Toast.LENGTH_SHORT).show();
                 });
@@ -279,7 +275,6 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         updateAlarm();
         currentAlarm.setEnable(true);
         SunAlarmManager.getService(this).set(currentAlarm);
-        //MainActivity.addAlarm(currentAlarm);
         preferences.writeAlarm(currentAlarm);
         Toast.makeText(this, this.getResources().getString(R.string.message_alarm_set)
                 + " " + currentAlarm.toString(), Toast.LENGTH_SHORT).show();
@@ -297,13 +292,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_LOCATION_CHOSEN) {
-            latitude = data.getDoubleExtra(LATITUDE, 0);
-            longitude = data.getDoubleExtra(LONGITUDE, 0);
-            cityName = defineCityName(latitude, longitude);
-            updateAlarm();
-            updateLocationViews();
-            updateTimeView();
-            //Toast.makeText(getApplicationContext(), lat + " " + lon, Toast.LENGTH_LONG).show();
+            updateLocation(data.getDoubleExtra(LATITUDE, 0), data.getDoubleExtra(LONGITUDE, 0));
         }
     }
 
@@ -337,20 +326,13 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private void updateLocationViews() {
         if (alarmType == SUN_TYPE) {
             SunAlarm sunAlarm = (SunAlarm) currentAlarm;
-            //cityName = defineCityName(latitude, longitude);
             if (cityName == null || cityName == "")
                 locationView.setText("Location: " + SunInfo.toLocationString(latitude, longitude, 5));
             else
                 locationView.setText("Location: " + cityName);
             updateRadioViews();
             delayBar.setValue(sunAlarm.getDelay());
-            //updateDelayView();
         }
-    }
-
-    public void setLocation() {
-        SunAlarm sunAlarm = (SunAlarm) currentAlarm;
-
     }
 
     private void updateAlarm() {
@@ -405,20 +387,5 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     public void onStopTrackingTouch(SeekBar seekBar) {
         updateAlarm();
         updateTimeView();
-    }
-
-    private String defineCityName(double lat, double lon) {
-        Geocoder gcd = new Geocoder(getBaseContext(), Locale.getDefault());
-        List<Address> addresses;
-        try {
-            addresses = gcd.getFromLocation(lat, lon, 1);
-            if (addresses.size() > 0) {
-                if (addresses.get(0).getLocality() != null) return addresses.get(0).getLocality();
-                return "";
-            }
-        } catch (IOException e) {
-            //e.printStackTrace();
-        }
-        return "";
     }
 }

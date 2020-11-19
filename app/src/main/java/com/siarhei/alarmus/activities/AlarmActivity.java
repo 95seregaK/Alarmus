@@ -123,13 +123,13 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
 
     private void setNewLocation() {
         MapActivity.defineCurrentLocation(this, (code, location) -> {
-            if (code == MapActivity.CODE_SUCCESS && location != null) {
-                SunAlarm sunAlarm =(SunAlarm) alarm;
+            if (code == MapActivity.CODE_SUCCESS) {
+                SunAlarm sunAlarm = (SunAlarm) alarm;
                 sunAlarm.setPosition(location.getLatitude(), location.getLongitude());
                 Log.d("defineCurrentLocation", "yes!!!");
                 sunAlarm.defineTime();
-                sunAlarm.setTimeNext(false);
-                sunAlarm.setCity("jkjlkj");
+                sunAlarm.setCity(MapActivity.defineCityName(getBaseContext(),
+                        location.getLatitude(), location.getLongitude()));
                 SunAlarmManager.getService(this).set(sunAlarm);
                 AlarmPreferences.getInstance(this).writeAlarm(sunAlarm);
             }

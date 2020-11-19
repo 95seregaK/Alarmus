@@ -88,6 +88,21 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
         });
     }
 
+    public static String defineCityName(Context baseContext, double lat, double lon) {
+        Geocoder gcd = new Geocoder(baseContext, Locale.getDefault());
+        List<Address> addresses;
+        try {
+            addresses = gcd.getFromLocation(lat, lon, 1);
+            if (addresses.size() > 0) {
+                if (addresses.get(0).getLocality() != null) return addresses.get(0).getLocality();
+                return "";
+            }
+        } catch (IOException e) {
+            //e.printStackTrace();
+        }
+        return "";
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +115,7 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
         currentLocationButton.setOnClickListener(this);
         infoWindow = findViewById(R.id.info_view);
         sunInfoView = findViewById(R.id.sun_info_view);
-        infoWindowBar=findViewById(R.id.info_window_bar);
+        infoWindowBar = findViewById(R.id.info_window_bar);
         locationView = findViewById(R.id.location);
         timeZoneView = findViewById(R.id.time_zone);
         dateButton = findViewById(R.id.date_button);
@@ -228,20 +243,6 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
         float offset = currentSunInfo.getTimeZoneOffset();
         timeZoneView.setText("Time zone: " + currentSunInfo.getTimeZone() + (offset > 0 ? " +" : " ") + offset + " h");
         sunInfoView.setSunInfo(currentSunInfo);
-    }
-
-    public String defineCityName(double lat, double lon) {
-        Geocoder gcd = new Geocoder(getBaseContext(), Locale.getDefault());
-        List<Address> addresses;
-        try {
-            addresses = gcd.getFromLocation(lat, lon, 1);
-            if (addresses.size() > 0) {
-                return addresses.get(0).getLocality();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
     }
 
     @Override
