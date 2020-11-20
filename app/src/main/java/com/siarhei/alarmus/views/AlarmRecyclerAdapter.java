@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.siarhei.alarmus.R;
 import com.siarhei.alarmus.data.Alarm;
 import com.siarhei.alarmus.data.SunAlarm;
+import com.siarhei.alarmus.sun.SunInfo;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
     private List<Alarm> alarms;
     private OnCheckedChangeListener onCheckedChangeListener;
     private Context context;
-    private int colorAlarmDisable, colorAlarmEnable,colorDaysEnable,colorDaysDisable;
+    private int colorAlarmDisable, colorAlarmEnable, colorDaysEnable, colorDaysDisable;
 
     @NonNull
     @Override
@@ -66,12 +67,6 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
         holder.enabled.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*if (event.getAction() == MotionEvent.ACTION_BUTTON_RELEASE
-                        && onCheckedChangeListener != null) {
-                    holder.enabled.setChecked(!holder.enabled.isChecked());
-                    onCheckedChangeListener.onCheckedChange((CompoundButton) v,
-                            position, ((CompoundButton) v).isChecked());
-                }*/
                 onCheckedChangeListener.onCheckedChange((CompoundButton) v,
                         position, ((CompoundButton) v).isChecked());
             }
@@ -85,7 +80,11 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
         });*/
         if (alarm instanceof SunAlarm) {
             SunAlarm sunAlarm = (SunAlarm) alarm;
-            holder.location.setText(sunAlarm.getCity());
+            if (sunAlarm.getCity() == "")
+                holder.location.setText(SunInfo.toLocationString(sunAlarm.getLatitude(), sunAlarm.getLongitude(), 3));
+            else
+                holder.location.setText(sunAlarm.getCity());
+
             if (sunAlarm.getSunMode() == SunAlarm.MODE_SUNRISE)
                 holder.sunMode.setImageResource(R.drawable.ic_sunrise);
             else if (sunAlarm.getSunMode() == SunAlarm.MODE_NOON)

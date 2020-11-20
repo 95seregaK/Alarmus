@@ -93,10 +93,8 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
         List<Address> addresses;
         try {
             addresses = gcd.getFromLocation(lat, lon, 1);
-            if (addresses.size() > 0) {
-                if (addresses.get(0).getLocality() != null) return addresses.get(0).getLocality();
-                return "";
-            }
+            if (addresses.size() > 0 && addresses.get(0).getLocality() != null)
+                return addresses.get(0).getLocality();
         } catch (IOException e) {
             //e.printStackTrace();
         }

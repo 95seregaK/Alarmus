@@ -161,6 +161,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         updateAlarm();
         updateLocationViews();
         updateTimeView();
+
     }
 
     public AlertDialog createLabelEditDialog() {
@@ -326,12 +327,13 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private void updateLocationViews() {
         if (alarmType == SUN_TYPE) {
             SunAlarm sunAlarm = (SunAlarm) currentAlarm;
-            if (cityName == null || cityName == "")
-                locationView.setText("Location: " + SunInfo.toLocationString(latitude, longitude, 5));
-            else
+            if (cityName != null && cityName.length() > 1)
                 locationView.setText("Location: " + cityName);
+            else
+                locationView.setText("Location: " + SunInfo.toLocationString(latitude, longitude, 5));
             updateRadioViews();
             delayBar.setValue(sunAlarm.getDelay());
+            Log.d("updateLocation", "cityName:" + cityName + "!");
         }
     }
 
