@@ -97,7 +97,8 @@
                     android:layout_height="@dimen/medium_height"
                     android:layoutDirection="rtl"
                     android:text="@string/set_auto_update"
-                    android:textSize="@dimen/add_alarm_text_size" />
+                    android:textSize="@dimen/add_alarm_text_size"
+                    android:visibility="gone"/>
 
                 <com.siarhei.alarmus.views.ImageRadioGroup
                     android:id="@+id/radio_group_sun_mode"

@@ -52,8 +52,8 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
 
     public static final int CODE_SUCCESS = 1;
     public static final int CODE_FAILURE = 2;
-    public static final double DEFAULT_LATITUDE = 54.0;
-    public static final double DEFAULT_LONGITUDE = 28.0;
+    public static final double DEFAULT_LATITUDE = 48.85;
+    public static final double DEFAULT_LONGITUDE = 2.33;
     public static final String MODE_MAP = "mode";
     private SunInfoMarker defaultMarker;
     private RadiusMarkerClusterer markerClusterer;

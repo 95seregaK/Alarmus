@@ -1,7 +1,6 @@
 package com.siarhei.alarmus.views;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,10 +79,10 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
         });*/
         if (alarm instanceof SunAlarm) {
             SunAlarm sunAlarm = (SunAlarm) alarm;
-            if (sunAlarm.getCity() == "")
-                holder.location.setText(SunInfo.toLocationString(sunAlarm.getLatitude(), sunAlarm.getLongitude(), 3));
-            else
+            if (sunAlarm.getCity() != null && sunAlarm.getCity().length() > 1)
                 holder.location.setText(sunAlarm.getCity());
+            else
+                holder.location.setText(SunInfo.toLocationString(sunAlarm.getLatitude(), sunAlarm.getLongitude(), 3));
 
             if (sunAlarm.getSunMode() == SunAlarm.MODE_SUNRISE)
                 holder.sunMode.setImageResource(R.drawable.ic_sunrise);
@@ -137,6 +136,10 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
         notifyDataSetChanged();
     }
 
+    public interface OnCheckedChangeListener {
+        void onCheckedChange(CompoundButton buttonView, int position, boolean isChecked);
+    }
+
     static final class ViewHolder extends RecyclerView.ViewHolder {
 
         final TextView time, date, label, location;
@@ -163,9 +166,5 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
                     itemView.findViewById(R.id.row_day7)};
 
         }
-    }
-
-    public interface OnCheckedChangeListener {
-        void onCheckedChange(CompoundButton buttonView, int position, boolean isChecked);
     }
 }

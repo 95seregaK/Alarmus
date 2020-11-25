@@ -139,10 +139,13 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             updateCheck.setChecked(sunAlarm.isUpdate());
             if (sunAlarm.isUpdate())
                 MapActivity.defineCurrentLocation(this, (code, location) -> {
-                    if (code == MapActivity.CODE_SUCCESS)
+                    if (code == MapActivity.CODE_SUCCESS) {
                         updateLocation(location.getLatitude(), location.getLongitude());
-                    else
-                        Toast.makeText(this, R.string.message_location_cannot, Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        Toast.makeText(this, R.string.message_set_location, Toast.LENGTH_SHORT).show();
+                    }
+                    sunAlarm.setUpdate(false);
                 });
             cityName = sunAlarm.getCity();
             updateLocationViews();
@@ -228,7 +231,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
                 updateTimeView();
             });
         }
-        updateCheck.setOnCheckedChangeListener((buttonView, isChecked) -> {
+       /* updateCheck.setOnCheckedChangeListener((buttonView, isChecked) -> {
             ((SunAlarm) currentAlarm).setUpdate(isChecked);
             if (isChecked) {
                 MapActivity.defineCurrentLocation(this, (code, location) -> {
@@ -238,7 +241,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
                         Toast.makeText(this, R.string.message_location_cannot, Toast.LENGTH_SHORT).show();
                 });
             }
-        });
+        });*/
     }
 
     @Override
@@ -345,7 +348,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             else if (radioSunset.isChecked()) sunAlarm.setSunMode(SunAlarm.MODE_SUNSET);
             sunAlarm.setPosition(latitude, longitude);
             sunAlarm.setDelay(delayBar.getValue());
-            sunAlarm.setUpdate(updateCheck.isChecked());
+            //sunAlarm.setUpdate(updateCheck.isChecked());
             sunAlarm.setCity(cityName);
         } else {
             currentAlarm.setTime(timePicker.getCurrentHour(), timePicker.getCurrentMinute());

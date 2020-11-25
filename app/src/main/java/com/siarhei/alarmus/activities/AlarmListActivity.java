@@ -147,12 +147,9 @@ public class AlarmListActivity extends AppCompatActivity implements View.OnClick
     public void onItemSwipe(View view, int position, int dir) {
 
         if (dir == MyRecyclerView.LEFT) {
-            preferences.remove(alarms.get(position).getId());
-            alarmManager.cancel(alarms.get(position));
-            alarmManager.cancelSnoozed(alarms.get(position));
-            alarms.remove(position);
+            confirmDeleting(position);
         }
-        alarmAdapter.notifyDataSetChanged();
+
     }
 
     @Override
@@ -206,12 +203,24 @@ public class AlarmListActivity extends AppCompatActivity implements View.OnClick
         return max + 1;
     }
 
-    public void requestPermissions() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-            }
-        }
+    private void removeAlarm(int position) {
+        preferences.remove(alarms.get(position).getId());
+        alarmManager.cancel(alarms.get(position));
+        alarmManager.cancelSnoozed(alarms.get(position));
+        alarms.remove(position);
+    }
+
+    private void confirmDeleting(int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getResources().getString(R.string.message_confirm_deleting));
+        builder.setPositiveButton(R.string.confirm, (dialog, id) -> {
+            removeAlarm(position);
+            alarmAdapter.notifyDataSetChanged();
+        });
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+            alarmAdapter.notifyDataSetChanged();
+        });
+        builder.create();
+        builder.show();
     }
 }

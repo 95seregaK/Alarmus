@@ -48,5 +48,8 @@
     <string name="tap_to_cancel">Tap to cancel</string>
     <string name="after">minutes have passed after</string>
     <string name="before">"minutes left before "</string>
+    <string name="message_confirm_deleting">\"Confirm deleting\"</string>
+    <string name="confirm">Confirm</string>
+
 
 </resources>

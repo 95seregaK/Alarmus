@@ -102,8 +102,8 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         sunSlider.setOnSliderMoveListener(this);
         timer = new Timer();
         timer.schedule(new MyTimerTask(), timerDelay);
-        if (alarm instanceof SunAlarm && ((SunAlarm) alarm).isUpdate())
-            setNewLocation();
+        /*if (alarm instanceof SunAlarm && ((SunAlarm) alarm).isUpdate())
+            setNewLocation();*/
 
         try {
             play();
