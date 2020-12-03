@@ -95,10 +95,10 @@ public class MainActivity extends TabActivity {
 
     public AlertDialog createPermissionsDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        //LayoutInflater inflater = getLayoutInflater();
-        //View dialogView = inflater.inflate(R.layout.dialog_edit_label, null);
         builder.setMessage(R.string.message_permissions);
-
+        builder.setPositiveButton(R.string.ok, (dialog, id) -> {
+          dialog.cancel();
+        });
         builder.setOnCancelListener(dialog -> {
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                    Uri.parse("package:" + this.getPackageName()));

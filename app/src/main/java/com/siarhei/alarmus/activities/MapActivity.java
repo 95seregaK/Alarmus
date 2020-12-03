@@ -101,6 +101,31 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
         return "";
     }
 
+    public static Location getLastKnownLocation(Context context) {
+
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            return null;
+        }
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        Location lastLocationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location lastLocationNet = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        Location location = null;
+        Log.d("LocationManager", "location");
+        if (lastLocationNet != null && (lastLocationGPS == null ||
+                lastLocationGPS.getTime() < lastLocationNet.getTime())) {
+            location = lastLocationNet;
+            Log.d("LocationManager", "NETWORK_PROVIDER");
+        } else if (lastLocationGPS != null && (lastLocationNet == null ||
+                lastLocationGPS.getTime() > lastLocationNet.getTime())) {
+            location = lastLocationGPS;
+            Log.d("LocationManager", "GPS_PROVIDER");
+        }
+        return location;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,13 +145,6 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
         dateButton.setOnClickListener(this);
         infoWindowBar.setOnClickListener(this);
 
-        //setting this before the layout is inflated is a good idea
-        //it 'should' ensure that the map has a writable location for the map cache, even without permissions
-        //if no tiles are displayed, you can try overriding the cache path using Configuration.getInstance().setCachePath
-        //see also StorageUtils
-        //note, the load method also sets the HTTP User Agent to your application's package name, abusing osm's tile servers will get you banned based on this string
-
-        //inflate and create the map
         map = findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
         //map.setBuiltInZoomControls(true);
@@ -156,13 +174,16 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
         map.getOverlays().add(defaultMarker);
 
         if (mode == 0) {
+            Location loc = getLastKnownLocation(this);
+            if (loc != null) {
+                defaultMarker.setPosition(new GeoPoint(loc.getLatitude(), loc.getLongitude()));
+            }
             setPositionBtn.setVisibility(View.GONE);
             defineCurrentLocation(this, (code, location) -> {
                 if (code == CODE_SUCCESS)
                     onLocationDefined(location);
                 else
                     Toast.makeText(this, R.string.message_location_cannot, Toast.LENGTH_SHORT).show();
-
             });
         }
 
@@ -171,8 +192,7 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
         // markerClusterer.setRadius(20);
 
         // map.getOverlays().add(markerClusterer);
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        //Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
         //startPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
         //mapController.animateTo(startPoint);
         //defaultMarker.setPosition(startPoint);

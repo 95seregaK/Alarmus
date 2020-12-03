@@ -1,9 +1,6 @@
 package com.siarhei.alarmus.activities;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -213,9 +209,21 @@ public class AlarmListActivity extends AppCompatActivity implements View.OnClick
     private void confirmDeleting(int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getResources().getString(R.string.message_confirm_deleting));
+
+      /*
+       LayoutInflater inflater = getLayoutInflater();
+       View layout = inflater.inflate(R.layout.layout_dialog_confirm, null);
+        layout.findViewById(R.id.button_confirm).setOnClickListener(v -> {
+            removeAlarm(position);
+            //alarmAdapter.notifyDataSetChanged();
+        });
+        layout.findViewById(R.id.button_cancel).setOnClickListener(v -> {
+            alarmAdapter.notifyDataSetChanged();
+        });
+        builder.setView(layout);*/
         builder.setPositiveButton(R.string.confirm, (dialog, id) -> {
             removeAlarm(position);
-            alarmAdapter.notifyDataSetChanged();
+            //alarmAdapter.notifyDataSetChanged();
         });
         builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
             alarmAdapter.notifyDataSetChanged();

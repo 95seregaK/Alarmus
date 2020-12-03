@@ -42,13 +42,13 @@
     <string name="alarms">Alarms</string>
     <string name="map">Map</string>
     <string name="message_permissions">Please allow this app to display over other apps. Otherwise,
-        the app will not work correctly. Tap outside the window to continue</string>
+        the app will not work correctly.</string>
     <string name="dismiss">Dismiss</string>
     <string name="message_snoozed_to">Alarm snoozed to</string>
     <string name="tap_to_cancel">Tap to cancel</string>
     <string name="after">minutes have passed after</string>
-    <string name="before">"minutes left before "</string>
-    <string name="message_confirm_deleting">\"Confirm deleting\"</string>
+    <string name="before">minutes left before</string>
+    <string name="message_confirm_deleting">Confirm deleting:</string>
     <string name="confirm">Confirm</string>
 
 

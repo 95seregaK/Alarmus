@@ -3,7 +3,7 @@
     <style name="AlarmTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
 <!--        <item name="android:windowIsTranslucent">true</item>-->
-        <item name="android:windowBackground">@drawable/sunrise_bckg</item>
+        <item name="android:windowBackground">@drawable/alarm_bckg</item>
         <item name="android:typeface">serif</item>
         <item name="android:textColor">@color/color_text_default</item>
         <item name="android:keepScreenOn">true</item>

@@ -3,6 +3,7 @@ package com.siarhei.alarmus.activities;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -137,16 +138,20 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             latitude = sunAlarm.getLatitude();
             longitude = sunAlarm.getLongitude();
             updateCheck.setChecked(sunAlarm.isUpdate());
-            if (sunAlarm.isUpdate())
-                MapActivity.defineCurrentLocation(this, (code, location) -> {
+            if (sunAlarm.isUpdate()) {
+                Location location = MapActivity.getLastKnownLocation(this);
+                if (location != null)
+                    updateLocation(location.getLatitude(), location.getLongitude());
+                MapActivity.defineCurrentLocation(this, (code, loc) -> {
                     if (code == MapActivity.CODE_SUCCESS) {
-                        updateLocation(location.getLatitude(), location.getLongitude());
+                        updateLocation(loc.getLatitude(), loc.getLongitude());
 
                     } else {
                         Toast.makeText(this, R.string.message_set_location, Toast.LENGTH_SHORT).show();
                     }
                     sunAlarm.setUpdate(false);
                 });
+            }
             cityName = sunAlarm.getCity();
             updateLocationViews();
             updateDelayView();
