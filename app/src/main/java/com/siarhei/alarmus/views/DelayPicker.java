@@ -6,7 +6,6 @@ import android.util.AttributeSet;
 public class DelayPicker extends androidx.appcompat.widget.AppCompatSeekBar {
     private int maxDelay = 120;
     private int zeroOffset = 5;
-    private String[] displayedValues;
 
     public DelayPicker(Context context) {
         super(context);

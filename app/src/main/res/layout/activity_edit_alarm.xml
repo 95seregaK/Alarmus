@@ -98,7 +98,7 @@
                     android:layoutDirection="rtl"
                     android:text="@string/set_auto_update"
                     android:textSize="@dimen/add_alarm_text_size"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <com.siarhei.alarmus.views.ImageRadioGroup
                     android:id="@+id/radio_group_sun_mode"
@@ -160,29 +160,43 @@
                         android:text="@string/delay"
                         android:textAppearance="@style/TextStyle.Dark"
                         android:textSize="@dimen/add_alarm_text_size" />
-
-                    <com.siarhei.alarmus.views.DelayPicker
-                        android:id="@+id/delay_picker"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:descendantFocusability="blocksDescendants"
-                        android:focusable="false"
-                        android:marqueeRepeatLimit="-1"
-                        android:textAppearance="@style/TextStyle.Dark"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/delay_picker_size"
-                        android:visibility="gone" />
-                    />
                 </LinearLayout>
 
-                <com.siarhei.alarmus.views.DelayPicker
-                    android:id="@+id/delayBar"
-                    style="@style/Widget.AppCompat.SeekBar"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/margin_edit_alarm"
-                    android:max="120" />
+                    android:orientation="horizontal"
+                    >
+
+                    <ImageButton
+                        android:id="@+id/button_left"
+                        android:layout_width="@dimen/size_delay_bar"
+                        android:layout_height="@dimen/size_delay_bar"
+                        android:background="?android:selectableItemBackground"
+                        android:src="@drawable/ic_left"
+                        android:scaleType="fitCenter"
+                        android:layout_alignParentLeft="true"
+                        />
+
+                    <com.siarhei.alarmus.views.DelayPicker
+                        android:id="@+id/delayBar"
+                        style="@style/Widget.AppCompat.SeekBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/size_delay_bar"
+                        android:layout_marginHorizontal="@dimen/size_delay_bar"
+                        android:max="120"
+
+                       />
+
+                   <ImageButton
+                         android:id="@+id/button_right"
+                         android:layout_width="@dimen/size_delay_bar"
+                         android:layout_height="@dimen/size_delay_bar"
+                         android:background="?android:selectableItemBackground"
+                         android:src="@drawable/ic_right"
+                         android:scaleType="fitCenter"
+                         android:layout_alignParentRight="true"/>
+                </RelativeLayout>
 
             </LinearLayout>
 

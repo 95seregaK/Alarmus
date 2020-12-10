@@ -53,7 +53,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private TextView timeView, dateView, locationView;
     private EditText labelEdit;
     private TimePicker timePicker;
-    private ImageButton saveBtn;
+    private ImageButton saveBtn, leftButton, rightButton;
     private CheckBox repeatCheck, updateCheck;
     private ImageRadioGroup radioGroupSunMode;
     private ImageRadioButton radioSunrise, radioSunset, radioNoon;
@@ -107,6 +107,8 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         weekView = findViewById(R.id.view_week);
         sunLayout = findViewById(R.id.sun_layout);
         delayBar = findViewById(R.id.delayBar);
+        leftButton = findViewById(R.id.button_left);
+        rightButton = findViewById(R.id.button_right);
         updateCheck = findViewById(R.id.check_update);
         checkDays = new CircleCheckBox[]{findViewById(R.id.check_day1),
                 findViewById(R.id.check_day2), findViewById(R.id.check_day3),
@@ -211,6 +213,17 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         saveBtn.setOnClickListener(this);
         repeatCheck.setOnCheckedChangeListener(this);
         locationButton.setOnClickListener(this);
+        locationButton.setOnLongClickListener((v)->{
+            MapActivity.defineCurrentLocation(this, (code, loc) -> {
+                if (code == MapActivity.CODE_SUCCESS) {
+                    updateLocation(loc.getLatitude(), loc.getLongitude());
+
+                } else {
+                    Toast.makeText(this, R.string.message_set_location, Toast.LENGTH_SHORT).show();
+                }
+            });
+            return false;
+        });
         timePicker.setOnTimeChangedListener((view, hourOfDay, minute) -> {
             updateAlarm();
             updateTimeView();
@@ -228,6 +241,20 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         });
 
         delayBar.setOnSeekBarChangeListener(this);
+        leftButton.setOnClickListener((v) -> {
+            delayBar.setValue(delayBar.getValue() - 1);
+            updateAlarm();
+            updateDelayView();
+
+            updateTimeView();
+        });
+        rightButton.setOnClickListener((v) -> {
+            delayBar.setValue(delayBar.getValue() + 1);
+            updateAlarm();
+            updateDelayView();
+
+            updateTimeView();
+        });
 
         for (int i = 0; i < 7; i++) {
             checkDays[i].setOnCheckedChangeListener((view, checked) -> {
