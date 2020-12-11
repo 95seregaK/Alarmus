@@ -222,7 +222,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
                     Toast.makeText(this, R.string.message_set_location, Toast.LENGTH_SHORT).show();
                 }
             });
-            return false;
+            return true;
         });
         timePicker.setOnTimeChangedListener((view, hourOfDay, minute) -> {
             updateAlarm();
