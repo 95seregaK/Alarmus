@@ -217,6 +217,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             MapActivity.defineCurrentLocation(this, (code, loc) -> {
                 if (code == MapActivity.CODE_SUCCESS) {
                     updateLocation(loc.getLatitude(), loc.getLongitude());
+                    Toast.makeText(this, R.string.location_updated, Toast.LENGTH_SHORT).show();
 
                 } else {
                     Toast.makeText(this, R.string.message_set_location, Toast.LENGTH_SHORT).show();

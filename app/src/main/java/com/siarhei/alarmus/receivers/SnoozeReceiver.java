@@ -3,7 +3,6 @@ package com.siarhei.alarmus.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.core.app.NotificationManagerCompat;
 
@@ -14,8 +13,7 @@ public class SnoozeReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         SunAlarmManager.getService(context).cancelSnoozed(intent.getParcelableExtra(AlarmReceiver.ALARM));
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.cancel(AlarmActivity.DEFAULT_NOTIFICATION_ID);
-        //Log.d("SnoozeReceiver","alarm canceled");
+        //NotificationManagerCompat.from(context).cancel(AlarmActivity.DEFAULT_NOTIFICATION_ID);
     }
+    //Log.d("SnoozeReceiver","alarm canceled");
 }

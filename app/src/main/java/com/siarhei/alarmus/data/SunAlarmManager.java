@@ -5,8 +5,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
 
+import androidx.core.app.NotificationManagerCompat;
+
+import com.siarhei.alarmus.activities.AlarmActivity;
 import com.siarhei.alarmus.receivers.AlarmReceiver;
 
 import static com.siarhei.alarmus.data.Alarm.ID;
@@ -42,11 +44,11 @@ public class SunAlarmManager {
         } else alarmManager.set(AlarmManager.RTC_WAKEUP, alarm.getTimeInMillis(),
                 prepareIntent(alarm, false));
 
-       // Log.d("alarmManager", "prepareIntent " + (prepareIntent(alarm, true).equals(prepareIntent(alarm, true))));
+        // Log.d("alarmManager", "prepareIntent " + (prepareIntent(alarm, true).equals(prepareIntent(alarm, true))));
 
     }
 
-    public void setDelayed(Alarm alarm, int delay) {
+    public void setSnoozed(Alarm alarm, int delay) {
         long time = System.currentTimeMillis() + delay * 60000;
         alarmManager.set(AlarmManager.RTC_WAKEUP, time, prepareIntent(alarm, true));
     }
@@ -57,5 +59,6 @@ public class SunAlarmManager {
 
     public void cancelSnoozed(Alarm alarm) {
         alarmManager.cancel(prepareIntent(alarm, true));
+        NotificationManagerCompat.from(context).cancel(AlarmActivity.DEFAULT_NOTIFICATION_ID);
     }
 }
