@@ -3,13 +3,10 @@
     <color name="colorPrimary">#008DB1</color>
     <color name="colorPrimaryDark">#28447E</color>
     <color name="colorAccent">#008DB1</color>
-    <color name="infoWindowBckg">#136693</color>
     <color name="white">#FFFFFF</color>
     <color name="colorTransparent">#00FFFFFF</color>
-    <color name="color_info_text">#FFFFFF</color>
     <color name="color_info_active">#FFE600</color>
     <color name="color_info_inactive">#BCBCBC</color>
-    <color name="colorHalfTransparent">#85191919</color>
     <color name="color_circle_check_checked">@color/colorPrimary</color>
     <color name="color_circle_check_unchecked">#00000000</color>
     <color name="color_text_circle_check_checked">#FFFFFF</color>

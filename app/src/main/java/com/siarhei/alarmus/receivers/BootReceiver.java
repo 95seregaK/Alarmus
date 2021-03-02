@@ -14,7 +14,7 @@ import java.util.List;
 public class BootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Toast.makeText(context, "BOOT! " + toString(), Toast.LENGTH_LONG).show();
+//        Toast.makeText(context, "BOOT! " + toString(), Toast.LENGTH_LONG).show();
         AlarmPreferences preferences = AlarmPreferences.getInstance(context);
         List<Alarm> alarms = preferences.readAllAlarms();
         for (Alarm alarm : alarms) {

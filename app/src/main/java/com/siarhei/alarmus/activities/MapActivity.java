@@ -6,6 +6,8 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -161,12 +163,12 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
 
         GeoPoint startPoint = new GeoPoint(lat, lon);
         defaultMarker = new SunInfoMarker(map, this);
-        if (Build.VERSION.SDK_INT <= 28) {
-            Drawable icon = getResources().getDrawable(R.drawable.ic_default_marker);
-            //defaultMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            defaultMarker.setIcon(icon);
-            //defaultMarker.setPanToView(true);
-        }
+//      if (Build.VERSION.SDK_INT <= 28) {
+        Drawable icon = getResources().getDrawable(R.mipmap.ic_default_marker128);
+        defaultMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        defaultMarker.setIcon(icon);
+        //defaultMarker.setPanToView(true);
+        //}
         defaultMarker.setOnMarkerClickListener(this);
         defaultMarker.setPosition(startPoint);
         currentSunInfo = new SunInfo(Calendar.getInstance(), lat, lon);

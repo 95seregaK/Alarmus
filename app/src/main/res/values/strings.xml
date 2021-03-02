@@ -1,24 +1,18 @@
 <resources>
     <string name="app_name">Alarmus</string>
-    <string name="dialog_message">Wake up!!!</string>
-    <string name="dialog_title">Alarm</string>
     <string name="ok">OK</string>
     <string name="once">once</string>
     <string name="repeat">Repeat</string>
     <string name="cancel">CANCEL</string>
     <string name="alarm_deleted">Alarm deleted!</string>
-    <string name="save_alarm">Save</string>
     <string name="sunrise">Sunrise</string>
     <string name="sunset">Sunset</string>
     <string name="edit_alarm">Edit Alarm</string>
-    <string name="today">Today</string>
-    <string name="next_day">Next day</string>
     <string name="noon">Solar noon</string>
     <string name="day_duration">Day duration</string>
     <string name="location">Location</string>
     <string name="delay">Alarm offset:</string>
     <string name="date">Date</string>
-    <string name="minute">minutes</string>
     <string name="label">Label</string>
     <string name="monday">M</string>
     <string name="tuesday">T</string>
@@ -27,12 +21,8 @@
     <string name="friday">F</string>
     <string name="saturday">S</string>
     <string name="sunday">S</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
     <string name="set_auto_update">Auto-update location</string>
     <string name="every_day">every day</string>
-    <string name="message_request_permissions">Location cannot be determined! Please allow permissions</string>
     <string name="message_set_location">Location cannot be determined! Please set location manually</string>
     <string name="message_location_cannot">Location cannot be determined!</string>
     <string name="message_alarm_set">Alarm set on </string>
