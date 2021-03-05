@@ -109,8 +109,7 @@ public class AlarmListActivity extends AppCompatActivity implements View.OnClick
 
     public void editAlarm(Alarm alarm) {
         Intent intent = new Intent("android.intent.action.ADD_ALARM");
-        if (alarm instanceof Alarm) intent.putExtra(ALARM_EDITING, alarm);
-        else intent.putExtra(ALARM_EDITING, alarm);
+        intent.putExtra(ALARM_EDITING, alarm);
         startActivityForResult(intent, CODE_ADD_NEW);
     }
 

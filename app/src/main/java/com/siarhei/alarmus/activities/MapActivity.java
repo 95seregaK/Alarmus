@@ -33,6 +33,7 @@ import com.siarhei.alarmus.sun.SunInfo;
 import com.siarhei.alarmus.views.FloatingView;
 import com.siarhei.alarmus.views.SunInfoScrollView;
 
+import org.jetbrains.annotations.Nullable;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
 import org.osmdroid.config.Configuration;
@@ -58,8 +59,8 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
     public static final double DEFAULT_LATITUDE = 48.85;
     public static final double DEFAULT_LONGITUDE = 2.33;
     public static final String MODE_MAP = "mode";
+    private static final int MODE_MAP_OBSERVING = 0;
     private SunInfoMarker defaultMarker;
-    private RadiusMarkerClusterer markerClusterer;
     private FusedLocationProviderClient fusedLocationClient;
     private FloatingActionButton setPositionBtn;
     private FloatingView infoWindow;
@@ -103,6 +104,7 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
         }
         return "";
     }
+
 
     public static Location getLastKnownLocation(Context context) {
 
@@ -159,7 +161,7 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
 
         double lat = getIntent().getDoubleExtra(EditAlarmActivity.LATITUDE, DEFAULT_LATITUDE);
         double lon = getIntent().getDoubleExtra(EditAlarmActivity.LONGITUDE, DEFAULT_LONGITUDE);
-        int mode = getIntent().getIntExtra(MODE_MAP, 0);
+        int mode = getIntent().getIntExtra(MODE_MAP, MODE_MAP_OBSERVING);
 
         GeoPoint startPoint = new GeoPoint(lat, lon);
         defaultMarker = new SunInfoMarker(map, this);
@@ -177,7 +179,7 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
         map.getOverlays().add(mapEventsOverlay);
         map.getOverlays().add(defaultMarker);
 
-        if (mode == 0) {
+        if (mode == MODE_MAP_OBSERVING) {
             Location loc = getLastKnownLocation(this);
             if (loc != null) {
                 defaultMarker.setPosition(new GeoPoint(loc.getLatitude(), loc.getLongitude()));

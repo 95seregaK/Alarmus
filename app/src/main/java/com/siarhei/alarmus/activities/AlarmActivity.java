@@ -10,6 +10,7 @@ import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.RemoteViews;
 import android.widget.TextView;
@@ -54,6 +55,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     private static final int d6 = 20;
     private static final int d7 = 30;
     private static final int FINISH_DELAY = 500;
+    private static final int CODE_SUCCESS = 1;
     private TextView time, date, label;
     private CircleSlider sunSlider;
     private MediaPlayer mMediaPlayer;
@@ -62,13 +64,13 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     private Timer timer;
     private SunAlarmManager alarmManager;
     private AlarmPreferences preferences;
+    private int finishCode = 0;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
-
         unblockScreen();
         alarmManager = SunAlarmManager.getService(this);
         sunSlider = findViewById(R.id.slideButton);
@@ -128,8 +130,6 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
 
     @Override
     public void finish() {
-        timer.cancel();
-        mMediaPlayer.release();
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -168,16 +168,19 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         mMediaPlayer.start();
     }
 
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-
-    }
-
-    @Override
+  /*  @Override
     public void onBackPressed() {
         snooze(1);
         super.onBackPressed();
+    }
+*/
 
+    @Override
+    public void onStop() {
+        if (finishCode != CODE_SUCCESS)  snooze(1);
+        timer.cancel();
+        mMediaPlayer.release();
+        super.onStop();
     }
 
     @Override
@@ -195,12 +198,13 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
                 else if (dir > s6 && dir <= s7) d = d7;
                 else d = d1;
                 snooze(d);
-                finish();
             }
+            finish();
         } else if (action == CircleSlider.ACTION_FAILURE) ;
     }
 
     private void dismiss() {
+        finishCode = CODE_SUCCESS;
         if (alarm instanceof SunAlarm && ((SunAlarm) (alarm)).isUpdate())
             MapActivity.defineCurrentLocation(this, (code, location) -> {
                 if (code == MapActivity.CODE_SUCCESS)
@@ -215,6 +219,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     }
 
     private void snooze(int d) {
+        finishCode = CODE_SUCCESS;
         alarmManager.setSnoozed(alarm, d);
         makeNotification(d);
         Toast.makeText(this, getResources().getString(R.string.message_delayed)
