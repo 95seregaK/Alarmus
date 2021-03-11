@@ -10,7 +10,6 @@ import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.RemoteViews;
 import android.widget.TextView;
@@ -55,16 +54,15 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     private static final int d6 = 20;
     private static final int d7 = 30;
     private static final int FINISH_DELAY = 500;
-    private static final int CODE_SUCCESS = 1;
+    private static final int CODE_DISMISS = -1;
+    private final int timerDelay = 1000 * 60 * 3;
+    private int delay = d1;
     private TextView time, date, label;
-    private CircleSlider sunSlider;
     private MediaPlayer mMediaPlayer;
     private Alarm alarm;
-    private int timerDelay = 1000 * 60 * 3;
     private Timer timer;
     private SunAlarmManager alarmManager;
     private AlarmPreferences preferences;
-    private int finishCode = 0;
 
 
     @Override
@@ -73,7 +71,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         setContentView(R.layout.activity_alarm);
         unblockScreen();
         alarmManager = SunAlarmManager.getService(this);
-        sunSlider = findViewById(R.id.slideButton);
+        CircleSlider sunSlider = findViewById(R.id.slideButton);
         time = findViewById(R.id.time);
         date = findViewById(R.id.date);
         label = findViewById(R.id.label);
@@ -177,7 +175,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
 
     @Override
     public void onStop() {
-        if (finishCode != CODE_SUCCESS)  snooze(1);
+        if (delay != CODE_DISMISS) snooze(delay);
         timer.cancel();
         mMediaPlayer.release();
         super.onStop();
@@ -186,25 +184,20 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     @Override
     public void onSliderMoved(int action, float dir) {
         if (action == CircleSlider.ACTION_SUCCESS) {
-            if (dir > s7 && dir <= s0) {
-                dismiss();
-            } else {
-                int d;
-                if (dir > s1 && dir <= s2) d = d2;
-                else if (dir > s2 && dir <= s3) d = d3;
-                else if (dir > s3 && dir <= s4) d = d4;
-                else if (dir > s4 && dir <= s5) d = d5;
-                else if (dir > s5 && dir <= s6) d = d6;
-                else if (dir > s6 && dir <= s7) d = d7;
-                else d = d1;
-                snooze(d);
-            }
+            if (dir > s7 && dir <= s0)  delay = CODE_DISMISS;
+            else if (dir > s1 && dir <= s2) delay = d2;
+            else if (dir > s2 && dir <= s3) delay = d3;
+            else if (dir > s3 && dir <= s4) delay = d4;
+            else if (dir > s4 && dir <= s5) delay = d5;
+            else if (dir > s5 && dir <= s6) delay = d6;
+            else if (dir > s6 && dir <= s7) delay = d7;
+            else delay = d1;
             finish();
-        } else if (action == CircleSlider.ACTION_FAILURE) ;
+        }// else if (action == CircleSlider.ACTION_FAILURE) ;
     }
 
     private void dismiss() {
-        finishCode = CODE_SUCCESS;
+        delay = CODE_DISMISS;
         if (alarm instanceof SunAlarm && ((SunAlarm) (alarm)).isUpdate())
             MapActivity.defineCurrentLocation(this, (code, location) -> {
                 if (code == MapActivity.CODE_SUCCESS)
@@ -219,7 +212,6 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     }
 
     private void snooze(int d) {
-        finishCode = CODE_SUCCESS;
         alarmManager.setSnoozed(alarm, d);
         makeNotification(d);
         Toast.makeText(this, getResources().getString(R.string.message_delayed)
@@ -277,5 +269,4 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
             });
         }
     }
-
 }
