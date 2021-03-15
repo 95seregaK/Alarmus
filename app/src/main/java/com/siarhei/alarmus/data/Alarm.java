@@ -22,7 +22,7 @@ public class Alarm implements Parcelable {
     };
     private static final int HOUR_DEFAULT = 6;
     private static final int MINUTE_DEFAULT = 0;
-    private static final long MAX_DELAY = 10 * 60 * 1000;
+    private static final long ACTUAL_DELAY = 10 * 60 * 1000;
     // public static String[] DAYS = {"Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"};
     public static String[] DAYS_SHORT = {"M", "T", "W", "T", "F", "S", "S"};
     // public static String[] DAYS_SHORT = {"m", "t", "w", "t", "f", "s", "s"};
@@ -216,6 +216,6 @@ public class Alarm implements Parcelable {
     }
 
     public boolean isActual() {
-        return getTimeInMillis() > System.currentTimeMillis() - MAX_DELAY;
+        return getTimeInMillis() > System.currentTimeMillis() - ACTUAL_DELAY;
     }
 }

@@ -90,7 +90,11 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
                 holder.sunMode.setImageResource(R.drawable.ic_noon);
             else if (sunAlarm.getSunMode() == SunAlarm.MODE_SUNSET)
                 holder.sunMode.setImageResource(R.drawable.ic_sunset);
-
+            int d = sunAlarm.getDelay();
+            int h = Math.abs(d) / 60;
+            int m = Math.abs(d) % 60;
+            String s = (d < 0 ? "- " : "+") + (h > 0 ? h + "h " : "") + m + "m";
+            holder.delay.setText(s);
         } else {
             holder.sunMode.setImageDrawable(null);
             holder.location.setText("");
@@ -103,6 +107,7 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
             holder.sunMode.setImageAlpha(context.getResources().getInteger(R.integer.enable_alpha));
             holder.sunMode.setColorFilter(0);
             holder.location.setTextColor(colorAlarmEnable);
+            holder.delay.setTextColor(colorAlarmEnable);
             for (int i = 0; i < 7; i++) {
                 if (alarm.getDays()[i]) holder.days[i].setTextColor(colorDaysEnable);
                 else holder.days[i].setTextColor(colorDaysDisable);
@@ -119,6 +124,7 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
             holder.sunMode.setImageAlpha(context.getResources().getInteger(R.integer.disable_alpha));
             holder.sunMode.setColorFilter(colorAlarmDisable);
             holder.location.setTextColor(colorAlarmDisable);
+            holder.delay.setTextColor(colorAlarmDisable);
         }
     }
 
@@ -142,7 +148,7 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
 
     static final class ViewHolder extends RecyclerView.ViewHolder {
 
-        final TextView time, date, label, location;
+        final TextView time, date, label, location, delay;
         final TextView days[];
         final Switch enabled;
         final ImageView sunMode;
@@ -157,6 +163,7 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
             enabled = itemView.findViewById(R.id.row_switch);
             sunMode = itemView.findViewById(R.id.row_sun_mode);
             location = itemView.findViewById(R.id.row_location);
+            delay = itemView.findViewById(R.id.row_delay);
             days = new TextView[]{itemView.findViewById(R.id.row_day1),
                     itemView.findViewById(R.id.row_day2),
                     itemView.findViewById(R.id.row_day3),

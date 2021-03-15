@@ -35,6 +35,3 @@ public class ImageRadioGroup extends LinearLayout {
         public void onCheckedChange(int id);
     }
 }
-
-
-
