@@ -93,7 +93,7 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
             int d = sunAlarm.getDelay();
             int h = Math.abs(d) / 60;
             int m = Math.abs(d) % 60;
-            String s = (d < 0 ? "—" : "+") + (h > 0 ? h + "h " : "") + m + "m";
+            String s = (d < 0 ? "-" : "+") + (h > 0 ? h + "h " : "") + m + "m";
             holder.delay.setText(s);
         } else {
             holder.sunMode.setImageDrawable(null);

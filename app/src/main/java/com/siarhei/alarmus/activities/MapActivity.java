@@ -84,8 +84,8 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
         }
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(60000);
-        locationRequest.setFastestInterval(10000);
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(1000);
         FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
         LocationCallback locationCallback = new LocationCallback() {
             int count = 0;
@@ -132,11 +132,14 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
         try {
             addresses = gcd.getFromLocation(lat, lon, 1);
             if (addresses.size() > 0 && addresses.get(0).getLocality() != null)
+                Log.d("defineCityName",addresses.get(0).getLocality());
                 return addresses.get(0).getLocality();
         } catch (IOException e) {
             //e.printStackTrace();
         }
+        Log.d("defineCityName","null");
         return "";
+
     }
 
 

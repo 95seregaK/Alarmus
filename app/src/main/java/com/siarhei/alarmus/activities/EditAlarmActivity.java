@@ -173,14 +173,15 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
                 }
                 handler.post(new Runnable() {
                     public void run() {
-
+                        if (cityName != null && cityName.length() > 1)
+                            locationView.setText("Location: " + cityName);
                     }
                 });
             }
         };
 
         t.start();
-       // cityName = MapActivity.defineCityName(getBaseContext(), latitude, longitude);
+        //cityName = MapActivity.defineCityName(getBaseContext(), latitude, longitude);
         updateAlarm();
         updateLocationViews();
         updateTimeView();

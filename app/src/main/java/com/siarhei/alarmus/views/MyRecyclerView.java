@@ -53,7 +53,7 @@ public class MyRecyclerView extends RecyclerView {
     public void setOnItemSwipeListener(@NonNull OnItemSwipeListener listener) {
         this.onItemSwipeListener = listener;
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(
-                0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                0, ItemTouchHelper.LEFT /*| ItemTouchHelper.RIGHT*/) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
                                   RecyclerView.ViewHolder target) {

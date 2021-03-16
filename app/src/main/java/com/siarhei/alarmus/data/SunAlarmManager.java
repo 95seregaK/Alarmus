@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.core.app.NotificationManagerCompat;
 
@@ -14,7 +15,7 @@ import com.siarhei.alarmus.receivers.AlarmReceiver;
 import static com.siarhei.alarmus.data.Alarm.ID;
 
 public class SunAlarmManager {
-    public static final String SOOZED = "snoozed";
+    public static final String SNOOZED = "snoozed";
     private final AlarmManager alarmManager;
     private final Context context;
 
@@ -29,9 +30,10 @@ public class SunAlarmManager {
 
     public PendingIntent prepareIntent(Alarm alarm, boolean snoozed) {
         Intent intent = new Intent(context, AlarmReceiver.class);
-        if (snoozed) intent.setAction(SOOZED);
+        //if (snoozed) intent.setAction(SNOOZED);
+        intent.putExtra(SNOOZED, snoozed);
         intent.putExtra(ID, alarm.getId());
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, alarm.getId(),
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, snoozed ? -alarm.getId() : alarm.getId(),
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         return alarmIntent;
     }

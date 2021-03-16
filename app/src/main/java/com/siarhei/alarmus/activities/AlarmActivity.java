@@ -55,8 +55,9 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     private static final int d7 = 30;
     private static final int FINISH_DELAY = 500;
     private static final int CODE_DISMISS = -1;
-    private final int timerDelay = 1000 * 60 * 3;
+    private final int timerDelay = 1000 * 60 * 2;
     private int delay = d1;
+    private int stop = 0;
     private TextView time, date, label;
     private MediaPlayer mMediaPlayer;
     private Alarm alarm;
@@ -70,6 +71,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
         unblockScreen();
+        this.setFinishOnTouchOutside(true);
         alarmManager = SunAlarmManager.getService(this);
         CircleSlider sunSlider = findViewById(R.id.slideButton);
         time = findViewById(R.id.time);
@@ -83,7 +85,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         time.setText(Alarm.toTime(calendar));
         date.setText(Alarm.toDate(calendar) + ", " + Alarm.toDay(calendar, Alarm.FULL));
         label.setText(makeLabel());
-        if (!getIntent().getBooleanExtra(SunAlarmManager.SOOZED, false)) setNextAlarm();
+        if (!getIntent().getBooleanExtra(SunAlarmManager.SNOOZED, false)) setNextAlarm();
         else NotificationManagerCompat.from(this).cancel(AlarmActivity.DEFAULT_NOTIFICATION_ID);
         sunSlider.setOnSliderMoveListener(this);
         timer = new Timer();
@@ -126,7 +128,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         return text;
     }
 
-    @Override
+   /* @Override
     public void finish() {
         new Timer().schedule(new TimerTask() {
             @Override
@@ -134,7 +136,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
                 runOnUiThread(AlarmActivity.super::finish);
             }
         }, FINISH_DELAY);
-    }
+    }*/
 
     private void setNewLocation() {
         MapActivity.defineCurrentLocation(this, (code, location) -> {
@@ -166,25 +168,33 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         mMediaPlayer.start();
     }
 
-  /*  @Override
-    public void onBackPressed() {
-        snooze(1);
-        super.onBackPressed();
-    }
-*/
-
+    /*  @Override
+      public void onBackPressed() {
+          snooze(1);
+          super.onBackPressed();
+      }
+  */
     @Override
     public void onStop() {
+        Log.d("CODE_DISMISS", "onStop" + stop);
+        if (stop == 1) finish();
+        stop++;
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d("CODE_DISMISS", "onDestroy" + delay);
         if (delay != CODE_DISMISS) snooze(delay);
         timer.cancel();
         mMediaPlayer.release();
-        super.onStop();
+        super.onDestroy();
     }
 
     @Override
     public void onSliderMoved(int action, float dir) {
         if (action == CircleSlider.ACTION_SUCCESS) {
-            if (dir > s7 && dir <= s0)  delay = CODE_DISMISS;
+            if (dir > s7 && dir <= s0) delay = CODE_DISMISS;
             else if (dir > s1 && dir <= s2) delay = d2;
             else if (dir > s2 && dir <= s3) delay = d3;
             else if (dir > s3 && dir <= s4) delay = d4;
@@ -192,7 +202,9 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
             else if (dir > s5 && dir <= s6) delay = d6;
             else if (dir > s6 && dir <= s7) delay = d7;
             else delay = d1;
+            Log.d("ACTION_SUCCESS", delay + " ");
             finish();
+
         }// else if (action == CircleSlider.ACTION_FAILURE) ;
     }
 
@@ -262,9 +274,9 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         @Override
         public void run() {
             runOnUiThread(() -> {
-                mMediaPlayer.release();
+                /*mMediaPlayer.release();
                 snooze(d3);
-                timer.cancel();
+                timer.cancel();*/
                 finish();
             });
         }

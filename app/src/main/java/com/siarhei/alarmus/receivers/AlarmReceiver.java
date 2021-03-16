@@ -21,21 +21,23 @@ public class AlarmReceiver extends BroadcastReceiver {
         Intent alarmIntent = new Intent(context, AlarmActivity.class);
         alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         int id = intent.getIntExtra(Alarm.ID, 0);
-        boolean snoozed = intent.getAction() == SunAlarmManager.SOOZED;
-         //setNextAlarm(context, intent);
+        Log.d("alarm.getId()2","alarm.getId()"+id);
+        boolean snoozed = intent.getBooleanExtra(SunAlarmManager.SNOOZED, false);
+        //boolean snoozed = intent.getAction() == SunAlarmManager.SNOOZED;
+        //setNextAlarm(context, intent);
         alarmIntent.putExtra(Alarm.ID, id);
-        alarmIntent.putExtra(SunAlarmManager.SOOZED, snoozed);
+        alarmIntent.putExtra(SunAlarmManager.SNOOZED, snoozed);
         context.startActivity(alarmIntent);
     }
 
     public void setNextAlarm(Context context, Intent intent) {
         preferences = AlarmPreferences.getInstance(context);
         Alarm alarm = preferences.readAlarm(intent.getIntExtra(Alarm.ID, 0));
-        if (intent.getAction() != SunAlarmManager.SOOZED) {
+        if (intent.getAction() != SunAlarmManager.SNOOZED) {
             if (alarm.isRepeat()) {
                 alarm.setTimeNext(false);
                 SunAlarmManager.getService(context).set(alarm);
-                Log.d("setNextAlarm","setNextAlarm BroadcastReceiver");
+                Log.d("setNextAlarm", "setNextAlarm BroadcastReceiver");
             } else
                 alarm.setEnable(false);
             preferences.writeAlarm(alarm);
