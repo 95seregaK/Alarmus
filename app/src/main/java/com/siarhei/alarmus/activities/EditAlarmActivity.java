@@ -3,8 +3,8 @@ package com.siarhei.alarmus.activities;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,8 +45,6 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     public static final int SUN_TYPE = AlarmPreferences.SUN_TYPE;
     public static final int SIMPLE_TYPE = AlarmPreferences.SIMPLE_TYPE;
     public static final int RESULT_EDIT_ALARM = 4;
-    public static final String LONGITUDE = "longitude";
-    public static final String LATITUDE = "latitude";
     public static final String ALARM_NAME = "alarm";
     public static final String ID = "id";
 
@@ -141,13 +139,9 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
             longitude = sunAlarm.getLongitude();
             updateCheck.setChecked(sunAlarm.isUpdate());
             if (sunAlarm.isUpdate()) {
-                Location location = MapActivity.getLastKnownLocation(this);
-                if (location != null)
-                    updateLocation(location.getLatitude(), location.getLongitude());
                 MapActivity.defineCurrentLocation(this, (code, loc) -> {
                     if (code == MapActivity.CODE_SUCCESS) {
                         updateLocation(loc.getLatitude(), loc.getLongitude());
-
                     } else {
                         Toast.makeText(this, R.string.message_set_location, Toast.LENGTH_SHORT).show();
                     }
@@ -167,11 +161,29 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private void updateLocation(double lat, double lon) {
         latitude = lat;
         longitude = lon;
-        cityName = MapActivity.defineCityName(getBaseContext(), latitude, longitude);
+        Thread t = new Thread() {
+
+            Handler handler = new Handler();
+
+            @Override
+            public void run() {
+                try {
+                    cityName = MapActivity.defineCityName(getBaseContext(), latitude, longitude);
+                } finally {
+                }
+                handler.post(new Runnable() {
+                    public void run() {
+
+                    }
+                });
+            }
+        };
+
+        t.start();
+       // cityName = MapActivity.defineCityName(getBaseContext(), latitude, longitude);
         updateAlarm();
         updateLocationViews();
         updateTimeView();
-
     }
 
     public AlertDialog createLabelEditDialog() {
@@ -213,7 +225,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         saveBtn.setOnClickListener(this);
         repeatCheck.setOnCheckedChangeListener(this);
         locationButton.setOnClickListener(this);
-        locationButton.setOnLongClickListener((v)->{
+        locationButton.setOnLongClickListener((v) -> {
             MapActivity.defineCurrentLocation(this, (code, loc) -> {
                 if (code == MapActivity.CODE_SUCCESS) {
                     updateLocation(loc.getLatitude(), loc.getLongitude());
@@ -319,17 +331,18 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
 
     private void chooseLocation() {
         Intent mapIntent = new Intent("android.intent.action.SET_LOCATION");
-        mapIntent.putExtra(LATITUDE, ((SunAlarm) currentAlarm).getLatitude());
-        mapIntent.putExtra(LONGITUDE, ((SunAlarm) currentAlarm).getLongitude());
-        mapIntent.putExtra(MapActivity.MODE_MAP, 1);
-        this.startActivityForResult(mapIntent, 1);
+        mapIntent.putExtra(MapActivity.LATITUDE, ((SunAlarm) currentAlarm).getLatitude());
+        mapIntent.putExtra(MapActivity.LONGITUDE, ((SunAlarm) currentAlarm).getLongitude());
+        mapIntent.putExtra(MapActivity.MODE_MAP, MapActivity.MODE_CHOSE_LOCATION);
+        this.startActivityForResult(mapIntent, MapActivity.MODE_CHOSE_LOCATION);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_LOCATION_CHOSEN) {
-            updateLocation(data.getDoubleExtra(LATITUDE, 0), data.getDoubleExtra(LONGITUDE, 0));
+            updateLocation(data.getDoubleExtra(MapActivity.LATITUDE, latitude),
+                    data.getDoubleExtra(MapActivity.LONGITUDE, longitude));
         }
     }
 
