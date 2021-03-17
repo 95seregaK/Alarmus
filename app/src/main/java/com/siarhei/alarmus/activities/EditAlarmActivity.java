@@ -383,7 +383,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
                 locationView.setText("Location: " + SunInfo.toLocationString(latitude, longitude, 5));
             updateRadioViews();
             delayBar.setValue(sunAlarm.getDelay());
-            Log.d("updateLocation", "cityName:" + cityName + "!");
+            //Log.d("updateLocation", "cityName:" + cityName + "!");
         }
     }
 

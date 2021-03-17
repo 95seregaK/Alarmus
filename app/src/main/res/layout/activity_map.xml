@@ -97,7 +97,7 @@
 
                     <LinearLayout
                         android:id="@+id/date_button"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
                         android:minWidth="@dimen/width_column_sun_info"
@@ -121,29 +121,30 @@
 
                     <TextView
                         android:id="@+id/text_sunrise"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="@dimen/height_item_sun_info_table"
                         android:text="@string/sunrise"
                         android:textAppearance="@style/TextStyle.Light" />
 
                     <TextView
                         android:id="@+id/text_noon"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="@dimen/height_item_sun_info_table"
                         android:text="@string/noon"
                         android:textAppearance="@style/TextStyle.Light" />
 
                     <TextView
                         android:id="@+id/text_sunset"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="@dimen/height_item_sun_info_table"
                         android:text="@string/sunset"
                         android:textAppearance="@style/TextStyle.Light" />
 
                     <TextView
                         android:id="@+id/text_day_duration"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="@dimen/height_item_sun_info_table"
+                        android:singleLine="true"
                         android:text="@string/day_duration"
                         android:textAppearance="@style/TextStyle.Light" />
 

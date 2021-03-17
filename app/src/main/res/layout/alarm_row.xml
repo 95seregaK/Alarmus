@@ -177,6 +177,4 @@
                 android:textSize="@dimen/row_text_size_min" />
         </LinearLayout>
     </LinearLayout>
-
-
 </LinearLayout>

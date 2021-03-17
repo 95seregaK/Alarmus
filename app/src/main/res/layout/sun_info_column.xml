@@ -43,7 +43,6 @@
         android:id="@+id/text_day_duration"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_item_sun_info_table"
-        android:text="@string/day_duration"
         android:textAppearance="@style/TextStyle.Light"
          />
 

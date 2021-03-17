@@ -56,5 +56,3 @@ public class SlideButton extends androidx.appcompat.widget.AppCompatSeekBar {
         public void handleSlide(int res);
     }
 }
-
-

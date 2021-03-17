@@ -27,6 +27,7 @@ import com.siarhei.alarmus.data.SunAlarm;
 import com.siarhei.alarmus.data.SunAlarmManager;
 import com.siarhei.alarmus.receivers.AlarmReceiver;
 import com.siarhei.alarmus.receivers.SnoozeReceiver;
+import com.siarhei.alarmus.sun.SunInfo;
 import com.siarhei.alarmus.views.CircleSlider;
 
 import java.io.IOException;
@@ -111,7 +112,20 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         if (alarm instanceof SunAlarm) {
             if (text != "" && text != null) text += '\n';
             SunAlarm sunAlarm = (SunAlarm) alarm;
-            int delay = (int) (System.currentTimeMillis() - sunAlarm.getTimeInMillis()) / 60000 + sunAlarm.getDelay();
+            Calendar calendar = Calendar.getInstance();
+            SunInfo info = new SunInfo(calendar,
+                    ((SunAlarm) alarm).getLatitude(), ((SunAlarm) alarm).getLongitude());
+            int delay;
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            long today = calendar.getTimeInMillis();
+            if (sunAlarm.getSunMode() == SunAlarm.MODE_SUNRISE)
+                delay = (int) ((System.currentTimeMillis() - today) / 60000 - 60 * info.getSunriseLocalTime());
+            else if (sunAlarm.getSunMode() == SunAlarm.MODE_NOON)
+                delay = (int) ((System.currentTimeMillis() - today) / 60000 - 60 * info.getNoonLocalTime());
+            else
+                delay = (int) ((System.currentTimeMillis() - today) / 60000 - 60 * info.getSunsetLocalTime());
             if (delay == 0)
                 text += "It is ";
             else if (delay > 0)
