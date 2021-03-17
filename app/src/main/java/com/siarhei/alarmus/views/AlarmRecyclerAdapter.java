@@ -98,6 +98,7 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
         } else {
             holder.sunMode.setImageDrawable(null);
             holder.location.setText("");
+            holder.delay.setText("");
         }
         if (alarm.isEnabled()) {
             //holder.layout.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));

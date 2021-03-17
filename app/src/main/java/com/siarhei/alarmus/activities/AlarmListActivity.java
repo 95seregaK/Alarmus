@@ -31,7 +31,6 @@ public class AlarmListActivity extends AppCompatActivity implements View.OnClick
     static final String ALARM_EDITING = "alarm_for_editing";
     private static final int CODE_ADD_NEW = 3;
     private static final int CODE_EDIT_CURRENT = 4;
-    private static final short SHIFT = 8;
     private static List<Alarm> alarms;
     private MyRecyclerView recycler;
     private AlarmPreferences preferences;
@@ -222,7 +221,7 @@ public class AlarmListActivity extends AppCompatActivity implements View.OnClick
         builder.setView(layout);*/
         builder.setPositiveButton(R.string.confirm, (dialog, id) -> {
             removeAlarm(position);
-            //alarmAdapter.notifyDataSetChanged();
+            alarmAdapter.notifyDataSetChanged();
         });
         builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
             alarmAdapter.notifyDataSetChanged();
