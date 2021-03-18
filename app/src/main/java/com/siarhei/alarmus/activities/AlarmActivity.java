@@ -133,7 +133,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
             }
             int h = Math.abs(delay) / 60;
             String s = (h > 0 ? h + /*(h > 1 ?  " hours " : " hour")*/"h " : " ")
-                    + Math.abs(delay) % 60 + (h > 0 ? "m " : " minutes");
+                    + Math.abs(delay) % 60 + (h > 0 ? "m " : " minutes ");
             if (delay == 0)
                 text += "It is ";
             else if (delay > 0)
