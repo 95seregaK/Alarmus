@@ -60,7 +60,9 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
     public static final int MODE_MAP_OBSERVING = 2;
     public static final float DEFAULT_LATITUDE = 48.85f;
     public static final float DEFAULT_LONGITUDE = 2.33f;
+    public static final float DEFAULT_ZOOM = 9.5f;
     private static final String LOCATION_PREFERENCES = "Location preferences";
+    private static final String ZOOM = "zoom";
     private SunInfoMarker defaultMarker;
     private FusedLocationProviderClient fusedLocationClient;
     private FloatingActionButton setPositionBtn;
@@ -132,12 +134,12 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
         try {
             addresses = gcd.getFromLocation(lat, lon, 1);
             if (addresses.size() > 0 && addresses.get(0).getLocality() != null)
-                Log.d("defineCityName",addresses.get(0).getLocality());
-                return addresses.get(0).getLocality();
+                Log.d("defineCityName", addresses.get(0).getLocality());
+            return addresses.get(0).getLocality();
         } catch (IOException e) {
             //e.printStackTrace();
         }
-        Log.d("defineCityName","null");
+        Log.d("defineCityName", "null");
         return "";
 
     }
@@ -185,17 +187,15 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
         timeZoneView = findViewById(R.id.time_zone);
         dateButton = findViewById(R.id.date_button);
         dateButton.setOnClickListener(this);
-        infoWindowBar.setOnClickListener(this);
-
+        // infoWindowBar.setOnClickListener(this);
         map = findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
         map.setMultiTouchControls(true);
         //We can move the map on a default view point. For this, we need access to the map controller:
-
         mapController = map.getController();
-        mapController.setZoom(9.5);
         pref = getSharedPreferences(LOCATION_PREFERENCES, Context.MODE_PRIVATE);
+        mapController.setZoom(pref.getFloat(ZOOM, DEFAULT_ZOOM));
         double lat = getIntent().getDoubleExtra(LATITUDE, pref.getFloat(LATITUDE, DEFAULT_LATITUDE));
         double lon = getIntent().getDoubleExtra(LONGITUDE, pref.getFloat(LONGITUDE, DEFAULT_LONGITUDE));
         int mode = getIntent().getIntExtra(MODE_MAP, MODE_MAP_OBSERVING);
@@ -248,7 +248,7 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
 
             });
         } else if (view.getId() == R.id.info_window_bar) {
-            if (infoWindow.isHiden()) infoWindow.emerge();
+            if (infoWindow.isHidden()) infoWindow.emerge();
             else infoWindow.hide();
         } else if (view.getId() == R.id.date_button) {
             setDate();
@@ -297,6 +297,7 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
         SharedPreferences.Editor editor = pref.edit();
         editor.putFloat(LATITUDE, (float) defaultMarker.getPosition().getLatitude());
         editor.putFloat(LONGITUDE, (float) defaultMarker.getPosition().getLongitude());
+        editor.putFloat(ZOOM, (float) map.getZoomLevelDouble());
         editor.apply();
         super.onDestroy();
     }
@@ -354,8 +355,8 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
         return false;
     }
 
+
     public interface OnLocationDefinedCallback {
         void onLocationDefined(int code, Location location);
     }
-
 }

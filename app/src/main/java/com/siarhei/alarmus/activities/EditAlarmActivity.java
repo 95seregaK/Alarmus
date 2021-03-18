@@ -324,7 +324,9 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private void save() {
         updateAlarm();
         currentAlarm.setEnable(true);
-        SunAlarmManager.getService(this).set(currentAlarm);
+        SunAlarmManager alarmManager = SunAlarmManager.getService(this);
+        alarmManager.cancelSnoozed(currentAlarm);
+        alarmManager.set(currentAlarm);
         preferences.writeAlarm(currentAlarm);
         Toast.makeText(this, this.getResources().getString(R.string.message_alarm_set)
                 + " " + currentAlarm.toString(), Toast.LENGTH_SHORT).show();

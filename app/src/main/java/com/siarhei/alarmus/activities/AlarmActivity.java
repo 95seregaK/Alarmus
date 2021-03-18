@@ -115,29 +115,32 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
             Calendar calendar = Calendar.getInstance();
             SunInfo info = new SunInfo(calendar,
                     ((SunAlarm) alarm).getLatitude(), ((SunAlarm) alarm).getLongitude());
-            int delay;
             calendar.set(Calendar.HOUR_OF_DAY, 0);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
             long today = calendar.getTimeInMillis();
-            if (sunAlarm.getSunMode() == SunAlarm.MODE_SUNRISE)
+            int delay;
+            String postfix;
+            if (sunAlarm.getSunMode() == SunAlarm.MODE_SUNRISE) {
                 delay = (int) ((System.currentTimeMillis() - today) / 60000 - 60 * info.getSunriseLocalTime());
-            else if (sunAlarm.getSunMode() == SunAlarm.MODE_NOON)
+                postfix = getResources().getString(R.string.sunrise);
+            } else if (sunAlarm.getSunMode() == SunAlarm.MODE_NOON) {
                 delay = (int) ((System.currentTimeMillis() - today) / 60000 - 60 * info.getNoonLocalTime());
-            else
+                postfix = getResources().getString(R.string.noon);
+            } else {
                 delay = (int) ((System.currentTimeMillis() - today) / 60000 - 60 * info.getSunsetLocalTime());
+                postfix = getResources().getString(R.string.sunset);
+            }
+            int h = Math.abs(delay) / 60;
+            String s = (h > 0 ? h + /*(h > 1 ?  " hours " : " hour")*/"h " : " ")
+                    + Math.abs(delay) % 60 + (h > 0 ? "m " : " minutes");
             if (delay == 0)
                 text += "It is ";
             else if (delay > 0)
-                text += delay + " " + getResources().getString(R.string.after) + " ";
+                text += s + getResources().getString(R.string.after) + " ";
             else if (delay < 0)
-                text += (-delay) + " " + getResources().getString(R.string.before) + " ";
-            if (sunAlarm.getSunMode() == SunAlarm.MODE_SUNRISE)
-                text += getResources().getString(R.string.sunrise);
-            else if (sunAlarm.getSunMode() == SunAlarm.MODE_NOON)
-                text += getResources().getString(R.string.noon);
-            else if (sunAlarm.getSunMode() == SunAlarm.MODE_SUNSET)
-                text += getResources().getString(R.string.sunset);
+                text += s + getResources().getString(R.string.before) + " ";
+            text += postfix;
         }
         return text;
     }

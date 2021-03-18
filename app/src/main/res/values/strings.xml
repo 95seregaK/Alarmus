@@ -36,8 +36,8 @@
     <string name="dismiss">Dismiss</string>
     <string name="message_snoozed_to">Alarm snoozed to</string>
     <string name="tap_to_cancel">Tap to cancel</string>
-    <string name="after">minutes passed since</string>
-    <string name="before">minutes left until</string>
+    <string name="after">passed since</string>
+    <string name="before">left until</string>
     <string name="message_confirm_deleting">Confirm deleting:</string>
     <string name="confirm">Confirm</string>
     <string name="location_updated">Location updated!</string>
