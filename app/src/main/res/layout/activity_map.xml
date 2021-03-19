@@ -50,16 +50,30 @@
         android:orientation="vertical"
         android:paddingBottom="24dp">
 
-        <TextView
-            android:id="@+id/info_window_bar"
+  <!--      <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/info_window_toolbar_height"
             android:background="@color/white"
-            android:paddingHorizontal="@dimen/info_window_margin"
-            android:text="INFO"
-            android:textAppearance="@style/TextStyle"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/toolbar_text_size" />
+            android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/button_hide"
+                android:layout_width="@dimen/info_window_toolbar_height"
+                android:layout_height="match_parent"
+                android:padding="@dimen/padding_hide_button"
+                android:background="?android:selectableItemBackground"
+                android:src="@drawable/ic_down"
+                android:scaleType="centerCrop"
+                />
+            <TextView
+                android:id="@+id/info_window_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:text="INFO"
+                android:textAppearance="@style/TextStyle"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/toolbar_text_size" />
+        </LinearLayout>-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -102,21 +116,20 @@
                         android:background="@color/white"
                         android:minWidth="@dimen/width_column_sun_info"
                         android:orientation="horizontal">
+
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="match_parent"
-                            android:src="@drawable/ic_calendar"
-                            android:scaleType="centerCrop"
                             android:layout_marginRight="6dp"
-                            />
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_calendar" />
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/height_item_sun_info_table"
                             android:text="@string/date"
                             android:textAppearance="@style/TextStyle.Dark"
                             android:textColor="@color/colorPrimaryDark" />
-
-
                     </LinearLayout>
 
                     <TextView

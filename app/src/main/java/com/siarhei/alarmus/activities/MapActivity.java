@@ -181,13 +181,12 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
         currentLocationButton = findViewById(R.id.button_define_location);
         currentLocationButton.setOnClickListener(this);
         infoWindow = findViewById(R.id.info_view);
+        infoWindow.setTitle(getString(R.string.info));
         sunInfoView = findViewById(R.id.sun_info_view);
-        infoWindowBar = findViewById(R.id.info_window_bar);
         locationView = findViewById(R.id.location);
         timeZoneView = findViewById(R.id.time_zone);
         dateButton = findViewById(R.id.date_button);
         dateButton.setOnClickListener(this);
-        // infoWindowBar.setOnClickListener(this);
         map = findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
@@ -247,10 +246,7 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
                     Toast.makeText(this, R.string.message_location_cannot, Toast.LENGTH_SHORT).show();
 
             });
-        } else if (view.getId() == R.id.info_window_bar) {
-            if (infoWindow.isHidden()) infoWindow.emerge();
-            else infoWindow.hide();
-        } else if (view.getId() == R.id.date_button) {
+        }else if (view.getId() == R.id.date_button) {
             setDate();
         }
     }

@@ -41,4 +41,5 @@
     <string name="message_confirm_deleting">Confirm deleting:</string>
     <string name="confirm">Confirm</string>
     <string name="location_updated">Location updated!</string>
+    <string name="info">INFO</string>
 </resources>

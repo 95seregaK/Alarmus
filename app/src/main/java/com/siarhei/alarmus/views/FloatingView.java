@@ -5,15 +5,21 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.siarhei.alarmus.R;
+
+import static androidx.core.content.ContextCompat.getDrawable;
 
 public class FloatingView extends LinearLayout {
 
@@ -23,6 +29,8 @@ public class FloatingView extends LinearLayout {
     private int parentHeight;
     private boolean shown = true, motion = false;
     private float y, dy;
+    private TextView title;
+    private ImageButton hideButton;
 
     public FloatingView(Context context) {
         super(context);
@@ -45,17 +53,52 @@ public class FloatingView extends LinearLayout {
     }
 
     private void setView(Context context) {
-        int height = (int) getResources().getDimension(R.dimen.info_window_toolbar_height);
+        LinearLayout toolbar = new LinearLayout(context);
+        toolbar.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, toolbarHeight));
+        toolbar.setOrientation(HORIZONTAL);
+        toolbar.setBackgroundColor(getResources().getColor(R.color.white));
+        hideButton = new ImageButton(context);
+        hideButton.setLayoutParams(new ViewGroup.LayoutParams(toolbarHeight, ViewGroup.LayoutParams.MATCH_PARENT));
+        hideButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        hideButton.setImageResource(R.drawable.ic_down);
+        int padding = (int) getResources().getDimension(R.dimen.padding_hide_button);
+        Log.d("padding_hide_button", padding + "");
+        hideButton.setPadding(padding, padding, padding, padding);
+        TypedValue outValue = new TypedValue();
+        context.getTheme().resolveAttribute(
+                android.R.attr.selectableItemBackground, outValue, true);
+        hideButton.setBackground(getDrawable(context, outValue.resourceId));
+        hideButton.setOnClickListener(this::onClick);
         setOnTouchListener(this::onTouch);
-        //setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        //addView(new TextView(context),LayoutParams.MATCH_PARENT,100);
-        //setY(DISPLAY_HEIGHT);
+        title = new TextView(context);
+        title.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        title.setTextAppearance(context, R.style.TextStyle);
+        title.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+        int size = (int) (getResources().getDimension(R.dimen.toolbar_text_size)
+                / getResources().getDisplayMetrics().density);
+        title.setTextSize(size);
+        Log.d("padding_hide_button", size + "");
+        toolbar.addView(hideButton);
+        toolbar.addView(title);
+
+        addView(toolbar);
+
+    }
+
+    private void onClick(View view) {
+        if (shown) hide();
+        else emerge();
+    }
+
+    public void setTitle(CharSequence text) {
+        title.setText(text);
     }
 
     public void emerge() {
         parentHeight = ((ViewGroup) getParent()).getHeight();
         animate().y(parentHeight - getHeight()).x(0).setDuration(floatDuration).start();
         shown = true;
+        hideButton.setImageResource(R.drawable.ic_down);
     }
 
     public void hide() {
@@ -63,6 +106,7 @@ public class FloatingView extends LinearLayout {
         animate().y(parentHeight - toolbarHeight)
                 .x(0).setDuration(floatDuration).start();
         shown = false;
+        hideButton.setImageResource(R.drawable.ic_up);
     }
 
     public boolean isHidden() {
@@ -77,7 +121,6 @@ public class FloatingView extends LinearLayout {
                 parentHeight = ((ViewGroup) getParent()).getHeight();
                 break;
             case MotionEvent.ACTION_MOVE:
-                motion = true;
                 y = event.getRawY() + dy;
                 if (y <= parentHeight - toolbarHeight && y >= parentHeight - getHeight())
                     setY(y);
@@ -85,14 +128,8 @@ public class FloatingView extends LinearLayout {
                 break;
             case MotionEvent.ACTION_UP:
                 y = event.getRawY() + dy;
-                if (!motion && event.getY() > 0 && event.getY() < toolbarHeight) {
-                    if (shown) hide();
-                    else emerge();
-                } else {
-                    if (parentHeight - y > getHeight() / 2) emerge();
-                    else hide();
-                }
-                motion = false;
+                if (parentHeight - y > getHeight() / 2) emerge();
+                else hide();
                 break;
             default:
                 return false;
