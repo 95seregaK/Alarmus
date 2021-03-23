@@ -7,7 +7,7 @@ import com.siarhei.alarmus.sun.SunInfo;
 
 import java.util.Calendar;
 
-public class SunAlarm extends Alarm implements Cloneable{
+public class SunAlarm extends Alarm implements Cloneable {
     public static final int MODE_SUNRISE = 1;
     public static final int MODE_NOON = 2;
     public static final int MODE_SUNSET = 3;
@@ -72,7 +72,7 @@ public class SunAlarm extends Alarm implements Cloneable{
     }
 
     public void defineTime() {
-        SunInfo info = new SunInfo(time, latitude, longitude);
+        SunInfo info = SunInfo.getInstance(time, latitude, longitude);
         double t = 0;
         switch (sunMode) {
             case MODE_SUNRISE:
@@ -112,17 +112,21 @@ public class SunAlarm extends Alarm implements Cloneable{
         longitude = lon;
     }
 
+    public int getDelay() {
+        return delay;
+    }
+
     public void setDelay(int value) {
         time.add(Calendar.MINUTE, value - delay);
         delay = value;
     }
 
-    public int getDelay() {
-        return delay;
-    }
-
     public String getCity() {
         return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public boolean isUpdate() {
@@ -131,9 +135,5 @@ public class SunAlarm extends Alarm implements Cloneable{
 
     public void setUpdate(boolean update) {
         this.update = update;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
     }
 }

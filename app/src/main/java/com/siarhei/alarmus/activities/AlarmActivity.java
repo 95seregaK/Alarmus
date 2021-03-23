@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
-import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,6 +65,14 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     private SunAlarmManager alarmManager;
     private AlarmPreferences preferences;
 
+    public static String delayToString(int delay, boolean full) {
+        int h = Math.abs(delay) / 60;
+        int m = Math.abs(delay) % 60;
+        String hour = full ? (h == 1 ? " hour " : " hours ") : "h ";
+        String min = full ? (m == 1 ? " minute " : " minutes ") : "m ";
+        return (h > 0 ? h + hour : " ")
+                + m + min;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,7 +86,6 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         date = findViewById(R.id.date);
         label = findViewById(R.id.label);
         mMediaPlayer = new MediaPlayer();
-        //alarm = getIntent().getParcelableExtra(AlarmReceiver.ALARM);
         preferences = AlarmPreferences.getInstance(this);
         alarm = preferences.readAlarm(getIntent().getIntExtra(Alarm.ID, 0));
         Calendar calendar = Calendar.getInstance();
@@ -112,35 +118,35 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         if (alarm instanceof SunAlarm) {
             if (text != "" && text != null) text += '\n';
             SunAlarm sunAlarm = (SunAlarm) alarm;
-            Calendar calendar = Calendar.getInstance();
-            SunInfo info = new SunInfo(calendar,
-                    ((SunAlarm) alarm).getLatitude(), ((SunAlarm) alarm).getLongitude());
-            calendar.set(Calendar.HOUR_OF_DAY, 0);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            long today = calendar.getTimeInMillis();
-            int delay;
+            Calendar calendar = Alarm.dayBeginning(Calendar.getInstance());
+            SunInfo info = SunInfo.getInstance(calendar, sunAlarm.getLatitude(), sunAlarm.getLongitude());
+            double event;
             String postfix;
-            if (sunAlarm.getSunMode() == SunAlarm.MODE_SUNRISE) {
-                delay = (int) ((System.currentTimeMillis() - today) / 60000 - 60 * info.getSunriseLocalTime());
-                postfix = getResources().getString(R.string.sunrise);
-            } else if (sunAlarm.getSunMode() == SunAlarm.MODE_NOON) {
-                delay = (int) ((System.currentTimeMillis() - today) / 60000 - 60 * info.getNoonLocalTime());
-                postfix = getResources().getString(R.string.noon);
-            } else {
-                delay = (int) ((System.currentTimeMillis() - today) / 60000 - 60 * info.getSunsetLocalTime());
-                postfix = getResources().getString(R.string.sunset);
+            switch (sunAlarm.getSunMode()) {
+                case SunAlarm.MODE_SUNRISE:
+                    event = info.getSunriseLocalTime();
+                    postfix = getResources().getString(R.string.sunrise);
+                    break;
+                case SunAlarm.MODE_NOON:
+                    event = info.getNoonLocalTime();
+                    postfix = getResources().getString(R.string.noon);
+                    break;
+                default:
+                    event = info.getSunsetLocalTime();
+                    postfix = getResources().getString(R.string.sunset);
+                    break;
             }
-            int h = Math.abs(delay) / 60;
-            String s = (h > 0 ? h + /*(h > 1 ?  " hours " : " hour")*/"h " : " ")
-                    + Math.abs(delay) % 60 + (h > 0 ? "m " : " minutes ");
-            if (delay == 0)
-                text += "It is ";
-            else if (delay > 0)
-                text += s + getResources().getString(R.string.after) + " ";
-            else if (delay < 0)
-                text += s + getResources().getString(R.string.before) + " ";
-            text += postfix;
+            int delay = (int) (System.currentTimeMillis() - calendar.getTimeInMillis()) / 60000 - (int) (60 * event);
+            if (delay == 0) {
+                text += "It is";
+            } else {
+                text += delayToString(delay, Math.abs(delay) < 60);
+                if (delay > 0)
+                    text += getResources().getString(R.string.after);
+                else if (delay < 0)
+                    text += getResources().getString(R.string.before);
+            }
+            text += " " + postfix;
         }
         return text;
     }
@@ -171,12 +177,9 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
     }
 
     public void play() throws IOException {
-
         AudioManager mAudioManager = (AudioManager) this.getSystemService(AUDIO_SERVICE);
         mAudioManager.setMode(AudioManager.MODE_NORMAL);
         mAudioManager.setSpeakerphoneOn(false);
-
-
         mMediaPlayer.reset();
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
         mMediaPlayer.setDataSource(this, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
@@ -221,7 +224,6 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
             else delay = d1;
             Log.d("ACTION_SUCCESS", delay + " ");
             finish();
-
         }// else if (action == CircleSlider.ACTION_FAILURE) ;
     }
 
@@ -260,7 +262,7 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
             channel.setDescription("Channel description");
             notificationManager.createNotificationChannel(channel);
         }
-        RemoteViews notificationView = new RemoteViews(getPackageName(), R.layout.layout_notification);
+        //RemoteViews notificationView = new RemoteViews(getPackageName(), R.layout.layout_notification);
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, d);
         NotificationCompat.Builder builder =
@@ -284,16 +286,12 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
         } else
             alarm.setEnable(false);
         preferences.writeAlarm(alarm);
-
     }
 
     class MyTimerTask extends TimerTask {
         @Override
         public void run() {
             runOnUiThread(() -> {
-                /*mMediaPlayer.release();
-                snooze(d3);
-                timer.cancel();*/
                 finish();
             });
         }

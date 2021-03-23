@@ -27,7 +27,6 @@ public class SunInfoMarker extends Marker {
             setSubDescription(info.subDescription());
             setTitle("INFO:");
         }
-
     }
 
     @Override
@@ -38,6 +37,6 @@ public class SunInfoMarker extends Marker {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int month = calendar.get(Calendar.MONTH) + 1;
         int year = calendar.get(Calendar.YEAR);
-        setRelatedObject(new SunInfo(day, month, year, position.getLatitude(), position.getLongitude()));
+        setRelatedObject(SunInfo.getInstance(day, month, year, position.getLatitude(), position.getLongitude()));
     }
 }

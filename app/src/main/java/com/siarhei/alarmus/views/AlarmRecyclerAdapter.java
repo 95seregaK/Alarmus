@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.siarhei.alarmus.R;
+import com.siarhei.alarmus.activities.AlarmActivity;
 import com.siarhei.alarmus.data.Alarm;
 import com.siarhei.alarmus.data.SunAlarm;
 import com.siarhei.alarmus.sun.SunInfo;
@@ -91,13 +92,7 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
             else if (sunAlarm.getSunMode() == SunAlarm.MODE_SUNSET)
                 holder.sunMode.setImageResource(R.drawable.ic_sunset);
             int d = sunAlarm.getDelay();
-            int h = Math.abs(d) / 60;
-            int m = Math.abs(d) % 60;
-            String s;
-            if (d == 0) s = "";
-            else
-                s = (d < 0 ? "-" : "+") + (h > 0 ? h + "h " : "") + m + "m";
-            holder.delay.setText(s);
+            holder.delay.setText((d < 0 ? "-" : "+") + AlarmActivity.delayToString(d,false));
         } else {
             holder.sunMode.setImageDrawable(null);
             holder.location.setText("");

@@ -207,7 +207,7 @@ public class MapActivity extends Activity implements Marker.OnMarkerClickListene
         //defaultMarker.setPanToView(true);
         defaultMarker.setOnMarkerClickListener(this);
         defaultMarker.setPosition(startPoint);
-        currentSunInfo = new SunInfo(Calendar.getInstance(), lat, lon);
+        currentSunInfo = SunInfo.getInstance(Calendar.getInstance(), lat, lon);
         updateSunInfoLocation();
         MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(this);
         map.getOverlays().add(mapEventsOverlay);

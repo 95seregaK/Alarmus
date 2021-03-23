@@ -75,6 +75,13 @@ public class Alarm implements Parcelable {
                 + (year < 10 ? "0" : "") + year;
     }
 
+    public static Calendar dayBeginning(Calendar calendar) {
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        return calendar;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
@@ -113,17 +120,13 @@ public class Alarm implements Parcelable {
             setToday();
             now = System.currentTimeMillis();
         } else {
-            Calendar calendar = Calendar.getInstance();
+            Calendar calendar = dayBeginning(Calendar.getInstance());
             calendar.add(Calendar.DAY_OF_MONTH, 1);
-            calendar.set(Calendar.HOUR_OF_DAY, 0);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
             now = calendar.getTimeInMillis();
         }
         while (now > time.getTimeInMillis() || (repeat && !days[(time.get(Calendar.DAY_OF_WEEK) + 5) % 7])) {
             addDay();
         }
-        //Log.d("alarmType", "Alarm");
     }
 
     public void setToday() {

@@ -31,8 +31,7 @@ public class SunInfo {
     private float timeZoneOffset;
     private String timeZoneName;
 
-
-    public SunInfo(int day, int month, int year, double latitude, double longitude) {
+    protected SunInfo(int day, int month, int year, double latitude, double longitude) {
         this.day = day;
         this.month = month;
         this.year = year;
@@ -41,13 +40,17 @@ public class SunInfo {
         init();
     }
 
-    public SunInfo(Calendar calendar, double lat, double lon) {
-        this.day = calendar.get(Calendar.DAY_OF_MONTH);
-        this.month = calendar.get(Calendar.MONTH) + 1;
-        this.year = calendar.get(Calendar.YEAR);
-        this.latitude = lat;
-        this.longitude = lon;
-        init();
+    protected SunInfo(Calendar calendar, double lat, double lon) {
+        this(calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1,
+                calendar.get(Calendar.YEAR), lat, lon);
+    }
+
+    public static SunInfo getInstance(int day, int month, int year, double latitude, double longitude) {
+        return new SunInfo(day, month, year, latitude, longitude);
+    }
+
+    public static SunInfo getInstance(Calendar calendar, double latitude, double longitude) {
+        return new SunInfo(calendar, latitude, longitude);
     }
 
     public static SunInfo nextDaySunInfo(SunInfo info, int add) {
@@ -82,6 +85,45 @@ public class SunInfo {
     public static double toLocalTime(double julianTime, float offset) {
         double time = (julianTime + 0.5 + offset / 24.0) % 1;
         return time >= 0 ? 24 * time : 24 * time + 24;
+    }
+
+    public static int getMinute(double time) {
+        int hour = (int) time;
+        int minute = (int) (60 * (time % 1));
+        return minute;
+    }
+
+    public static int getHour(double time) {
+        int hour = (int) time;
+        return hour;
+    }
+
+    public static String toLocationString(double lat, double lon, int d) {
+        return Math.abs(SunMath.round(lat, d)) + (lat < 0 ? "S" : "N") + ", "
+                + Math.abs(SunMath.round(lon, d)) + (lon < 0 ? "W" : "E");
+    }
+
+    public static String toTimeString(double time, int format) {
+        int hour = (int) time;
+        double minute = (time - hour) * 60;
+        int min = (int) minute;
+        double second = (minute - min) * 60;
+        double sec = (int) second;
+        int millis = (int) ((second - sec) * 1000);
+        String timeStr = (hour > 9 ? "" : "0") + hour + (min > 9 ? ":" : ":0") + min;
+        switch (format) {
+            case HH_MM:
+                break;
+            case HH_MM_SS:
+                timeStr += (sec > 9 ? ":" : ":0") + sec;
+                break;
+            case HH_MM_SS_MM:
+                timeStr += sec > 9 ? ":" : ":0" + sec + SunMath.round(millis, 3);
+                break;
+            default:
+                break;
+        }
+        return timeStr;
     }
 
     public String toString(int timeFormat) {
@@ -137,12 +179,17 @@ public class SunInfo {
         return day;
     }
 
-    public SunInfo setNewDate(int day, int month, int year) {
+    public void setNewDate(int day, int month, int year) {
         this.day = day;
         this.month = month;
         this.year = year;
         init();
-        return this;
+    }
+
+    public void setNewPosition(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        init();
     }
 
     private void init() {
@@ -180,55 +227,9 @@ public class SunInfo {
                 + year);
     }
 
-    public static int getMinute(double time) {
-        int hour = (int) time;
-        int minute = (int) (60 * (time % 1));
-        return minute;
-    }
-
-    public static int getHour(double time) {
-        int hour = (int) time;
-        return hour;
-    }
-
     public String toDateString() {
         return (day < 10 ? "0" : "") + day + "."
                 + (month < 10 ? "0" : "") + month + "."
                 + (year % 100 < 10 ? "0" : "") + year % 100;
-    }
-
-    public static String toLocationString(double lat, double lon, int d) {
-        return Math.abs(SunMath.round(lat, d)) + (lat < 0 ? "S" : "N") + ", "
-                + Math.abs(SunMath.round(lon, d)) + (lon < 0 ? "W" : "E");
-    }
-
-    public static String toTimeString(double time, int format) {
-        int hour = (int) time;
-        double minute = (time - hour) * 60;
-        int min = (int) minute;
-        double second = (minute - min) * 60;
-        double sec = (int) second;
-        int millis = (int) ((second - sec) * 1000);
-        String timeStr = (hour > 9 ? "" : "0") + hour + (min > 9 ? ":" : ":0") + min;
-        switch (format) {
-            case HH_MM:
-                break;
-            case HH_MM_SS:
-                timeStr += (sec > 9 ? ":" : ":0") + sec;
-                break;
-            case HH_MM_SS_MM:
-                timeStr += sec > 9 ? ":" : ":0" + sec + SunMath.round(millis, 3);
-                break;
-            default:
-                break;
-        }
-        return timeStr;
-    }
-
-    public SunInfo setNewPosition(double latitude, double longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-        init();
-        return this;
     }
 }
