@@ -175,8 +175,9 @@ public class AlarmListActivity extends AppCompatActivity implements View.OnClick
         alarmManager.set(alarm);
         preferences.writeAlarm(alarm);
         alarmAdapter.notifyDataSetChanged();
-        Toast.makeText(this, this.getResources().getString(R.string.message_alarm_set)
-                + " " + alarm.toString(), Toast.LENGTH_SHORT).show();
+       /* Toast.makeText(this, this.getResources().getString(R.string.message_alarm_set)
+                + " " + alarm.toString(), Toast.LENGTH_SHORT).show();*/
+        EditAlarmActivity.makeToast(this,alarm);
     }
 
     private void cancelAlarm(Alarm alarm) {

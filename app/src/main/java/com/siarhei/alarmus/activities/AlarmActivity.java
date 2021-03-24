@@ -67,11 +67,13 @@ public class AlarmActivity extends AppCompatActivity implements CircleSlider.OnS
 
     public static String delayToString(int delay, boolean full) {
         int h = Math.abs(delay) / 60;
+        int d = h / 24;
+        h = h % 24;
         int m = Math.abs(delay) % 60;
+        String day = full ? (d == 1 ? " day " : " days ") : "d ";
         String hour = full ? (h == 1 ? " hour " : " hours ") : "h ";
         String min = full ? (m == 1 ? " minute " : " minutes ") : "m ";
-        return (h > 0 ? h + hour : " ")
-                + m + min;
+        return (d > 0 ? d + day : "") + (h > 0 ? h + hour : "") + (m > 0 ? m + min : "");
     }
 
     @Override

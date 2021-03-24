@@ -1,6 +1,7 @@
 package com.siarhei.alarmus.activities;
 
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -68,6 +69,12 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private AlertDialog editLabelDialog;
     private DelayPicker delayBar;
     private String cityName = "";
+
+    public static void makeToast(Context context, Alarm alarm) {
+        int d = (int) (alarm.getTimeInMillis() - System.currentTimeMillis()) / 60000;
+        Toast.makeText(context, context.getResources().getString(R.string.message_alarm_set_for)
+                + " " + AlarmActivity.delayToString(d, true), Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -327,8 +334,9 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         alarmManager.cancelSnoozed(currentAlarm);
         alarmManager.set(currentAlarm);
         preferences.writeAlarm(currentAlarm);
-        Toast.makeText(this, this.getResources().getString(R.string.message_alarm_set)
-                + " " + currentAlarm.toString(), Toast.LENGTH_SHORT).show();
+       /* Toast.makeText(this, this.getResources().getString(R.string.message_alarm_set)
+                + " " + currentAlarm.toString(), Toast.LENGTH_SHORT).show();*/
+        makeToast(this, currentAlarm);
     }
 
     private void chooseLocation() {
@@ -420,8 +428,7 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private void updateDelayView() {
         String delayString = getResources().getString(R.string.delay) + "   ";
         int delay = delayBar.getValue();
-        delayView.setText(delayString + (delay < 0 ? "" : "+") + delay + " "
-                + getResources().getString(R.string.minutes));
+        delayView.setText(delayString + (delay < 0 ? "" : "+") + AlarmActivity.delayToString(delay, true));
     }
 
     @Override
