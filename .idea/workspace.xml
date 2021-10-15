@@ -25,16 +25,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f10215e-c20b-49a3-889d-2870a71a8b90" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/alarmus_icon.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/main_icon.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[J4AXJR009134JG6]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -91,7 +92,7 @@
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="BundleExportedModule" value="Alarmus.app" />
     <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="Nexus_7_2012_API_26" />
-    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2021-04-03T19:23:40.911Z" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2021-10-15T11:17:46.361Z" />
     <property name="ExportApk.ApkPath" value="C:\Users\siarh\AndroidStudioProjects\alarmus\app" />
     <property name="ExportApk.BuildVariants" value="release" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
@@ -413,7 +414,14 @@
       <option name="project" value="LOCAL" />
       <updated>1634288927332</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Merge remote-tracking branch 'origin/master' into master">
+      <created>1634294454062</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1634294454062</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -501,30 +509,34 @@
     <option name="LAST_COMMIT_MESSAGE" value="Merge remote-tracking branch 'origin/master' into master" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="395" y="0" key="CommitChangelistDialog2" timestamp="1634288924873">
+    <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1634295787939">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="395" y="0" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1634288924873" />
-    <state width="1476" height="123" key="GridCell.Tab.0.bottom" timestamp="1634285194615">
+    <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.824@0.0.1536.824" timestamp="1634295787939" />
+    <state x="395" y="0" key="CommitChangelistDialog2" timestamp="1634294453554">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1476" height="123" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1634285194615" />
-    <state width="1476" height="123" key="GridCell.Tab.0.center" timestamp="1634285194615">
+    <state x="395" y="0" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1634294453554" />
+    <state width="1276" height="123" key="GridCell.Tab.0.bottom" timestamp="1634295788259">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1476" height="123" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1634285194615" />
-    <state width="1476" height="123" key="GridCell.Tab.0.left" timestamp="1634285194614">
+    <state width="1276" height="123" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1634295788259" />
+    <state width="1276" height="123" key="GridCell.Tab.0.center" timestamp="1634295788259">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1476" height="123" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1634285194614" />
-    <state width="1476" height="123" key="GridCell.Tab.0.right" timestamp="1634285194615">
+    <state width="1276" height="123" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1634295788259" />
+    <state width="1276" height="123" key="GridCell.Tab.0.left" timestamp="1634295788258">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1476" height="123" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1634285194615" />
-    <state x="584" y="190" key="chooseDestDirectoryDialog" timestamp="1634294056623">
+    <state width="1276" height="123" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1634295788258" />
+    <state width="1276" height="123" key="GridCell.Tab.0.right" timestamp="1634295788259">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="584" y="190" key="chooseDestDirectoryDialog/0.0.1536.824@0.0.1536.824" timestamp="1634294056623" />
+    <state width="1276" height="123" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1634295788259" />
+    <state x="584" y="190" key="chooseDestDirectoryDialog" timestamp="1634294403185">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="584" y="190" key="chooseDestDirectoryDialog/0.0.1536.824@0.0.1536.824" timestamp="1634294403185" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
