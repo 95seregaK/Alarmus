@@ -428,7 +428,8 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
     private void updateDelayView() {
         String delayString = getResources().getString(R.string.delay) + "   ";
         int delay = delayBar.getValue();
-        delayView.setText(delayString + (delay < 0 ? "" : "+") + AlarmActivity.delayToString(delay, true));
+        delayView.setText(delayString + (delay < 0 ? "-" : (delay > 0 ?"+":"0"))
+                + AlarmActivity.delayToString(delay, true));
     }
 
     @Override
