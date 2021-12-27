@@ -27,8 +27,9 @@
     <list default="true" id="4f10215e-c20b-49a3-889d-2870a71a8b90" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/main_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/siarhei/alarmus/activities/EditAlarmActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/siarhei/alarmus/activities/EditAlarmActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,7 +115,7 @@
     <property name="android-custom-viewC:/home/siarhei/Android/Sdk/sources/android-30/android/view/View.java_SELECTED" value="View" />
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/app/src/main/res/drawable" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/main/res/drawable" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="multi-representation-previewC:/Users/kazakovsr/.gradle/caches/modules-2/files-2.1/com.wefika/horizontal-picker/1.1.1/f01322bd1f48a4c15453e41043404ae76d61d92/horizontal-picker-1.1.1-sources.jar!/com/wefika/horizontalpicker/HorizontalPicker.java_selected" value="Custom views" />
     <property name="multi-representation-previewC:/Users/kazakovsr/StudioProjects/Alarmus/app/src/main/java/com/siarhei/alarmus/views/CircleCheckBox.java_selected" value="Custom views" />
     <property name="multi-representation-previewC:/Users/kazakovsr/StudioProjects/Alarmus/app/src/main/java/com/siarhei/alarmus/views/CircleSlider.java_selected" value="Custom views" />
@@ -127,10 +128,10 @@
     <property name="multi-representation-previewC:/Users/kazakovsr/StudioProjects/Alarmus/app/src/main/java/com/siarhei/alarmus/views/SlideButton.java_selected" value="Custom views" />
     <property name="multi-representation-previewC:/Users/kazakovsr/StudioProjects/Alarmus/app/src/main/java/com/siarhei/alarmus/views/SunInfoScrollView.java_selected" value="Custom views" />
     <property name="multi-representation-previewC:/Users/kazakovsr/StudioProjects/Alarmus/app/src/main/java/com/siarhei/alarmus/views/SunSlider.java_selected" value="Custom views" />
-    <property name="multi-representation-previewC:/Users/siarh/AndroidStudioProjects/alarmus/app/src/main/java/com/siarhei/alarmus/views/MyRecyclerView.java_selected" value="Custom views" />
+    <property name="multi-representation-previewC:/Users/siarh/AndroidStudioProjects/alarmus/app/src/main/java/com/siarhei/alarmus/views/MyRecyclerView.java_selected" value="" />
     <property name="multi-representation-previewC:/Users/siarh/AndroidStudioProjects/alarmus/app/src/main/java/com/siarhei/alarmus/views/SunSlider.java_selected" value="Custom views" />
     <property name="multi-representation-previewC:/home/siarhei/Android/Sdk/sources/android-30/android/view/View.java_selected" value="Custom views" />
-    <property name="project.structure.last.edited" value="Suggestions" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.17" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
@@ -421,7 +422,14 @@
       <option name="project" value="LOCAL" />
       <updated>1634294454062</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Merge remote-tracking branch 'origin/master' into master">
+      <created>1634297654897</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1634297654897</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -509,14 +517,18 @@
     <option name="LAST_COMMIT_MESSAGE" value="Merge remote-tracking branch 'origin/master' into master" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="286" y="158" key="#PSD" timestamp="1640339100320">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="286" y="158" key="#PSD/0.0.1536.824@0.0.1536.824" timestamp="1640339100320" />
     <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1634295787939">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.824@0.0.1536.824" timestamp="1634295787939" />
-    <state x="395" y="0" key="CommitChangelistDialog2" timestamp="1634294453554">
+    <state x="395" y="0" key="CommitChangelistDialog2" timestamp="1634297653826">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="395" y="0" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1634294453554" />
+    <state x="395" y="0" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1634297653826" />
     <state width="1276" height="123" key="GridCell.Tab.0.bottom" timestamp="1634295788259">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -533,6 +545,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1276" height="123" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1634295788259" />
+    <state x="321" y="114" key="SettingsEditor" timestamp="1640338040519">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="321" y="114" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1640338040519" />
     <state x="584" y="190" key="chooseDestDirectoryDialog" timestamp="1634294403185">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -543,7 +559,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/siarhei/alarmus/activities/EditAlarmActivity.java</url>
-          <line>259</line>
+          <line>258</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

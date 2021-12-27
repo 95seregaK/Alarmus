@@ -188,7 +188,6 @@ public class EditAlarmActivity extends AppCompatActivity implements CompoundButt
         };
 
         t.start();
-        //cityName = MapActivity.defineCityName(getBaseContext(), latitude, longitude);
         updateAlarm();
         updateLocationViews();
         updateTimeView();
